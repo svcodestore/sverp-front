@@ -1,0 +1,491 @@
+<!--
+ * @Author: yanbuw1911
+ * @Date: 2020-12-07 14:19:34
+ * @LastEditTime: 2021-01-08 14:26:43
+ * @LastEditors: yanbuw1911
+ * @Description:
+ * @FilePath: \client\src\components\SV\SvGrid\grid.vue
+-->
+<template>
+  <vxe-grid ref="xGrid" v-bind="attrs" v-on="events">
+    <template #toolbar>
+      <slot name="toolbar">
+        <div style="display: flex; margin-bottom: 2px;">
+          <div class="toolbar-item">
+            {{ title }}
+          </div>
+          <a-button shape="circle" :title="$t('refresh')" :size="btnSize" v-if="refreshBtn" @click="_handleRefreshGrid">
+            <a-icon type="reload" />
+          </a-button>
+          <div class="toolbar-operate-btn" v-if="isEditColumn && allowEdit && (allowAdd || allowDel)">
+            <a-button shape="circle" :title="$t('undo')" :size="btnSize" @click="$refs.xGrid.revertData()">
+              <a-icon type="undo" />
+            </a-button>
+            <a-button
+              type="primary"
+              shape="circle"
+              :title="$t('add')"
+              :size="btnSize"
+              @click="_handleAddItem"
+              v-if="allowAdd"
+            >
+              <a-icon type="plus" />
+            </a-button>
+            <a-button
+              type="danger"
+              shape="circle"
+              :title="$t('del')"
+              :size="btnSize"
+              :disabled="!currRow"
+              @click="_handleDelItem"
+              v-if="allowDel"
+            >
+              <a-icon type="delete" />
+            </a-button>
+            <a-popconfirm
+              :title="$t('gridOptConfirmText')"
+              :ok-text="$t('confirm')"
+              :cancel-text="$t('cancel')"
+              placement="rightTop"
+              :disabled="popconfirmDisabled"
+              @confirm="_submitOptData"
+              @cancel="popconfirmDisabled = true"
+            >
+              <a-button
+                shape="circle"
+                :title="$t('save')"
+                :size="btnSize"
+                :loading="saveBtnLoading"
+                :disabled="!handleSaveOpt"
+                @click="_handleSaveData"
+              >
+                <a-icon v-show="!saveBtnLoading" type="save" />
+              </a-button>
+            </a-popconfirm>
+          </div>
+          <slot name="svgridToolbar"></slot>
+          <div class="toolbar-item" style="margin-left: auto; user-select: none;">
+            {{ `${$refs.xGrid ? $refs.xGrid.getTableData().visibleData.length : '0'}${$t('record')}` }}
+            <a-button shape="circle" :title="$t('zoom')" :size="btnSize" v-if="zoomBtn" @click="_zoom">
+              <a-icon type="zoom-out" v-if="isMaxSize" />
+              <a-icon type="zoom-in" v-else />
+            </a-button>
+            <vxe-pulldown ref="xDown">
+              <template v-slot>
+                <a-button
+                  @click="showPanel"
+                  shape="circle"
+                  style="margin-left: 2px;"
+                  :title="$t('displayedCol')"
+                  :size="btnSize"
+                  v-if="colSetBtn || isManyColumn"
+                >
+                  <a-icon type="menu" />
+                </a-button>
+              </template>
+              <template v-slot:dropdown>
+                <div class="visible-columns">
+                  <a-checkbox
+                    v-model="col.visible"
+                    v-for="(col, idx) in getTableColumn().fullColumn"
+                    :key="idx"
+                    @change="refreshColumn"
+                  >
+                    {{ col.title }}
+                  </a-checkbox>
+                </div>
+              </template>
+            </vxe-pulldown>
+          </div>
+        </div>
+      </slot>
+    </template>
+    <template v-for="slotname in colSlot" #[slotname]="{ row, column }">
+      <slot :name="slotname" v-bind="{ row, column }"></slot>
+    </template>
+  </vxe-grid>
+</template>
+
+<script>
+import XEUtils from 'xe-utils'
+import { gridProps } from './props'
+
+export default {
+  props: {
+    title: {
+      type: null,
+      default: null
+    },
+    btnSize: {
+      type: String,
+      default: 'default',
+      validator: function (value) {
+        return ['large', 'default', 'small'].includes(value)
+      }
+    },
+    refreshBtn: {
+      type: Boolean,
+      default: () => true
+    },
+    zoomBtn: {
+      type: Boolean,
+      default: () => true
+    },
+    colSetBtn: {
+      type: Boolean,
+      default: () => false
+    },
+    allowEdit: {
+      type: Boolean,
+      default: () => true
+    },
+    allowAdd: {
+      type: Boolean,
+      default: () => true
+    },
+    allowDel: {
+      type: Boolean,
+      default: () => true
+    },
+    addItem: { type: [Object, Function], default: () => ({}) },
+    operatorFields: { type: Object, default: () => ({}) },
+    handleInsert: { type: Function, default: null },
+    handleUpdate: { type: [Object, Function], default: null },
+    handleSaveOpt: {
+      type: Function,
+      default: null
+    },
+    ...gridProps
+  },
+  data () {
+    return {
+      isMaxSize: false,
+      currRow: null,
+      popconfirmDisabled: true,
+      saveBtnLoading: false,
+      originData: null,
+      isManyColumn: false
+    }
+  },
+  watch: {
+    data () {
+      this.originData = this.data.map(e => XEUtils.clone(e, true))
+    }
+  },
+  computed: {
+    attrs () {
+      const { data, wrappedColumns, loading, editRules, rowClassName, align } = this
+      return {
+        class: this.class,
+        loading,
+        columns: wrappedColumns,
+        data,
+        editRules,
+        rowClassName,
+        align,
+        ...this.defaultAttrs
+      }
+    },
+    defaultAttrs () {
+      const { border, height, mergedEditConfig, mergedMouseConfig, mergedKeyboardConfig } = this
+      const defaultAttrs = {
+        id: 'svGrid',
+        height: height === null ? null : height || 500,
+        rowId: 'id',
+        stripe: true,
+        round: true,
+        autoResize: true,
+        syncResize: true,
+        highlightHoverRow: true,
+        highlightCurrentRow: true,
+        border: border || true,
+        resizable: true,
+        showHeaderOverflow: true,
+        showOverflow: true,
+        keepSource: true,
+        editConfig: mergedEditConfig,
+        mouseConfig: mergedMouseConfig,
+        keyboardConfig: mergedKeyboardConfig
+      }
+      return defaultAttrs
+    },
+    mergedEditConfig () {
+      return Object.assign({ trigger: 'dblclick', mode: 'cell', showStatus: true }, this.editConfig)
+    },
+    mergedMouseConfig () {
+      return Object.assign({ selected: true }, this.mouseConfig)
+    },
+    mergedKeyboardConfig () {
+      return Object.assign(
+        { isArrow: true, isDel: true, isEnter: true, isTab: true, isEdit: true },
+        this.keyboardConfig
+      )
+    },
+    wrappedColumns () {
+      if (this.columns) {
+        this.columns.forEach((col, idx) => {
+          // 如果有下拉框则添加下拉选项到列过滤器
+          if (col.editRender && col.editRender.name === '$select') {
+            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+            this.columns[idx].filters = col.editRender.options
+          }
+
+          if (col.type && col.type === 'number') {
+            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+            this.columns[idx].align = 'right'
+          }
+        })
+      }
+      return this.columns
+    },
+    events () {
+      const evt = {
+        'current-change': this._currentChange,
+        'cell-dblclick': this._cellDblClick
+      }
+      return evt
+    },
+    // 处理 slot
+    colSlot () {
+      const slots = []
+      this.columns &&
+        this.columns.forEach(col => {
+          if (col.slots) {
+            const { header, footer, content, filter, edit } = col.slots
+            col.slots.default && slots.push(col.slots.default)
+            header && slots.push(header)
+            footer && slots.push(footer)
+            content && slots.push(content)
+            filter && slots.push(filter)
+            edit && slots.push(edit)
+          }
+        })
+
+      return slots
+    },
+    isEditColumn () {
+      return this.wrappedColumns && this.wrappedColumns.findIndex(col => !!col.editRender) > -1
+    }
+  },
+  methods: {
+    showPanel () {
+      this.$refs.xDown.showPanel()
+    },
+    getTableData () {
+      return this.$refs.xGrid.getTableData()
+    },
+    getColumns () {
+      return this.$refs.xGrid.getColumns()
+    },
+    getTableColumn () {
+      return this.$refs.xGrid.getTableColumn()
+    },
+    refreshColumn () {
+      this.$refs.xGrid.refreshColumn()
+    },
+    setCurrentRow (row) {
+      this.$refs.xGrid.setCurrentRow(row)
+    },
+    setActiveCell (row, field) {
+      this.$refs.xGrid.setActiveCell(row, field)
+    },
+    /**
+     * @description: 获取格式化的修改数据，用于直接跟后台对接
+     * @return false | Object
+     */
+    getGridOpt () {
+      const {
+        $store: {
+          state: {
+            user: {
+              info: { con_id: usrid }
+            }
+          }
+        },
+        $refs: { xGrid },
+        operatorFields: { creator, modifier },
+        originData,
+        handleInsert, // 处理新增数据的回调，用于处理新增数据的结构
+        handleUpdate // 处理修改数据的回调，用于处理新增数据的结构
+      } = this
+
+      if (!originData) return false
+
+      const { getInsertRecords, getRemoveRecords, getUpdateRecords } = xGrid
+      const insertRecords = getInsertRecords()
+      const removeRecords = getRemoveRecords()
+      const updateRecords = getUpdateRecords()
+
+      const fmtInsertRecords = {
+        A: insertRecords.map(insertItem => {
+          if (typeof handleInsert === 'function') {
+            return handleInsert(insertItem)
+          }
+          const o = {}
+          for (const key in insertItem) {
+            if (Array.isArray(insertItem[key])) {
+              o[key] = insertItem[key].join(',')
+            } else {
+              o[key] = insertItem[key]
+            }
+          }
+          creator && (o[creator] = usrid)
+          modifier && (o[modifier] = usrid)
+          delete o.id
+          return o
+        })
+      }
+
+      const fmtRmRecords = { D: { id: removeRecords.map(e => e.id) } }
+
+      const fmtUpdateRecords = { U: [] }
+      const columns = Array.from(xGrid.getTableColumn().collectColumn).map(e => e.property)
+      updateRecords.forEach(updateRecord => {
+        let updateFields = {}
+        if (typeof handleUpdate === 'function') {
+          updateFields = handleUpdate(updateRecord, columns, originData)
+        } else {
+          const originRecord = originData.find(e => e.id === updateRecord.id)
+          columns.forEach(key => {
+            if (Array.isArray(updateRecord[key])) {
+              if (updateRecord[key].toString() !== originRecord[key].toString()) {
+                updateFields[key] = updateRecord[key].join(',')
+              }
+            } else {
+              if (updateRecord[key] !== originRecord[key]) {
+                updateFields[key] = updateRecord[key]
+              }
+            }
+          })
+          if (typeof handleUpdate === 'object' && !Array.isArray(handleUpdate)) {
+            updateFields = Object.assign(updateFields, handleUpdate)
+          }
+        }
+        modifier && (updateFields[modifier] = usrid)
+        fmtUpdateRecords.U.push({ [updateRecord.id]: updateFields })
+      })
+
+      const optData = Object.assign({}, fmtInsertRecords, fmtRmRecords, fmtUpdateRecords)
+      if (!insertRecords.length && !removeRecords.length && !updateRecords.length) {
+        return false
+      }
+      return optData
+    },
+    _zoom () {
+      this.isMaxSize = !this.isMaxSize
+      this.$refs.xGrid.zoom()
+    },
+    /**
+     * @description: 刷新
+     */
+    _handleRefreshGrid () {
+      this.$emit('refresh', this.params)
+    },
+    /**
+     * @description: 新增一条有默认值的记录
+     */
+    _handleAddItem () {
+      const {
+        $refs: { xGrid },
+        addItem: { defaultValue, focusField }
+      } = this
+
+      xGrid.insert(defaultValue || {}).then(({ row }) => {
+        focusField && xGrid.setActiveCell(row, focusField)
+      })
+    },
+    /**
+     * @description: 删除一条记录
+     */
+    _handleDelItem () {
+      const {
+        $refs: { xGrid },
+        currRow
+      } = this
+      xGrid.remove(currRow)
+    },
+    _currentChange ({ row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event }) {
+      this.currRow = row
+      this.$emit('current-change', { row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event })
+    },
+    _cellDblClick ({ row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event }) {
+      this.$emit('cell-dblclick', { row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event })
+    },
+    async _handleSaveData () {
+      this.popconfirmDisabled = true
+
+      const errMap = await this.$refs.xGrid.fullValidate().catch(errMap => errMap)
+      if (errMap) {
+        this.$message.error(this.$t('dataFmtErr'))
+        return
+      }
+      console.log(this.getGridOpt(), 'table modification')
+      if (!this.getGridOpt()) return
+      this.popconfirmDisabled = false
+    },
+    async _submitOptData () {
+      this.handleSaveOpt &&
+        (await this.handleSaveOpt(this.getGridOpt())
+          .then(res => {
+            const o = {}
+            if (res.result) {
+              this.currRow = null
+              this._handleRefreshGrid()
+              o.message = this.$t('saveSucc')
+              o.icon = <a-icon type='smile' style='color: #108ee9' />
+            } else {
+              o.message = this.$t('saveFail')
+              o.icon = <a-icon type='frown' style='color: #108ee9' />
+            }
+            this.$notification.open(o)
+          })
+          .catch(error => {
+            this.$notification.error({
+              message: error.response.status,
+              description: error.response.data.message,
+              icon: <a-icon type='frown' style='color: #108ee9' />
+            })
+          }))
+    }
+  },
+  updated () {
+    // 超过 8 个列就显示展示列按钮
+    this.isManyColumn = this.getTableColumn().fullColumn.length > 8
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.toolbar-item {
+  font-size: 16px;
+  margin: 2px 6px;
+  letter-spacing: 3px;
+  line-height: 30px;
+}
+
+.toolbar-operate-btn {
+  margin: 0 3px;
+  display: flex;
+
+  .ant-btn {
+    margin-right: 3px;
+  }
+}
+
+.visible-columns {
+  display: flex;
+  width: 110px;
+  flex-direction: column-reverse;
+  position: absolute;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.637);
+
+  .ant-checkbox-wrapper {
+    margin: 0;
+
+    > :not(.ant-checkbox)/deep/ {
+      padding: 0 !important;
+    }
+  }
+}
+</style>
