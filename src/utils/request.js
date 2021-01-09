@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2020-12-31 13:02:25
+ * @LastEditTime: 2021-01-09 13:46:32
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\utils\request.js
@@ -14,7 +14,7 @@ import { VueAxios } from './axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 const options = {
-  baseURL: 'http://www.sverp.com/webApi',
+  baseURL: process.env.VUE_APP_API_BASE_URL,
   timeout: 15000
 }
 
