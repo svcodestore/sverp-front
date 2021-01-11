@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:33
- * @LastEditTime: 2021-01-06 11:19:24
+ * @LastEditTime: 2021-01-11 16:11:15
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\locales\lang\zh-TW\index.js
@@ -97,6 +97,9 @@ const locale = {
   'menu.dashboard': '儀錶盤',
   SV: '斯達文星',
   login: '登錄',
+  removed: '已移除',
+  added: '已添加',
+  addToQN: '添加到快捷導航',
   ...menuNodes,
   ...svGrid,
   ...sys

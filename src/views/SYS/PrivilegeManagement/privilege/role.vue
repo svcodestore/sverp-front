@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 13:28:33
- * @LastEditTime: 2020-12-15 13:29:58
+ * @LastEditTime: 2021-01-11 13:06:25
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\views\SYS\PrivilegeManagement\privilege\role.vue
@@ -26,6 +26,10 @@ export default {
             role_is_del: 1
           },
           focusField: 'role_code'
+        },
+        operatorFields: {
+          creator: 'role_creator',
+          modifier: 'role_modifier'
         },
         editConfig: {
           activeMethod: this.activeCellMethod
@@ -76,12 +80,12 @@ export default {
         ]
       },
       roleGridEvents: {
-        refresh: this.init
+        refresh: this.getData
       }
     }
   },
   methods: {
-    async init () {
+    async getData () {
       this.roleGridOptions.loading = true
       await getRoles()
         .then(res => {
@@ -100,7 +104,7 @@ export default {
     }
   },
   mounted () {
-    this.init()
+    this.getData()
   }
 }
 </script>

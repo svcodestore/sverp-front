@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-09 15:16:05
- * @LastEditTime: 2020-12-17 14:33:06
+ * @LastEditTime: 2021-01-11 13:50:03
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\views\SYS\PrivilegeManagement\setting\roleOpet.vue
@@ -69,6 +69,9 @@ export default {
       gridOptions: {
         loading: false,
         data: [],
+        addItem: {
+          focusField: 'map_ro_rid'
+        },
         handleSaveOpt: saveRoleOpetMapOpt,
         editRules: {
           map_ro_rid: [

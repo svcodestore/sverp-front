@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-16 15:04:35
- * @LastEditTime: 2020-12-18 15:37:03
+ * @LastEditTime: 2021-01-11 13:42:21
  * @LastEditors: yanbuw1911
  * @Description: 用户权限设定
  * @FilePath: \client\src\views\SYS\PrivilegeManagement\setting\usrPrivilege.vue
@@ -137,7 +137,8 @@
       <a-descriptions-item label="接口黑名单">
         <template v-for="b in blackApi">
           <template v-if="!!b">
-            <a-badge color="black" :key="b" :text="b" />
+            <a-badge color="gray" :key="b" :text="b" />
+            <br :key="b" />
           </template>
         </template>
       </a-descriptions-item>

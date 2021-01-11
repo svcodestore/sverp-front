@@ -97,6 +97,9 @@ const locale = {
   'menu.dashboard': '仪表盘',
   SV: '斯达文星',
   login: '登录',
+  removed: '已移除',
+  added: '已添加',
+  addToQN: '添加到快捷导航',
   ...menuNodes,
   ...svGrid,
   ...sys

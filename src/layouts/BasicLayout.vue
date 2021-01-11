@@ -14,7 +14,7 @@
     <template v-slot:rightContentRender>
       <right-content :top-menu="settings.layout === 'topmenu'" :is-mobile="isMobile" :theme="settings.theme" />
     </template>
-    <div v-show="showFavPagesBtn" class="favorite" @click="handleFavoritePage" title="添加到常用界面">
+    <div v-show="showFavPagesBtn" class="favorite" @click="handleFavoritePage" :title="$t('addToQN')">
       <svg
         v-if="isFavoritePage"
         t="1609228892668"
@@ -226,7 +226,7 @@ export default {
           .then(res => {
             if (res.result) {
               pages = this.favPages.filter(item => item.ifp_menu_id !== menuid)
-              this.$message.success('已移除')
+              this.$message.success(this.$t('removed'))
             }
           })
           .catch(() => {})
@@ -235,7 +235,7 @@ export default {
           .then(res => {
             if (res.result) {
               pages = [...this.favPages, { ifp_menu_id: menuid, ifp_user_id: usrid }]
-              this.$message.success('已添加')
+              this.$message.success(this.$t('added'))
             }
           })
           .catch(() => {})

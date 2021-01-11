@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-09 15:16:29
- * @LastEditTime: 2020-12-16 11:13:31
+ * @LastEditTime: 2021-01-11 13:51:23
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\views\SYS\PrivilegeManagement\setting\groupOpet.vue
@@ -69,6 +69,7 @@ export default {
       gridOptions: {
         loading: false,
         data: [],
+        addItem: { focusField: 'map_do_did' },
         handleSaveOpt: saveGroupOpetMapOpt,
         editRules: {
           map_do_oid: [

@@ -1,9 +1,9 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-01-08 14:26:43
+ * @LastEditTime: 2021-01-11 16:06:37
  * @LastEditors: yanbuw1911
- * @Description:
+ * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: \client\src\components\SV\SvGrid\grid.vue
 -->
 <template>
@@ -11,13 +11,10 @@
     <template #toolbar>
       <slot name="toolbar">
         <div style="display: flex; margin-bottom: 2px;">
-          <div class="toolbar-item">
-            {{ title }}
-          </div>
           <a-button shape="circle" :title="$t('refresh')" :size="btnSize" v-if="refreshBtn" @click="_handleRefreshGrid">
             <a-icon type="reload" />
           </a-button>
-          <div class="toolbar-operate-btn" v-if="isEditColumn && allowEdit && (allowAdd || allowDel)">
+          <div class="toolbar-operate-btn" v-if="isEditable && isAllowEdit && (isAllowAdd || isAllowDel)">
             <a-button shape="circle" :title="$t('undo')" :size="btnSize" @click="$refs.xGrid.revertData()">
               <a-icon type="undo" />
             </a-button>
@@ -27,7 +24,7 @@
               :title="$t('add')"
               :size="btnSize"
               @click="_handleAddItem"
-              v-if="allowAdd"
+              v-if="isAllowAdd"
             >
               <a-icon type="plus" />
             </a-button>
@@ -38,7 +35,7 @@
               :size="btnSize"
               :disabled="!currRow"
               @click="_handleDelItem"
-              v-if="allowDel"
+              v-if="isAllowDel"
             >
               <a-icon type="delete" />
             </a-button>
@@ -63,9 +60,18 @@
               </a-button>
             </a-popconfirm>
           </div>
+          <div class="toolbar-item">
+            {{ title }}
+          </div>
           <slot name="svgridToolbar"></slot>
-          <div class="toolbar-item" style="margin-left: auto; user-select: none;">
-            {{ `${$refs.xGrid ? $refs.xGrid.getTableData().visibleData.length : '0'}${$t('record')}` }}
+          <div class="toolbar-item toolbar-item-right">
+            <a-input
+              class="svgrid-search-bar"
+              v-if="isShowSearch"
+              placeholder="搜索表格内容..."
+              v-model.trim="filterStr"
+            />
+            <span>{{ `${$refs.xGrid ? $refs.xGrid.getTableData().visibleData.length : '0'}${$t('record')}` }}</span>
             <a-button shape="circle" :title="$t('zoom')" :size="btnSize" v-if="zoomBtn" @click="_zoom">
               <a-icon type="zoom-out" v-if="isMaxSize" />
               <a-icon type="zoom-in" v-else />
@@ -108,53 +114,11 @@
 
 <script>
 import XEUtils from 'xe-utils'
-import { gridProps } from './props'
+import { gridProps, svGridProps } from './props'
 
 export default {
   props: {
-    title: {
-      type: null,
-      default: null
-    },
-    btnSize: {
-      type: String,
-      default: 'default',
-      validator: function (value) {
-        return ['large', 'default', 'small'].includes(value)
-      }
-    },
-    refreshBtn: {
-      type: Boolean,
-      default: () => true
-    },
-    zoomBtn: {
-      type: Boolean,
-      default: () => true
-    },
-    colSetBtn: {
-      type: Boolean,
-      default: () => false
-    },
-    allowEdit: {
-      type: Boolean,
-      default: () => true
-    },
-    allowAdd: {
-      type: Boolean,
-      default: () => true
-    },
-    allowDel: {
-      type: Boolean,
-      default: () => true
-    },
-    addItem: { type: [Object, Function], default: () => ({}) },
-    operatorFields: { type: Object, default: () => ({}) },
-    handleInsert: { type: Function, default: null },
-    handleUpdate: { type: [Object, Function], default: null },
-    handleSaveOpt: {
-      type: Function,
-      default: null
-    },
+    ...svGridProps,
     ...gridProps
   },
   data () {
@@ -164,28 +128,50 @@ export default {
       popconfirmDisabled: true,
       saveBtnLoading: false,
       originData: null,
-      isManyColumn: false
+      isManyColumn: false,
+      filterStr: ''
     }
   },
   watch: {
-    data () {
-      this.originData = this.data.map(e => XEUtils.clone(e, true))
+    data (now) {
+      // 记录表格初始数据
+      this.originData = now.map(e => XEUtils.clone(e, true))
     }
   },
   computed: {
+    // 表格属性
     attrs () {
-      const { data, wrappedColumns, loading, editRules, rowClassName, align } = this
+      const { filteredData, wrappedColumns, loading, editRules, rowClassName, align } = this
+
       return {
         class: this.class,
         loading,
         columns: wrappedColumns,
-        data,
+        data: filteredData,
         editRules,
         rowClassName,
         align,
         ...this.defaultAttrs
       }
     },
+    // 过滤后的数据
+    filteredData () {
+      const { data, filterStr, columns } = this
+
+      if (!filterStr) return data
+
+      return data.filter(item =>
+        columns
+          .map(col => col.field)
+          .some(
+            key =>
+              XEUtils.toString(item[key])
+                .toLowerCase()
+                .indexOf(filterStr) > -1
+          )
+      )
+    },
+    // 默认表格属性
     defaultAttrs () {
       const { border, height, mergedEditConfig, mergedMouseConfig, mergedKeyboardConfig } = this
       const defaultAttrs = {
@@ -207,6 +193,7 @@ export default {
         mouseConfig: mergedMouseConfig,
         keyboardConfig: mergedKeyboardConfig
       }
+
       return defaultAttrs
     },
     mergedEditConfig () {
@@ -221,6 +208,7 @@ export default {
         this.keyboardConfig
       )
     },
+    // 包装父组件传过来的列属性配置
     wrappedColumns () {
       if (this.columns) {
         this.columns.forEach((col, idx) => {
@@ -230,12 +218,14 @@ export default {
             this.columns[idx].filters = col.editRender.options
           }
 
+          // 数字列，右对齐
           if (col.type && col.type === 'number') {
             // eslint-disable-next-line vue/no-side-effects-in-computed-properties
             this.columns[idx].align = 'right'
           }
         })
       }
+
       return this.columns
     },
     events () {
@@ -243,6 +233,7 @@ export default {
         'current-change': this._currentChange,
         'cell-dblclick': this._cellDblClick
       }
+
       return evt
     },
     // 处理 slot
@@ -263,29 +254,57 @@ export default {
 
       return slots
     },
-    isEditColumn () {
+    // 是否为可编辑表格
+    isEditable () {
       return this.wrappedColumns && this.wrappedColumns.findIndex(col => !!col.editRender) > -1
+    },
+    isShowSearch () {
+      return this.searchBar || this.data.length > 7
     }
   },
   methods: {
+    /**
+     * @description: 显示动态列设置下拉框
+     */
     showPanel () {
       this.$refs.xDown.showPanel()
     },
+    /**
+     * @description: 获取表格数据
+     */
     getTableData () {
       return this.$refs.xGrid.getTableData()
     },
+    /**
+     * @description: 获取表格可显示的列
+     */
     getColumns () {
       return this.$refs.xGrid.getColumns()
     },
+    /**
+     * @description: 获取表格的列
+     */
     getTableColumn () {
       return this.$refs.xGrid.getTableColumn()
     },
+    /**
+     * @description: 刷新列，用于列的动态展示
+     */
     refreshColumn () {
       this.$refs.xGrid.refreshColumn()
     },
+    /**
+     * @description: 设置当前行
+     * @param Object row 哪一行数据
+     */
     setCurrentRow (row) {
       this.$refs.xGrid.setCurrentRow(row)
     },
+    /**
+     * @description: 编辑模式下，聚焦单元格
+     * @param Object row 哪一行数据
+     * @param String field 哪个字段
+     */
     setActiveCell (row, field) {
       this.$refs.xGrid.setActiveCell(row, field)
     },
@@ -316,11 +335,13 @@ export default {
       const removeRecords = getRemoveRecords()
       const updateRecords = getUpdateRecords()
 
+      // 收集表格新增数据并格式化
       const fmtInsertRecords = {
         A: insertRecords.map(insertItem => {
           if (typeof handleInsert === 'function') {
             return handleInsert(insertItem)
           }
+
           const o = {}
           for (const key in insertItem) {
             if (Array.isArray(insertItem[key])) {
@@ -329,15 +350,19 @@ export default {
               o[key] = insertItem[key]
             }
           }
+          // 自动设置创建者，修改者为当前登录账号
           creator && (o[creator] = usrid)
           modifier && (o[modifier] = usrid)
           delete o.id
+
           return o
         })
       }
 
+      // 收集表格删除数据并格式化
       const fmtRmRecords = { D: { id: removeRecords.map(e => e.id) } }
 
+      // 获取表格修改数据并格式化
       const fmtUpdateRecords = { U: [] }
       const columns = Array.from(xGrid.getTableColumn().collectColumn).map(e => e.property)
       updateRecords.forEach(updateRecord => {
@@ -347,6 +372,7 @@ export default {
         } else {
           const originRecord = originData.find(e => e.id === updateRecord.id)
           columns.forEach(key => {
+            // 处理下拉框多选
             if (Array.isArray(updateRecord[key])) {
               if (updateRecord[key].toString() !== originRecord[key].toString()) {
                 updateFields[key] = updateRecord[key].join(',')
@@ -357,10 +383,12 @@ export default {
               }
             }
           })
+          // 处理父组件传过来的 handleUpdate，如果是对象则合并
           if (typeof handleUpdate === 'object' && !Array.isArray(handleUpdate)) {
             updateFields = Object.assign(updateFields, handleUpdate)
           }
         }
+        // 自动设置修改者为当前登录账号
         modifier && (updateFields[modifier] = usrid)
         fmtUpdateRecords.U.push({ [updateRecord.id]: updateFields })
       })
@@ -369,8 +397,12 @@ export default {
       if (!insertRecords.length && !removeRecords.length && !updateRecords.length) {
         return false
       }
+
       return optData
     },
+    /**
+     * @description: 表格全屏转换
+     */
     _zoom () {
       this.isMaxSize = !this.isMaxSize
       this.$refs.xGrid.zoom()
@@ -404,13 +436,22 @@ export default {
       } = this
       xGrid.remove(currRow)
     },
+    /**
+     * @description: 表格当前行发生变化事件
+     */
     _currentChange ({ row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event }) {
       this.currRow = row
       this.$emit('current-change', { row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event })
     },
+    /**
+     * @description: 表格单元格双击事件
+     */
     _cellDblClick ({ row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event }) {
       this.$emit('cell-dblclick', { row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event })
     },
+    /**
+     * @description: 校验表格数据
+     */
     async _handleSaveData () {
       this.popconfirmDisabled = true
 
@@ -423,6 +464,9 @@ export default {
       if (!this.getGridOpt()) return
       this.popconfirmDisabled = false
     },
+    /**
+     * @description: 提交表格修改数据给后台
+     */
     async _submitOptData () {
       this.handleSaveOpt &&
         (await this.handleSaveOpt(this.getGridOpt())
@@ -456,36 +500,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.toolbar-item {
-  font-size: 16px;
-  margin: 2px 6px;
-  letter-spacing: 3px;
-  line-height: 30px;
-}
-
-.toolbar-operate-btn {
-  margin: 0 3px;
-  display: flex;
-
-  .ant-btn {
-    margin-right: 3px;
-  }
-}
-
-.visible-columns {
-  display: flex;
-  width: 110px;
-  flex-direction: column-reverse;
-  position: absolute;
-  right: 0;
-  background-color: rgba(255, 255, 255, 0.637);
-
-  .ant-checkbox-wrapper {
-    margin: 0;
-
-    > :not(.ant-checkbox)/deep/ {
-      padding: 0 !important;
-    }
-  }
-}
+@import './grid';
 </style>

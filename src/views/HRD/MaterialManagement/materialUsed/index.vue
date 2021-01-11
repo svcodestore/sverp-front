@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-07 11:11:38
- * @LastEditTime: 2021-01-11 08:17:34
+ * @LastEditTime: 2021-01-11 15:40:15
  * @LastEditors: yanbuw1911
  * @Description: 商品用料
  * @FilePath: \client\src\views\HRD\MaterialManagement\materialUsed\index.vue
@@ -30,7 +30,7 @@ export default {
         zoomBtn: false,
         loading: false,
         data: [],
-        allowDel: false,
+        isAllowDel: false,
         addItem: {
           focusField: 'hmu_material_name'
         },

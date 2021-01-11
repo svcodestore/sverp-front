@@ -48,7 +48,8 @@ export default {
             editRender: { name: 'input' },
             sortable: true,
             filters: [],
-            fixed: 'left'
+            fixed: 'left',
+            width: 110
           },
           {
             field: 'mnu_parent',
@@ -58,7 +59,8 @@ export default {
             },
             sortable: true,
             filters: [],
-            fixed: 'left'
+            fixed: 'left',
+            width: 130
           },
           {
             field: 'mnu_name',
@@ -71,13 +73,11 @@ export default {
           {
             field: 'mnu_alias',
             title: '别名',
-            width: 120,
             editRender: { name: 'input' }
           },
           {
             field: 'mnu_seq',
             title: '排序',
-            width: 90,
             editRender: { name: 'input' },
             sortable: true
           },
@@ -90,8 +90,7 @@ export default {
           {
             field: 'mnu_redirect',
             title: '重定向',
-            editRender: { name: 'input' },
-            width: 160
+            editRender: { name: 'input' }
           },
           {
             field: 'mnu_component',
@@ -102,7 +101,8 @@ export default {
           {
             field: 'mnu_icon',
             title: '图标',
-            editRender: { name: 'input' }
+            editRender: { name: 'input' },
+            width: 90
           },
           {
             field: 'mnu_status',

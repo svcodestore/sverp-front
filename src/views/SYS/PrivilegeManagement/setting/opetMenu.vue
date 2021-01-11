@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-09 15:15:33
- * @LastEditTime: 2020-12-17 14:26:08
+ * @LastEditTime: 2021-01-11 13:49:01
  * @LastEditors: yanbuw1911
  * @Description: 权限映射菜单设定界面
  * @FilePath: \client\src\views\SYS\PrivilegeManagement\setting\opetMenu.vue
@@ -64,6 +64,12 @@ export default {
       svGridOptions: {
         loading: false,
         data: [],
+        addItem: {
+          defaultValue: {
+            som_status: 1
+          },
+          focusField: 'som_assoc_menu'
+        },
         handleSaveOpt: saveOpetMenuMapOpt,
         editRules: {
           som_opet_name: [

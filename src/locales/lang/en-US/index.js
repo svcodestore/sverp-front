@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:28
- * @LastEditTime: 2021-01-07 10:29:46
+ * @LastEditTime: 2021-01-11 16:19:56
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\locales\lang\en-US\index.js
@@ -124,6 +124,9 @@ const locale = {
   'app.setting.production.hint': 'Setting panel shows in development environment only, please manually modify',
   SV: 'Star Vincci',
   login: 'Login',
+  removed: 'Removed',
+  added: 'Added',
+  addToQN: 'Add to quick navigation',
   ...menuNodes,
   ...svGrid,
   ...sys
