@@ -9,8 +9,8 @@
 <template>
   <div>
     <a-tabs defaultActiveKey="1" tabPosition="right">
-      <a-tab-pane key="1" tab="入库"></a-tab-pane>
-      <a-tab-pane key="2" tab="出库">
+      <a-tab-pane key="1" tab="入库管理"></a-tab-pane>
+      <a-tab-pane key="2" tab="出库管理">
         <outbound></outbound>
       </a-tab-pane>
       <a-tab-pane key="3" tab="领料申请"></a-tab-pane>

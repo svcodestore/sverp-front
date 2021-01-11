@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-07 11:11:38
- * @LastEditTime: 2021-01-07 15:52:33
+ * @LastEditTime: 2021-01-11 08:17:34
  * @LastEditors: yanbuw1911
  * @Description: 商品用料
  * @FilePath: \client\src\views\HRD\MaterialManagement\materialUsed\index.vue
@@ -42,13 +42,13 @@ export default {
             width: 50
           },
           {
-            title: '種類名稱',
+            title: '种类名称',
             field: 'hmu_material_name',
             editRender: { name: 'input' }
           },
           {
             type: 'number',
-            title: '種類編碼',
+            title: '种类编码',
             field: 'hmu_material_code',
             editRender: { name: 'input' }
           }
@@ -74,23 +74,23 @@ export default {
           },
           {
             type: 'number',
-            title: '種類編碼',
+            title: '种类编码',
             field: 'hmu_material_code',
             editRender: { name: 'input' }
           },
           {
-            title: '種類名稱',
+            title: '种类名称',
             field: 'hmu_material_name',
             editRender: { name: 'input' }
           },
           {
             type: 'number',
-            title: '規格型號',
+            title: '规格型号',
             field: 'hmu_material_model',
             editRender: { name: 'input' }
           },
           {
-            title: '計量單位',
+            title: '计量单位',
             field: 'hmu_material_unit',
             editRender: { name: 'input' }
           }

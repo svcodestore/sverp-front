@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-08 11:08:16
- * @LastEditTime: 2021-01-08 16:09:08
+ * @LastEditTime: 2021-01-11 08:08:24
  * @LastEditors: yanbuw1911
  * @Description: 出库管理
  * @FilePath: \client\src\views\HRD\MaterialManagement\storehouse\outbound.vue
@@ -22,7 +22,7 @@
       :title="modalTitle"
       :closable="modalClosable"
       v-model="outboundVisible"
-      :width="1500"
+      :width="modalWidth"
       :keyboard="false"
       :maskClosable="false"
       :destroyOnClose="true"
@@ -80,6 +80,7 @@ export default {
       modalClosable: true,
       outboundVisible: false,
       isPrinting: false,
+      browserWidth: document.body.clientWidth,
       gridOptions: {
         class: 'outbound-svgrid',
         height: 700,
@@ -162,6 +163,18 @@ export default {
           }
         ]
       }
+    }
+  },
+  watch: {
+    browserWidth (now) {
+      console.log(now)
+    }
+  },
+  computed: {
+    modalWidth () {
+      const width = document.body.clientWidth > 1600 ? 1500 : document.body.clientWidth - 100
+
+      return width
     }
   },
   methods: {
