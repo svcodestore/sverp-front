@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-01-11 16:06:37
+ * @LastEditTime: 2021-01-12 11:17:49
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: \client\src\components\SV\SvGrid\grid.vue
@@ -68,7 +68,7 @@
             <a-input
               class="svgrid-search-bar"
               v-if="isShowSearch"
-              placeholder="搜索表格内容..."
+              :placeholder="$t('svgrid.toolbar.search')"
               v-model.trim="filterStr"
             />
             <span>{{ `${$refs.xGrid ? $refs.xGrid.getTableData().visibleData.length : '0'}${$t('record')}` }}</span>

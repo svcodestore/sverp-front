@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:28
- * @LastEditTime: 2021-01-11 16:19:56
+ * @LastEditTime: 2021-01-12 13:11:13
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\locales\lang\en-US\index.js
@@ -10,6 +10,7 @@ import antdEnUS from 'ant-design-vue/es/locale-provider/en_US'
 import momentEU from 'moment/locale/eu'
 
 import sys from './SYS'
+import home from './home'
 
 const components = {
   antLocale: antdEnUS,
@@ -51,7 +52,10 @@ const menuNodes = {
   PROD_AUTOSCHD: 'Auto Schedule',
   SYS_PRVG: 'Privilege Management',
   TPM_NOTIFIER: 'Notifier',
-  HRD_MATERIAL_MANAGE: 'Material Management'
+  HRD_MATERIAL_MANAGE: 'Material Management',
+  PERSONAL_CENTER: 'Personal Center',
+  PERSONAL_SETTING: 'Personal Setting',
+  'svgrid.toolbar.search': 'input a keyword to search'
 }
 
 const svGrid = {
@@ -122,6 +126,8 @@ const locale = {
   'app.setting.loading': 'Loading theme',
   'app.setting.copyinfo': 'copy success，please replace defaultSettings in src/models/setting.js',
   'app.setting.production.hint': 'Setting panel shows in development environment only, please manually modify',
+  'navBar.lang': 'Choose Language',
+  'navBar.usageManual': 'Manual',
   SV: 'Star Vincci',
   login: 'Login',
   removed: 'Removed',
@@ -129,6 +135,7 @@ const locale = {
   addToQN: 'Add to quick navigation',
   ...menuNodes,
   ...svGrid,
+  ...home,
   ...sys
 }
 

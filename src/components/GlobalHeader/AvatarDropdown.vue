@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2020-11-27 13:00:56
+ * @LastEditTime: 2021-01-12 14:44:51
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\components\GlobalHeader\AvatarDropdown.vue
@@ -9,23 +9,27 @@
 <template>
   <a-dropdown v-if="currentUser && currentUser.name" placement="bottomRight">
     <span class="ant-pro-account-avatar">
-      <a-avatar size="small" src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png" class="antd-pro-global-header-index-avatar" />
+      <a-avatar
+        size="small"
+        src="https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png"
+        class="antd-pro-global-header-index-avatar"
+      />
       <span>{{ currentUser.name }}</span>
     </span>
     <template v-slot:overlay>
       <a-menu class="ant-pro-drop-down menu" :selected-keys="[]">
-        <!-- <a-menu-item v-if="menu" key="center" @click="handleToCenter">
+        <a-menu-item v-if="menu" key="center" @click="handleToCenter">
           <a-icon type="user" />
-          个人中心
-        </a-menu-item> -->
+          {{ $t('PERSONAL_CENTER') }}
+        </a-menu-item>
         <a-menu-item v-if="menu" key="settings" @click="handleToSettings">
           <a-icon type="setting" />
-          个人设置
+          {{ $t('PERSONAL_SETTING') }}
         </a-menu-item>
         <a-menu-divider v-if="menu" />
         <a-menu-item key="logout" @click="handleLogout">
           <a-icon type="logout" />
-          退出登录
+          {{ $t('home.account.logout') }}
         </a-menu-item>
       </a-menu>
     </template>

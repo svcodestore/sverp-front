@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2020-12-31 08:32:52
+ * @LastEditTime: 2021-01-12 09:41:36
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\store\modules\user.js
@@ -17,6 +17,8 @@ const user = {
     name: '',
     welcome: '',
     avatar: '',
+    dept: '',
+    title: '',
     roles: [],
     info: {},
     menus: [],
@@ -36,6 +38,12 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_DEPT: (state, dept) => {
+      state.dept = dept
+    },
+    SET_TITLE: (state, title) => {
+      state.title = title
     },
     SET_INFO: (state, info) => {
       state.info = info
@@ -61,7 +69,10 @@ const user = {
 
               commit('SET_TOKEN', data.token)
               commit('SET_NAME', { name: data.userinfo.con_name })
+              commit('SET_DEPT', data.userinfo.con_dept)
+              commit('SET_TITLE', data.userinfo.con_title)
               commit('SET_INFO', data.userinfo)
+              commit('SET_AVATAR', 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png')
 
               resolve(data)
             } else {
@@ -77,9 +88,12 @@ const user = {
     Logout ({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
+        commit('SET_DEPT', '')
+        commit('SET_TITLE', '')
         commit('SET_ROUTERS', [])
         commit('SET_ROUTER_TREE', [])
         commit('SET_FAV_PAGES', [])
+        commit('SET_AVATAR', '')
         storage.remove(ACCESS_TOKEN)
         storage.remove(LOGIN_ID)
         storage.remove(LOGIN_USER)

@@ -5,43 +5,31 @@
         <a-card :bordered="false">
           <div class="account-center-avatarHolder">
             <div class="avatar">
-              <img :src="avatar">
+              <img :src="avatar" />
             </div>
             <div class="username">{{ nickname }}</div>
-            <div class="bio">海纳百川，有容乃大</div>
+            <!-- <div class="bio">海纳百川，有容乃大</div> -->
           </div>
           <div class="account-center-detail">
-            <p>
-              <i class="title"></i>交互专家
-            </p>
-            <p>
-              <i class="group"></i>蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED
-            </p>
+            <p><i class="title"></i>{{ title }}</p>
+            <p><i class="group"></i>{{ dept }}</p>
             <p>
               <i class="address"></i>
-              <span>浙江省</span>
-              <span>杭州市</span>
+              <a href="https://www.starvincci.com/" target="_blank">东莞斯达文星</a>
             </p>
           </div>
-          <a-divider/>
+          <a-divider />
 
-          <div class="account-center-tags">
+          <!-- <div class="account-center-tags">
             <div class="tagsTitle">标签</div>
             <div>
               <template v-for="(tag, index) in tags">
                 <a-tooltip v-if="tag.length > 20" :key="tag" :title="tag">
-                  <a-tag
-                    :key="tag"
-                    :closable="index !== 0"
-                    :close="() => handleTagClose(tag)"
-                  >{{ `${tag.slice(0, 20)}...` }}</a-tag>
+                  <a-tag :key="tag" :closable="index !== 0" :close="() => handleTagClose(tag)">{{
+                    `${tag.slice(0, 20)}...`
+                  }}</a-tag>
                 </a-tooltip>
-                <a-tag
-                  v-else
-                  :key="tag"
-                  :closable="index !== 0"
-                  :close="() => handleTagClose(tag)"
-                >{{ tag }}</a-tag>
+                <a-tag v-else :key="tag" :closable="index !== 0" :close="() => handleTagClose(tag)">{{ tag }}</a-tag>
               </template>
               <a-input
                 v-if="tagInputVisible"
@@ -55,23 +43,23 @@
                 @keyup.enter="handleTagInputConfirm"
               />
               <a-tag v-else @click="showTagInput" style="background: #fff; borderStyle: dashed;">
-                <a-icon type="plus"/>New Tag
+                <a-icon type="plus" />New Tag
               </a-tag>
             </div>
-          </div>
-          <a-divider :dashed="true"/>
+          </div> -->
+          <!-- <a-divider :dashed="true" /> -->
 
           <div class="account-center-team">
-            <div class="teamTitle">团队</div>
+            <div class="teamTitle">所属分组</div>
             <a-spin :spinning="teamSpinning">
               <div class="members">
                 <a-row>
-                  <a-col :span="12" v-for="(item, index) in teams" :key="index">
+                  <!-- <a-col :span="12" v-for="(item, index) in teams" :key="index">
                     <a>
-                      <a-avatar size="small" :src="item.avatar"/>
+                      <a-avatar size="small" :src="item.avatar" />
                       <span class="member">{{ item.name }}</span>
                     </a>
-                  </a-col>
+                  </a-col> -->
                 </a-row>
               </div>
             </a-spin>
@@ -122,32 +110,32 @@ export default {
       tabListNoTitle: [
         {
           key: 'article',
-          tab: '文章(8)'
+          tab: '权限管理'
         },
         {
           key: 'app',
-          tab: '应用(8)'
+          tab: '操作日志'
         },
         {
           key: 'project',
-          tab: '项目(8)'
+          tab: '资源文件'
         }
       ],
       noTitleKey: 'app'
     }
   },
   computed: {
-    ...mapGetters(['nickname', 'avatar'])
+    ...mapGetters(['nickname', 'avatar', 'dept', 'title'])
   },
   mounted () {
     this.getTeams()
   },
   methods: {
     getTeams () {
-      this.$http.get('/workplace/teams').then(res => {
-        this.teams = res.result
-        this.teamSpinning = false
-      })
+      // this.$http.get('/workplace/teams').then(res => {
+      //   this.teams = res.result
+      // })
+      this.teamSpinning = false
     },
 
     handleTabChange (key, type) {

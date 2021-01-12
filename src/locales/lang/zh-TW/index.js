@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:33
- * @LastEditTime: 2021-01-11 16:11:15
+ * @LastEditTime: 2021-01-12 11:32:40
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\locales\lang\zh-TW\index.js
@@ -10,6 +10,7 @@ import antd from 'ant-design-vue/es/locale-provider/zh_CN'
 import momentCN from 'moment/locale/zh-cn'
 
 import sys from './SYS'
+import home from './home'
 
 const components = {
   antLocale: antd,
@@ -51,7 +52,9 @@ const menuNodes = {
   PROD_AUTOSCHD: '自動排程',
   SYS_PRVG: '權限管理',
   TPM_NOTIFIER: '通知人員',
-  HRD_MATERIAL_MANAGE: '前台物料庫存管理'
+  HRD_MATERIAL_MANAGE: '前台物料庫存管理',
+  PERSONAL_CENTER: '個人中心',
+  PERSONAL_SETTING: '個人設定'
 }
 
 const svGrid = {
@@ -89,12 +92,15 @@ const svGrid = {
   'svgrid.colGroup.allow': '允許',
   'svgrid.colGroup.disallow': '禁止',
   'svgrid.validate.required': '不能為空',
-  'svgrid.validate.repeat': '重複'
+  'svgrid.validate.repeat': '重複',
+  'svgrid.toolbar.search': '搜索表格內容...'
 }
 
 const locale = {
   'menu.home': '主頁',
   'menu.dashboard': '儀錶盤',
+  'navBar.lang': '選擇語言',
+  'navBar.usageManual': '使用指南',
   SV: '斯達文星',
   login: '登錄',
   removed: '已移除',
@@ -102,6 +108,7 @@ const locale = {
   addToQN: '添加到快捷導航',
   ...menuNodes,
   ...svGrid,
+  ...home,
   ...sys
 }
 

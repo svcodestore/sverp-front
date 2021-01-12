@@ -1,14 +1,14 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-09 16:35:33
- * @LastEditTime: 2020-12-10 07:48:52
+ * @LastEditTime: 2021-01-12 13:21:31
  * @LastEditors: yanbuw1911
  * @Description: 系统手册
  * @FilePath: \client\src\components\GlobalHeader\Manual.vue
 -->
 <template>
   <a-badge :dot="show">
-    <a href="http://192.168.123.51:8600/docs/manual" target="_blank" title="手册">
+    <a :href="manUrl" target="_blank" :title="$t('navBar.usageManual')">
       <a-icon type="book" />
     </a>
   </a-badge>
@@ -19,6 +19,11 @@ export default {
   data () {
     return {
       show: true
+    }
+  },
+  computed: {
+    manUrl () {
+      return process.env.VUE_APP_MANUAL_USAGE_URL
     }
   }
 }

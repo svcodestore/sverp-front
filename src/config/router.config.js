@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2020-12-31 10:16:12
+ * @LastEditTime: 2021-01-12 11:12:05
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\config\router.config.js
@@ -88,19 +88,19 @@ export const constantRouterMap = [
     component: BasicLayout,
     redirect: '/account/center',
     name: 'account',
-    meta: { title: '个人页', icon: 'user', keepAlive: true, permission: ['user'] },
+    meta: { title: 'PERSONAL_CENTER', icon: 'user', keepAlive: true },
     children: [
       {
         path: '/account/center',
         name: 'center',
         component: () => import('@/views/home/account/center'),
-        meta: { title: '个人中心', keepAlive: true, permission: ['user'] }
+        meta: { title: 'PERSONAL_CENTER', keepAlive: true }
       },
       {
         path: '/account/settings',
         name: 'settings',
         component: () => import('@/views/home/account/settings/Index'),
-        meta: { title: '个人设置', hideHeader: true, permission: ['user'] },
+        meta: { title: 'PERSONAL_SETTING', hideHeader: true },
         redirect: '/account/settings/base',
         hideChildrenInMenu: true,
         children: [
@@ -108,31 +108,31 @@ export const constantRouterMap = [
             path: '/account/settings/base',
             name: 'BaseSettings',
             component: () => import('@/views/home/account/settings/BaseSetting'),
-            meta: { title: '基本设置', hidden: true, permission: ['user'] }
+            meta: { title: 'PERSONAL_SETTING', hidden: true }
           }
           // {
           //   path: '/account/settings/security',
           //   name: 'SecuritySettings',
           //   component: () => import('@/views/home/account/settings/Security'),
-          //   meta: { title: '安全设置', hidden: true, keepAlive: true, permission: ['user'] }
+          //   meta: { title: '安全设置', hidden: true, keepAlive: true }
           // },
           // {
           //   path: '/account/settings/custom',
           //   name: 'CustomSettings',
           //   component: () => import('@/views/home/account/settings/Custom'),
-          //   meta: { title: '个性化设置', hidden: true, keepAlive: true, permission: ['user'] }
+          //   meta: { title: '个性化设置', hidden: true, keepAlive: true }
           // },
           // {
           //   path: '/account/settings/binding',
           //   name: 'BindingSettings',
           //   component: () => import('@/views/home/account/settings/Binding'),
-          //   meta: { title: '账户绑定', hidden: true, keepAlive: true, permission: ['user'] }
+          //   meta: { title: '账户绑定', hidden: true, keepAlive: true }
           // },
           // {
           //   path: '/account/settings/notification',
           //   name: 'NotificationSettings',
           //   component: () => import('@/views/home/account/settings/Notification'),
-          //   meta: { title: '新消息通知', hidden: true, keepAlive: true, permission: ['user'] }
+          //   meta: { title: '新消息通知', hidden: true, keepAlive: true }
           // }
         ]
       }

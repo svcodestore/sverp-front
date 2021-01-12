@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-09 19:48:29
- * @LastEditTime: 2020-12-30 14:25:16
+ * @LastEditTime: 2021-01-12 14:32:53
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\views\home\index.vue
@@ -10,7 +10,7 @@
   <div class="home-page">
     <div class="fav-pages-wrapper">
       <div class="fav-pages-title">
-        快捷导航
+        <span>{{ $t('home.quickNav') }}</span>
         <svg
           t="1609309374556"
           class="icon"
