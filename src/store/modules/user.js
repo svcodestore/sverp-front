@@ -1,13 +1,14 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2021-01-12 09:41:36
+ * @LastEditTime: 2021-01-13 16:35:36
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\store\modules\user.js
  */
 import storage from 'store'
 import { login } from '@/api/login'
+import { getUserInfo } from '@/api/user'
 import { ACCESS_TOKEN, LOGIN_ID, LOGIN_USER, BLACK_API_LIST } from '@/store/mutation-types'
 // import { welcome } from '@/utils/util'
 
@@ -106,6 +107,28 @@ const user = {
       return new Promise(resolve => {
         commit('SET_FAV_PAGES', pages)
         resolve()
+      })
+    },
+    SetProfile ({ commit }, id) {
+      return new Promise(async (resolve, reject) => {
+        await getUserInfo(id)
+          .then(response => {
+            const { result, data } = response
+            if (result) {
+              commit('SET_NAME', { name: data[0].con_name })
+              commit('SET_DEPT', data[0].con_dept)
+              commit('SET_TITLE', data[0].con_title)
+              commit('SET_INFO', data[0])
+              commit('SET_AVATAR', 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png')
+
+              resolve(data[0])
+            } else {
+              reject(result)
+            }
+          })
+          .catch(error => {
+            reject(error)
+          })
       })
     }
   }

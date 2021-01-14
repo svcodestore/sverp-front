@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2020-12-31 13:30:04
+ * @LastEditTime: 2021-01-13 16:31:04
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\permission.js
@@ -62,6 +62,11 @@ router.beforeEach(async (to, from, next) => {
       } else {
         next()
       }
+    }
+
+    // 重新获取用户信息，处理刷新界面，vuex 中的数据丢失
+    if (!store.getters.nickname) {
+      store.dispatch('SetProfile', storage.get(LOGIN_ID))
     }
   } else {
     if (whiteList.includes(to.name)) {

@@ -9,6 +9,7 @@
 const account = {
   'home.quickNav': '快捷導航',
   'home.account.settings.base': '基本設定',
+  'home.account.msgBox': '消息盒子',
   'home.account.logout': '退出登錄'
 }
 

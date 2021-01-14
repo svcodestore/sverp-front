@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2021-01-09 13:46:32
+ * @LastEditTime: 2021-01-13 16:37:01
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\utils\request.js
@@ -70,6 +70,7 @@ request.interceptors.request.use(config => {
   if (token) {
     config.headers.common['Access-Token'] = token
   }
+
   return config
 }, errorHandler)
 

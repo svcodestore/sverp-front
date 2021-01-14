@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-01-12 11:17:49
+ * @LastEditTime: 2021-01-14 13:24:45
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: \client\src\components\SV\SvGrid\grid.vue
@@ -173,7 +173,15 @@ export default {
     },
     // 默认表格属性
     defaultAttrs () {
-      const { border, height, mergedEditConfig, mergedMouseConfig, mergedKeyboardConfig } = this
+      const {
+        border,
+        height,
+        showHeaderOverflow,
+        showOverflow,
+        mergedEditConfig,
+        mergedMouseConfig,
+        mergedKeyboardConfig
+      } = this
       const defaultAttrs = {
         id: 'svGrid',
         height: height === null ? null : height || 500,
@@ -186,8 +194,8 @@ export default {
         highlightCurrentRow: true,
         border: border || true,
         resizable: true,
-        showHeaderOverflow: true,
-        showOverflow: true,
+        showHeaderOverflow,
+        showOverflow,
         keepSource: true,
         editConfig: mergedEditConfig,
         mouseConfig: mergedMouseConfig,
@@ -231,7 +239,8 @@ export default {
     events () {
       const evt = {
         'current-change': this._currentChange,
-        'cell-dblclick': this._cellDblClick
+        'cell-dblclick': this._cellDblClick,
+        'edit-actived': this.editActivedEvt
       }
 
       return evt
@@ -286,6 +295,9 @@ export default {
      */
     getTableColumn () {
       return this.$refs.xGrid.getTableColumn()
+    },
+    getColumnByField (field) {
+      return this.$refs.xGrid.getColumnByField(field)
     },
     /**
      * @description: 刷新列，用于列的动态展示
@@ -367,6 +379,7 @@ export default {
       const columns = Array.from(xGrid.getTableColumn().collectColumn).map(e => e.property)
       updateRecords.forEach(updateRecord => {
         let updateFields = {}
+
         if (typeof handleUpdate === 'function') {
           updateFields = handleUpdate(updateRecord, columns, originData)
         } else {
@@ -374,7 +387,7 @@ export default {
           columns.forEach(key => {
             // 处理下拉框多选
             if (Array.isArray(updateRecord[key])) {
-              if (updateRecord[key].toString() !== originRecord[key].toString()) {
+              if ((updateRecord[key] || []).toString() !== (originRecord[key] || []).toString()) {
                 updateFields[key] = updateRecord[key].join(',')
               }
             } else {
@@ -388,15 +401,18 @@ export default {
             updateFields = Object.assign(updateFields, handleUpdate)
           }
         }
+
         // 自动设置修改者为当前登录账号
         modifier && (updateFields[modifier] = usrid)
-        fmtUpdateRecords.U.push({ [updateRecord.id]: updateFields })
+        if (Object.keys(updateFields).length !== 1) {
+          fmtUpdateRecords.U.push({ [updateRecord.id]: updateFields })
+        }
       })
 
-      const optData = Object.assign({}, fmtInsertRecords, fmtRmRecords, fmtUpdateRecords)
-      if (!insertRecords.length && !removeRecords.length && !updateRecords.length) {
+      if (!fmtInsertRecords.A.length && !fmtRmRecords.D.id.length && !fmtUpdateRecords.U.length) {
         return false
       }
+      const optData = Object.assign({}, fmtInsertRecords, fmtRmRecords, fmtUpdateRecords)
 
       return optData
     },

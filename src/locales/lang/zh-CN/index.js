@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:05
- * @LastEditTime: 2021-01-12 13:11:31
+ * @LastEditTime: 2021-01-14 14:04:14
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\locales\lang\zh-CN\index.js
@@ -93,7 +93,7 @@ const svGrid = {
   'svgrid.colGroup.disallow': '禁止',
   'svgrid.validate.required': '不能为空',
   'svgrid.validate.repeat': '重复',
-  'svgrid.toolbar.search': '搜索表格内容...'
+  'svgrid.toolbar.search': '输入关键字搜索 ......'
 }
 
 const locale = {

@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:27:12
- * @LastEditTime: 2021-01-11 16:01:59
+ * @LastEditTime: 2021-01-14 13:23:36
  * @LastEditors: yanbuw1911
  * @Description: 参考 vxe-grid
  * @FilePath: \client\src\components\SV\SvGrid\props.js
@@ -10,7 +10,7 @@ const gridProps = {
   id: { type: String, default: () => '' },
   columns: { type: Array, default: () => [] },
   data: { type: Array, default: () => [] },
-  height: [Number, String],
+  height: { type: [Number, String], default: () => 500 },
   masHeight: [Number, String],
   autoResize: Boolean,
   syncResize: [Boolean, String, Number],
@@ -39,8 +39,8 @@ const gridProps = {
   footerMethod: Function,
   mergeCells: Array,
   mergeFooterItems: Array,
-  showOverflow: [Boolean, String],
-  showHeaderOverflow: [Boolean, String],
+  showOverflow: { type: [Boolean, String], default: () => true },
+  showHeaderOverflow: { type: [Boolean, String], default: () => true },
   showFooterOverflow: [Boolean, String],
   columnKey: Boolean,
   rowKey: Boolean,
@@ -124,6 +124,10 @@ const svGridProps = {
   searchBar: {
     type: Boolean,
     default: () => false
+  },
+  editActivedEvt: {
+    type: Function,
+    default: () => () => {}
   }
 }
 
