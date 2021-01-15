@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-05 08:55:47
- * @LastEditTime: 2021-01-06 08:48:23
+ * @LastEditTime: 2021-01-15 13:58:40
  * @LastEditors: yanbuw1911
  * @Description: 大文件上传
  * @FilePath: \client\src\components\tools\BigFileUpload.vue
@@ -284,7 +284,7 @@ export default {
         })
         .map(async ({ formData, index }) =>
           this.request({
-            url: 'http://192.168.123.51:3000',
+            url: process.env.VUE_APP_BIGFILE_UPLOAD_URL,
             data: formData,
             onProgress: this.createProgressHandler(this.container.data[index]),
             requestList: this.container.requestList
@@ -302,7 +302,7 @@ export default {
       this.container.status = Status.wait
 
       await this.request({
-        url: 'http://192.168.123.51:3000/merge',
+        url: process.env.VUE_APP_BIGFILE_UPLOAD_URL + '/merge',
         headers: {
           'content-type': 'application/json'
         },
@@ -319,7 +319,7 @@ export default {
     // 没有才进行上传
     async verifyUpload (filename, fileHash) {
       const { data } = await this.request({
-        url: 'http://192.168.123.51:3000/verify',
+        url: process.env.VUE_APP_BIGFILE_UPLOAD_URL + '/verify',
         headers: {
           'content-type': 'application/json'
         },
