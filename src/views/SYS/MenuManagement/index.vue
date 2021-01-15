@@ -13,6 +13,10 @@ export default {
       svGridOptions: {
         loading: false,
         data: [],
+        operatorFields: {
+          creator: 'mnu_creator',
+          modifier: 'mnu_modifier'
+        },
         addItem: {
           defaultValue: {
             mnu_status: 0,
@@ -170,19 +174,16 @@ export default {
       this.svGridOptions.loading = false
     },
     handleInsert (insertItem) {
-      const usrid = this.$store.state.user.info.con_id
-      const o = Object.assign({}, insertItem)
-      o.mnu_creator = usrid
-      o.mnu_modifier = usrid
-      if (!o.mnu_icon) {
-        delete o.mnu_icon
+      if (!insertItem.mnu_icon) {
+        delete insertItem.mnu_icon
       }
-      delete o.id
-      delete o.mnu_join_date
-      delete o.mnu_mod_date
-      delete o.creator
-      delete o.modifier
-      return o
+
+      delete insertItem.mnu_join_date
+      delete insertItem.mnu_mod_date
+      delete insertItem.creator
+      delete insertItem.modifier
+
+      return insertItem
     }
   },
   mounted () {

@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 19:48:29
- * @LastEditTime: 2021-01-14 16:04:37
+ * @LastEditTime: 2021-01-15 13:45:44
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\api\improve.js
@@ -18,7 +18,11 @@ const improveApi = {
   saveSoftRequireOpt: '/improve/saveSoftRequireOpt',
   setSoftwareRequireDayCheck: '/improve/setSoftwareRequireDayCheck',
   getDailyCheckList: '/improve/getDailyCheckList',
-  auditRequire: '/improve/auditRequire'
+  auditRequire: '/improve/auditRequire',
+  getSoftwareRequireDetail: '/improve/getSoftwareRequireDetail',
+  saveSoftwareRequireDetail: '/improve/saveSoftwareRequireDetail',
+  saveSoftwareRequireDevLog: '/improve/saveSoftwareRequireDevLog',
+  getSoftwareRequireDevLog: '/improve/getSoftwareRequireDevLog'
 }
 
 export const getSoftRequire = () => {
@@ -82,4 +86,32 @@ export const auditRequire = (softid, usrid) =>
     url: improveApi.auditRequire,
     method: 'post',
     data: stringify({ softid, usrid })
+  })
+
+export const getSoftwareRequireDetail = softid =>
+  request({
+    url: improveApi.getSoftwareRequireDetail,
+    method: 'post',
+    data: stringify({ softid })
+  })
+
+export const saveSoftwareRequireDetail = (softid, detail) =>
+  request({
+    url: improveApi.saveSoftwareRequireDetail,
+    method: 'post',
+    data: stringify({ softid, detail })
+  })
+
+export const getSoftwareRequireDevLog = softid =>
+  request({
+    url: improveApi.getSoftwareRequireDevLog,
+    method: 'post',
+    data: stringify({ softid })
+  })
+
+export const saveSoftwareRequireDevLog = (softid, devLog) =>
+  request({
+    url: improveApi.saveSoftwareRequireDevLog,
+    method: 'post',
+    data: stringify({ softid, devLog })
   })

@@ -3,42 +3,31 @@
     <sv-grid ref="svGrid" v-bind="gridOptions" v-on="svGridEvents">
       <template #svgridToolbar>
         <div style="display: flex;">
-          <a-button-group style="margin: 0 0 0 53px;" :size="gridOptions.btnSize">
-            <a-button title="设置参与人员" v-if="currRow && currRow.isr_leader === userInfo.con_id">
-              <a-icon type="team" />
-            </a-button>
-            <a-button title="加入" loading :disabled="!currRow" v-if="isDev">
-              <a-icon type="usergroup-add" />
-            </a-button>
-          </a-button-group>
           <a-button-group style="margin: 0 12px;" :size="gridOptions.btnSize">
-            <a-button title="项目详情" :disabled="!currRow" @click="itemDetailVisible = true">
+            <a-button title="项目详情" :disabled="!currRow" @click="handleShowItemDetail">
               <a-icon type="profile" />
             </a-button>
-            <a-button title="开发日志" :disabled="!currRow" @click="devLogVisible = true">
+            <a-button title="开发日志" :disabled="!currRow" @click="getDevLog">
               <a-icon type="file-done" />
             </a-button>
           </a-button-group>
           <a-button-group :size="gridOptions.btnSize">
             <a-button
               title="项目验收"
-              v-if="currRow && currRow.isr_leader === userInfo.con_id && !currRow.isr_approver"
+              v-if="
+                currRow &&
+                  currRow.isr_leader === userInfo.con_id &&
+                  !currRow.isr_approver &&
+                  typeof currRow.id === 'number'
+              "
               @click="auditedItem"
             >
               <a-icon type="smile" />
             </a-button>
-            <a-button
-              title="日工作确认"
-              v-if="currRow && currRow.isr_leader === userInfo.con_id && !currRow.isd_isok"
-              @click="dailyCheck"
-            >
+            <a-button title="日工作确认" v-if="checkOrDetail === 'check'" @click="dailyCheck">
               <a-icon type="check" />
             </a-button>
-            <a-button
-              title="工作确认详情"
-              v-if="currRow && currRow.isr_leader === userInfo.con_id && currRow.isd_isok"
-              @click="getCheckList"
-            >
+            <a-button title="工作确认详情" v-if="checkOrDetail === 'detail'" @click="getCheckList">
               <a-icon type="eye" />
             </a-button>
           </a-button-group>
@@ -58,7 +47,7 @@
       @cancel="itemDetailVisible = false"
     >
       <template #footer>
-        <a-button>
+        <a-button v-if="isDev" @click="handleSaveItemDetail">
           保存备注
         </a-button>
         <a-button type="primary" @click="printItemDetail">
@@ -109,7 +98,7 @@
         <a-row>
           <a-col :span="24">
             <span class="item-detail-label">当前进度：</span>
-            <span class="item-detail-value">{{ (currRow && currRow.isr_curr_phase) | prjStatusFilter }}</span>
+            <span class="item-detail-value">{{ currRow && currRow.isr_curr_phase }}</span>
           </a-col>
         </a-row>
         <a-row>
@@ -124,14 +113,18 @@
           <a-col :span="24">
             <span class="item-detail-label">项目验收：</span>
             <span class="item-detail-value">
-              {{ currRow && currRow.isr_approver && developers }}
+              {{ currRow && currRow.approver }}
             </span>
           </a-col>
         </a-row>
         <a-row>
-          <a-col :span="24">
+          <a-col :span="24" v-if="isDev">
             <span class="item-detail-label">备注：</span>
             <a-textarea v-model="itemRemark"></a-textarea>
+          </a-col>
+          <a-col :span="24" v-else>
+            <span class="item-detail-label">备注：</span>
+            <div v-html="itemRemark"></div>
           </a-col>
         </a-row>
       </div>
@@ -146,7 +139,10 @@
       @cancel="devLogVisible = false"
     >
       <template #footer>
-        <a-button v-if="currRow && currRow.isr_dev && currRow.isr_dev.includes(userInfo.con_id)">
+        <a-button
+          v-if="currRow && currRow.isr_dev && currRow.isr_dev.includes(userInfo.con_id)"
+          @click="handleSaveDevLog"
+        >
           保存
         </a-button>
         <a-button type="primary" @click="printItemDevLog">
@@ -166,7 +162,7 @@
       </div>
     </a-modal>
 
-    <a-modal v-model="dayCheckVisible" title="日工作确认列表" @ok="dayCheckVisible = false">
+    <a-modal v-model="dayCheckVisible" title="日工作确认列表" @ok="dayCheckVisible = false" :footer="null">
       <ul>
         <li class="daily-check-item" v-for="(item, idx) in dailyCheckList" :key="idx">
           {{ `${item.con_name} ${item.isd_chk_time}` }}
@@ -185,7 +181,11 @@ import {
   saveSoftRequireOpt,
   setSoftwareRequireDayCheck,
   getDailyCheckList,
-  auditRequire
+  auditRequire,
+  getSoftwareRequireDetail,
+  saveSoftwareRequireDetail,
+  saveSoftwareRequireDevLog,
+  getSoftwareRequireDevLog
 } from '@/api/improve'
 import { getGroups, getUsers } from '@/api/user'
 
@@ -219,37 +219,7 @@ export default {
   data () {
     return {
       itemRemark: '',
-      devLog: `2020-11-11
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas
-
-2020-11-12
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas
-
-2020-12-11
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas
-
-2020-12-12
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas
-
-2021-11-11
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas
-
-2021-11-12
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas
-
-2021-12-11
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas
-
-2021-12-12
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas
-asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfas`,
+      devLog: '',
       itemDetailVisible: false,
       devLogVisible: false,
       dayCheckVisible: false,
@@ -264,6 +234,7 @@ asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfas
         showOverflow: false,
         btnSize: 'large',
         searchBar: true,
+        isAllowEdit: false,
         data: [],
         editConfig: {
           activeMethod: this.activeRowMethod
@@ -280,6 +251,7 @@ asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfas
           creator: 'isr_creator',
           modifier: 'isr_modifier'
         },
+        handleInsert: this.handleInsert,
         handleUpdate: this.handleUpdate,
         handleSaveOpt: saveSoftRequireOpt,
         columns: [
@@ -379,6 +351,20 @@ asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfas
     },
     devLogTitle () {
       return this.currRow ? `开发日志（${this.currRow.isr_name}）` : '开发日志'
+    },
+    // check 显示日工作确认按钮，detail 显示工作确认详情按钮
+    checkOrDetail () {
+      const { currRow, userInfo } = this
+
+      if (currRow && currRow.isr_leader === userInfo.con_id && typeof currRow.id === 'number') {
+        if (currRow.isd_isok || currRow.approver) {
+          return 'detail'
+        } else {
+          return 'check'
+        }
+      } else {
+        return false
+      }
     }
   },
   methods: {
@@ -390,6 +376,8 @@ asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfas
     },
     async getData () {
       this.gridOptions.loading = true
+      this.currRow = null
+
       await getSoftRequire()
         .then(result => {
           if (result.result) {
@@ -400,6 +388,8 @@ asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfas
 
               return o
             })
+
+            this.$refs.xGrid.setCurrentRow(this.gridOptions.data[0])
           }
         })
         .catch(() => {})
@@ -410,11 +400,7 @@ asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfas
       this.currRow = row
     },
     activeRowMethod ({ row, rowIndex, column }) {
-      if (!row.isr_dev) {
-        return true
-      }
-
-      if (row.isr_dev.includes(this.userInfo.con_id)) {
+      if (this.isDev) {
         return true
       }
 
@@ -426,6 +412,12 @@ asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfas
         const devColumn = this.$refs.svGrid.getColumnByField('isr_dev')
         devColumn.editRender.attrs.disabled = true
       }
+    },
+    handleInsert (insertItem) {
+      delete insertItem.approver
+      delete insertItem.isd_isok
+
+      return insertItem
     },
     handleUpdate (updateItem, columns, originData) {
       const originRecord = originData.find(e => e.id === updateItem.id)
@@ -494,6 +486,38 @@ asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfas
           }
         })
         .catch(() => {})
+    },
+    async handleShowItemDetail () {
+      this.itemRemark = ''
+      await getSoftwareRequireDetail(this.currRow.id).then(res => {
+        if (res.result && res.data.length) {
+          this.itemRemark = res.data[0].isrd_detail
+        }
+      })
+      this.itemDetailVisible = true
+    },
+    handleSaveItemDetail () {
+      saveSoftwareRequireDetail(this.currRow.id, this.itemRemark).then(res => {
+        this.$notification[res.result ? 'success' : 'error']({
+          message: res.result ? '保存成功' : '保存失败'
+        })
+      })
+    },
+    async getDevLog () {
+      this.devLog = ''
+      await getSoftwareRequireDevLog(this.currRow.id).then(res => {
+        if (res.result && res.data.length) {
+          this.devLog = res.data[0].isdl_log
+        }
+      })
+      this.devLogVisible = true
+    },
+    handleSaveDevLog () {
+      saveSoftwareRequireDevLog(this.currRow.id, this.devLog).then(res => {
+        this.$notification[res.result ? 'success' : 'error']({
+          message: res.result ? '保存成功' : '保存失败'
+        })
+      })
     }
   },
   async beforeCreate () {
@@ -508,6 +532,7 @@ asdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfasdfasasdfasdfas
         developers = dev.map(d => ({ label: d.con_name, value: d.con_id }))
 
         this.isDev = !!dev.find(d => d.con_id === this.userInfo.con_id)
+        this.gridOptions.isAllowEdit = this.isDev
       }
     })
 

@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-01-14 13:24:45
+ * @LastEditTime: 2021-01-15 08:45:30
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: \client\src\components\SV\SvGrid\grid.vue
@@ -350,10 +350,6 @@ export default {
       // 收集表格新增数据并格式化
       const fmtInsertRecords = {
         A: insertRecords.map(insertItem => {
-          if (typeof handleInsert === 'function') {
-            return handleInsert(insertItem)
-          }
-
           const o = {}
           for (const key in insertItem) {
             if (Array.isArray(insertItem[key])) {
@@ -366,6 +362,11 @@ export default {
           creator && (o[creator] = usrid)
           modifier && (o[modifier] = usrid)
           delete o.id
+
+          // 如果传入回调函数则交给回调自行处理
+          if (typeof handleInsert === 'function') {
+            return handleInsert(o)
+          }
 
           return o
         })

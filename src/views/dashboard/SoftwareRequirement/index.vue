@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-09 19:48:29
- * @LastEditTime: 2021-01-13 14:18:15
+ * @LastEditTime: 2021-01-15 09:49:11
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\views\dashboard\SoftwareRequirement\index.vue
@@ -12,21 +12,21 @@
       <a-tab-pane key="1" tab="提案">
         <data-show></data-show>
       </a-tab-pane>
-      <a-tab-pane key="2" tab="图表">
+      <!-- <a-tab-pane key="2" tab="图表">
         <visual-show></visual-show>
-      </a-tab-pane>
+      </a-tab-pane> -->
     </a-tabs>
   </div>
 </template>
 
 <script>
 import dataShow from './data'
-import visualShow from './visual'
+// import visualShow from './visual'
 
 export default {
   components: {
-    'data-show': dataShow,
-    'visual-show': visualShow
+    'data-show': dataShow
+    // 'visual-show': visualShow
   }
 }
 </script>

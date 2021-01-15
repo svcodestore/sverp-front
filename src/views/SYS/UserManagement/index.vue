@@ -24,6 +24,10 @@ export default {
         loading: false,
         data: [],
         params: {},
+        operatorFields: {
+          creator: 'con_creator',
+          modifier: 'con_modifier'
+        },
         addItem: {
           defaultValue: {
             con_status: 0,
@@ -128,28 +132,16 @@ export default {
       return updateFields
     },
     handleInsert (insertItem) {
-      const usrid = this.$store.state.user.info.con_id
-      const o = {}
-      for (const key in insertItem) {
-        if (Array.isArray(insertItem[key])) {
-          o[key] = insertItem[key].join(',')
-        } else {
-          o[key] = insertItem[key]
-        }
-      }
+      insertItem.con_password = insertItem.con_password && md5(insertItem.con_password)
 
-      o.con_creator = usrid
-      o.con_modifier = usrid
-      o.con_password = o.con_password && md5(o.con_password)
-      delete o.id
-      delete o.con_join_date
-      delete o.con_mod_date
-      delete o.sue_last_login_time
-      delete o.sue_last_loginip
-      delete o.creator
-      delete o.modifier
+      delete insertItem.con_join_date
+      delete insertItem.con_mod_date
+      delete insertItem.sue_last_login_time
+      delete insertItem.sue_last_loginip
+      delete insertItem.creator
+      delete insertItem.modifier
 
-      return o
+      return insertItem
     },
     idValidator () {
       const idList = this.$refs.svGrid.getTableData().visibleData.map(item => item.con_id)
