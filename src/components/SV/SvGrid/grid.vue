@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-01-18 08:29:19
+ * @LastEditTime: 2021-01-18 17:37:11
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: \client\src\components\SV\SvGrid\grid.vue
@@ -398,7 +398,7 @@ export default {
 
         // 自动设置修改者为当前登录账号
         modifier && (updateFields[modifier] = usrid)
-        if (Object.keys(updateFields).length !== 1) {
+        if (Object.keys(updateFields).length !== 1 || !modifier) {
           fmtUpdateRecords.U.push({ [updateRecord.id]: updateFields })
         }
       })
