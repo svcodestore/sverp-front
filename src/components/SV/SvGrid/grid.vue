@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-01-15 08:45:30
+ * @LastEditTime: 2021-01-18 08:29:19
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: \client\src\components\SV\SvGrid\grid.vue
@@ -113,6 +113,7 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-expressions */
 import XEUtils from 'xe-utils'
 import { gridProps, svGridProps } from './props'
 
@@ -218,21 +219,13 @@ export default {
     },
     // 包装父组件传过来的列属性配置
     wrappedColumns () {
-      if (this.columns) {
-        this.columns.forEach((col, idx) => {
-          // 如果有下拉框则添加下拉选项到列过滤器
-          if (col.editRender && col.editRender.name === '$select') {
-            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-            this.columns[idx].filters = col.editRender.options
-          }
-
-          // 数字列，右对齐
-          if (col.type && col.type === 'number') {
-            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-            this.columns[idx].align = 'right'
-          }
-        })
-      }
+      this.columns?.forEach((col, idx) => {
+        // 如果有单选下拉框则添加下拉选项到列过滤器
+        if (col.editRender?.name === '$select' && !col.editRender?.props?.multiple) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.columns[idx].filters = col.editRender.options
+        }
+      })
 
       return this.columns
     },
@@ -248,18 +241,18 @@ export default {
     // 处理 slot
     colSlot () {
       const slots = []
-      this.columns &&
-        this.columns.forEach(col => {
-          if (col.slots) {
-            const { header, footer, content, filter, edit } = col.slots
-            col.slots.default && slots.push(col.slots.default)
-            header && slots.push(header)
-            footer && slots.push(footer)
-            content && slots.push(content)
-            filter && slots.push(filter)
-            edit && slots.push(edit)
-          }
-        })
+
+      this.columns?.forEach(col => {
+        if (col.slots) {
+          const { header, footer, content, filter, edit } = col.slots
+          col.slots.default && slots.push(col.slots.default)
+          header && slots.push(header)
+          footer && slots.push(footer)
+          content && slots.push(content)
+          filter && slots.push(filter)
+          edit && slots.push(edit)
+        }
+      })
 
       return slots
     },
@@ -485,28 +478,27 @@ export default {
      * @description: 提交表格修改数据给后台
      */
     async _submitOptData () {
-      this.handleSaveOpt &&
-        (await this.handleSaveOpt(this.getGridOpt())
-          .then(res => {
-            const o = {}
-            if (res.result) {
-              this.currRow = null
-              this._handleRefreshGrid()
-              o.message = this.$t('saveSucc')
-              o.icon = <a-icon type='smile' style='color: #108ee9' />
-            } else {
-              o.message = this.$t('saveFail')
-              o.icon = <a-icon type='frown' style='color: #108ee9' />
-            }
-            this.$notification.open(o)
+      await this.handleSaveOpt(this.getGridOpt())
+        ?.then(res => {
+          const o = {}
+          if (res.result) {
+            this.currRow = null
+            this._handleRefreshGrid()
+            o.message = this.$t('saveSucc')
+            o.icon = <a-icon type='smile' style='color: #108ee9' />
+          } else {
+            o.message = this.$t('saveFail')
+            o.icon = <a-icon type='frown' style='color: #108ee9' />
+          }
+          this.$notification.open(o)
+        })
+        .catch(error => {
+          this.$notification.error({
+            message: error.response.status,
+            description: error.response.data.message,
+            icon: <a-icon type='frown' style='color: #108ee9' />
           })
-          .catch(error => {
-            this.$notification.error({
-              message: error.response.status,
-              description: error.response.data.message,
-              icon: <a-icon type='frown' style='color: #108ee9' />
-            })
-          }))
+        })
     }
   },
   updated () {

@@ -12,7 +12,7 @@
       <a-tab-pane key="1" tab="商品管理">
         <material-used></material-used>
       </a-tab-pane>
-      <a-tab-pane key="2" tab="库存管理">
+      <a-tab-pane key="2" tab="库存查询">
         <stock></stock>
       </a-tab-pane>
       <a-tab-pane key="3" tab="出库/入库">

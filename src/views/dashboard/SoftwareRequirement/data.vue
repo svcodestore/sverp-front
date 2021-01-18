@@ -2,24 +2,19 @@
   <div>
     <sv-grid ref="svGrid" v-bind="gridOptions" v-on="svGridEvents">
       <template #svgridToolbar>
-        <div style="display: flex;">
+        <div style="display: flex;" v-if="currRow && typeof currRow.id === 'number'">
           <a-button-group style="margin: 0 12px;" :size="gridOptions.btnSize">
-            <a-button title="项目详情" :disabled="!currRow" @click="handleShowItemDetail">
+            <a-button title="项目详情" :disabled="!currRow" v-if="currRow" @click="handleShowItemDetail">
               <a-icon type="profile" />
             </a-button>
-            <a-button title="开发日志" :disabled="!currRow" @click="getDevLog">
+            <a-button title="开发日志" :disabled="!currRow" v-if="currRow" @click="getDevLog">
               <a-icon type="file-done" />
             </a-button>
           </a-button-group>
           <a-button-group :size="gridOptions.btnSize">
             <a-button
               title="项目验收"
-              v-if="
-                currRow &&
-                  currRow.isr_leader === userInfo.con_id &&
-                  !currRow.isr_approver &&
-                  typeof currRow.id === 'number'
-              "
+              v-if="currRow && currRow.isr_leader === userInfo.con_id && !currRow.isr_approver"
               @click="auditedItem"
             >
               <a-icon type="smile" />
@@ -256,6 +251,10 @@ export default {
         handleSaveOpt: saveSoftRequireOpt,
         columns: [
           {
+            type: 'seq',
+            width: 50
+          },
+          {
             field: 'isr_name',
             title: '项目名称',
             editRender: { name: 'input' }
@@ -263,7 +262,6 @@ export default {
           {
             field: 'isr_requr_dept',
             title: '需求单位',
-            filters: depts,
             editRender: {
               name: '$select',
               options: depts,
@@ -273,7 +271,6 @@ export default {
           {
             field: 'isr_leader',
             title: '项目负责人',
-            filters: developers,
             width: 140,
             editRender: {
               name: '$select',
@@ -283,7 +280,6 @@ export default {
           {
             field: 'isr_proj_status',
             title: '项目状态',
-            filters: prjStatus,
             width: 120,
             editRender: {
               name: '$select',
@@ -388,8 +384,6 @@ export default {
 
               return o
             })
-
-            this.$refs.xGrid.setCurrentRow(this.gridOptions.data[0])
           }
         })
         .catch(() => {})
@@ -400,7 +394,7 @@ export default {
       this.currRow = row
     },
     activeRowMethod ({ row, rowIndex, column }) {
-      if (this.isDev) {
+      if (this.isDev && !row.approver) {
         return true
       }
 
@@ -535,7 +529,8 @@ export default {
         this.gridOptions.isAllowEdit = this.isDev
       }
     })
-
+  },
+  async created () {
     await this.getData()
   }
 }

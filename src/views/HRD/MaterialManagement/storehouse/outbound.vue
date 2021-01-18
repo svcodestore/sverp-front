@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-08 11:08:16
- * @LastEditTime: 2021-01-11 08:08:24
+ * @LastEditTime: 2021-01-16 15:13:47
  * @LastEditors: yanbuw1911
  * @Description: 出库管理
  * @FilePath: \client\src\views\HRD\MaterialManagement\storehouse\outbound.vue
@@ -22,7 +22,7 @@
       :title="modalTitle"
       :closable="modalClosable"
       v-model="outboundVisible"
-      :width="modalWidth"
+      :width="900"
       :keyboard="false"
       :maskClosable="false"
       :destroyOnClose="true"
@@ -80,7 +80,6 @@ export default {
       modalClosable: true,
       outboundVisible: false,
       isPrinting: false,
-      browserWidth: document.body.clientWidth,
       gridOptions: {
         class: 'outbound-svgrid',
         height: 700,
@@ -165,18 +164,6 @@ export default {
       }
     }
   },
-  watch: {
-    browserWidth (now) {
-      console.log(now)
-    }
-  },
-  computed: {
-    modalWidth () {
-      const width = document.body.clientWidth > 1600 ? 1500 : document.body.clientWidth - 100
-
-      return width
-    }
-  },
   methods: {
     async getOutboundOrder () {
       this.gridOptions.loading = true
@@ -185,11 +172,7 @@ export default {
     },
     async handleDblClick ({ row }) {
       this.gridCurrRow = row
-      await getOutboundMaterial(row.id).then(res => {
-        if (res.result) {
-          this.detailGridOptions.data = res.data
-        }
-      })
+      await getOutboundMaterial(row.id).then(res => res.result && (this.detailGridOptions.data = res.data))
       this.outboundVisible = true
     },
     handleRowColor ({ row, rowIndex }) {
@@ -199,26 +182,16 @@ export default {
       this.isPrinting = true
       this.modalTitle = null
       this.modalClosable = false
-      const print = () => {
-        return new Promise(() => {
-          setTimeout(() => {
-            window.print()
-          })
 
-          const showBtn = () => {
-            return new Promise(() => {
-              setTimeout(() => {
-                this.isPrinting = false
-                this.modalTitle = '出库单详情'
-                this.modalClosable = true
-              })
-            })
-          }
-          showBtn()
+      setTimeout(() => {
+        window.print()
+
+        setTimeout(() => {
+          this.isPrinting = false
+          this.modalTitle = '出库单详情'
+          this.modalClosable = true
         })
-      }
-
-      print()
+      })
     },
     handleApprove () {}
   },

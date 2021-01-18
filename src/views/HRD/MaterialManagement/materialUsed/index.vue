@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-07 11:11:38
- * @LastEditTime: 2021-01-11 15:40:15
+ * @LastEditTime: 2021-01-16 15:18:59
  * @LastEditors: yanbuw1911
  * @Description: 商品用料
  * @FilePath: \client\src\views\HRD\MaterialManagement\materialUsed\index.vue
@@ -47,7 +47,7 @@ export default {
             editRender: { name: 'input' }
           },
           {
-            type: 'number',
+            align: 'right',
             title: '种类编码',
             field: 'hmu_material_code',
             editRender: { name: 'input' }
@@ -73,7 +73,6 @@ export default {
             width: 50
           },
           {
-            type: 'number',
             title: '种类编码',
             field: 'hmu_material_code',
             editRender: { name: 'input' }
@@ -84,7 +83,6 @@ export default {
             editRender: { name: 'input' }
           },
           {
-            type: 'number',
             title: '规格型号',
             field: 'hmu_material_model',
             editRender: { name: 'input' }
@@ -112,7 +110,7 @@ export default {
         .catch(() => {})
       this.materialOptions.loading = false
     },
-    async getMaterialList (categoryId = this.materialCurrRow && this.materialCurrRow.id) {
+    async getMaterialList (categoryId = this.materialCurrRow?.id) {
       this.subMaterialOptions.loading = true
       await getMaterialList(categoryId)
         .then(res => res.result && (this.subMaterialOptions.data = res.data))
@@ -121,7 +119,7 @@ export default {
     },
     handleMaterialChange ({ row }) {
       this.materialCurrRow = row
-      this.getMaterialList(row ? row.id : '')
+      this.getMaterialList(row?.id)
     },
     handleMaterialCategoryInsert (insertItem) {
       insertItem.hmu_material_parent = 0

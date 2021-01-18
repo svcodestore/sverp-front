@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2021-01-07 14:20:06
- * @LastEditTime: 2021-01-08 13:01:59
+ * @LastEditTime: 2021-01-16 16:57:22
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\api\hrd.js
@@ -14,7 +14,8 @@ const hrdApi = {
   getMaterialList: '/hrd/getMaterialList',
   saveMaterialUsedOpt: '/hrd/saveMaterialUsedOpt',
   getOutboundOrder: '/hrd/getOutboundOrder',
-  getOutboundMaterial: '/hrd/getOutboundMaterial'
+  getOutboundMaterial: '/hrd/getOutboundMaterial',
+  getMaterialLogList: '/hrd/getMaterialLogList'
 }
 
 export const getMaterialCategory = () =>
@@ -46,6 +47,13 @@ export const getOutboundOrder = () =>
 export const getOutboundMaterial = materialId =>
   request({
     url: hrdApi.getOutboundMaterial,
+    method: 'post',
+    data: stringify({ materialId })
+  })
+
+export const getMaterialLogList = materialId =>
+  request({
+    url: hrdApi.getMaterialLogList,
     method: 'post',
     data: stringify({ materialId })
   })
