@@ -54,7 +54,9 @@ const menuNodes = {
   TPM_NOTIFIER: '通知人员',
   HRD_MATERIAL_MANAGE: '前台物料库存管理',
   PERSONAL_CENTER: '个人中心',
-  PERSONAL_SETTING: '个人设置'
+  PERSONAL_SETTING: '个人设置',
+  CHAT: '聊天室',
+  CHAT_IDX: '聊天主页'
 }
 
 const svGrid = {

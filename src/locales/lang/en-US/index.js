@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:28
- * @LastEditTime: 2021-01-12 13:11:13
- * @LastEditors: yanbuw1911
+ * @LastEditTime: 2021-01-18 10:04:35
+ * @LastEditors: yu chen
  * @Description:
- * @FilePath: \client\src\locales\lang\en-US\index.js
+ * @FilePath: \sverp-front\src\locales\lang\en-US\index.js
  */
 import antdEnUS from 'ant-design-vue/es/locale-provider/en_US'
 import momentEU from 'moment/locale/eu'
@@ -55,7 +55,9 @@ const menuNodes = {
   HRD_MATERIAL_MANAGE: 'Material Management',
   PERSONAL_CENTER: 'Personal Center',
   PERSONAL_SETTING: 'Personal Setting',
-  'svgrid.toolbar.search': 'input a keyword to search'
+  'svgrid.toolbar.search': 'input a keyword to search',
+  CHAT: 'Chat',
+  CHAT_IDX: 'Home'
 }
 
 const svGrid = {

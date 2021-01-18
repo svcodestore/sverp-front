@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:33
- * @LastEditTime: 2021-01-14 14:04:32
- * @LastEditors: yanbuw1911
+ * @LastEditTime: 2021-01-18 10:05:49
+ * @LastEditors: yu chen
  * @Description:
- * @FilePath: \client\src\locales\lang\zh-TW\index.js
+ * @FilePath: \sverp-front\src\locales\lang\zh-TW\index.js
  */
 import antd from 'ant-design-vue/es/locale-provider/zh_CN'
 import momentCN from 'moment/locale/zh-cn'
@@ -54,7 +54,9 @@ const menuNodes = {
   TPM_NOTIFIER: '通知人員',
   HRD_MATERIAL_MANAGE: '前台物料庫存管理',
   PERSONAL_CENTER: '個人中心',
-  PERSONAL_SETTING: '個人設定'
+  PERSONAL_SETTING: '個人設定',
+  CHAT: '聊天室',
+  CHAT_IDX: '聊天主页'
 }
 
 const svGrid = {

@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2021-01-13 16:37:01
- * @LastEditors: yanbuw1911
+ * @LastEditTime: 2021-01-18 09:46:31
+ * @LastEditors: yu chen
  * @Description:
- * @FilePath: \client\src\utils\request.js
+ * @FilePath: \sverp-front\src\utils\request.js
  */
 import axios from 'axios'
 import store from '@/store'
@@ -14,7 +14,7 @@ import { VueAxios } from './axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 const options = {
-  baseURL: process.env.VUE_APP_API_BASE_URL,
+  baseURL: 'http://192.168.123.51:9600/webApi',
   timeout: 15000
 }
 

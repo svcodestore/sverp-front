@@ -69,10 +69,18 @@
 import md5 from 'md5'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
-
+import { apiSendMsg } from '@/api/chat'
+var webSocket = new WebSocket('ws://192.168.123.51:7272')
+heartBeat()
+function heartBeat () {
+  setInterval(function () {
+    webSocket.send("{ 'type': 'pong' }")
+  }, 5000)
+}
 export default {
   data () {
     return {
+      webSocket: null,
       isLoginError: false,
       loginErrorMsg: '请求出现错误，请稍后再试',
       form: this.$form.createForm(this),
@@ -115,6 +123,11 @@ export default {
       })
     },
     async loginSuccess (data) {
+      const name = localStorage
+        .getItem('userid')
+        .replace('"', '')
+        .replace('"', '')
+      const clientId = localStorage.getItem('client_id')
       if (data.userMenus) {
         await this.GenerateRoutes(data.userinfo.id)
           .then(routes => {
@@ -122,6 +135,17 @@ export default {
             this.$router.push({ path: '/' })
           })
           .catch(() => {})
+        if (name && clientId) {
+          await apiSendMsg({ type: 'init', client_id: clientId, client_name: name })
+            .then(res => {
+              if (res.code === 0) {
+                console.log('checkLogin success')
+              } else {
+                console.log('checkLogin error')
+              }
+            })
+            .catch(() => {})
+        }
         setTimeout(() => {
           this.$notification.success({
             message: '欢迎',
@@ -149,10 +173,56 @@ export default {
           this.loginErrorMsg,
         duration: 2
       })
+    },
+    initWebSocket (e) {
+      this.webSocket = e
+      this.webSocket.onopen = this.websocketonopen
+      this.webSocket.onmessage = this.websocketonmessage
+      this.webSocket.onerror = this.websocketonerror
+      this.webSocket.onclose = this.websocketclose
+    },
+    websocketonmessage (e) {
+      const data = JSON.parse(e.data)
+      switch (data.type) {
+        case 'ping':
+          console.log(data.type)
+          break
+        case 'init':
+          localStorage.setItem('client_id', data.client_id)
+          break
+        case 'login':
+          this.$store.state.userLists = data.uidAll
+          this.$store.state.userCounts = data.uidCount
+          break
+        case 'say':
+          if (data.content) {
+            localStorage.setItem('responMsg', data.to_uid + '：' + data.content)
+          }
+          break
+        case 'all':
+          if (data.content) {
+            localStorage.setItem('responMsg', data.to_uid + '对所有人说：' + data.content)
+          }
+          break
+        case 'logout':
+          this.$store.state.userLists = data.uidAll
+          this.$store.state.userCounts = data.uidCount
+          break
+      }
+    },
+    websocketonopen () {
+      console.log('连接成功')
+    },
+    websocketonerror () {
+      console.log('WebSocketError')
+    },
+    websocketclose () {
+      console.log('连接已关闭...')
     }
   },
   created () {
     document.title = `${this.$t('login')} - ${this.$t('SV')}`
+    this.initWebSocket(webSocket)
   }
 }
 </script>

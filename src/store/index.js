@@ -19,7 +19,11 @@ export default new Vuex.Store({
     user,
     permission
   },
-  state: {},
+  state: {
+    userLists: '',
+    userCounts: 0,
+    responMsg: ''
+  },
   mutations: {},
   actions: {},
   getters
