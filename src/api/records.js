@@ -1,10 +1,10 @@
 /*
  * @Author: yu chen
  * @Date: 2020-12-07 14:44:49
- * @LastEditTime: 2020-12-30 13:44:50
+ * @LastEditTime: 2021-01-18 14:21:21
  * @LastEditors: yu chen
  * @Description: In User Settings Edit
- * @FilePath: \webapp\src\api\records.js
+ * @FilePath: \sverp-front\src\api\records.js
  */
 import request from '@/utils/request'
 import { stringify } from 'qs'
@@ -16,7 +16,9 @@ const recordsApi = {
   apiSendMsg: '/record/apiSendMsg',
   apiNotify: '/record/apiNotify',
   apiSaveNotify: '/record/apiSaveNotify',
-  apiCheckCode: '/record/apiCheckCode'
+  apiCheckCode: '/record/apiCheckCode',
+  apiFitting: '/record/apiFitting',
+  apiSaveFitting: '/record/apiSaveFitting'
 }
 export function apiRepairList (paramter = '') {
   return request({
@@ -80,5 +82,19 @@ export function apiCheckCode (paramter) {
     url: recordsApi.apiCheckCode,
     method: 'post',
     data: stringify(paramter)
+  })
+}
+export function apiFitting (paramter = '') {
+  return request({
+    url: recordsApi.apiFitting,
+    method: 'post',
+    data: stringify(paramter)
+  })
+}
+export function apiSaveFitting (saveFittingList) {
+  return request({
+    url: recordsApi.apiSaveFitting,
+    method: 'post',
+    data: stringify({ saveFittingList })
   })
 }

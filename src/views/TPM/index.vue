@@ -1,21 +1,33 @@
 <template>
   <div>
     <div class="box">
-      <vxe-button v-for="item in count" :key="item.value" :style="item.color" @click="mecheStatus(item.value)">
+      <vxe-button
+        v-show="category"
+        v-for="item in count"
+        :key="item.value"
+        :style="item.color"
+        @click="mecheStatus(item.value)"
+      >
         {{ item.name }}
         <div>{{ item.count }}</div>
       </vxe-button>
+      <vxe-button @click="fitting">
+        查看
+        <div>{{ name }}</div>
+      </vxe-button>
     </div>
-    <!-- <div style='clear: both;'></div> -->
     <sv-grid ref="svGrid" v-bind="svGridOptions" v-on="svGridEvents" v-show="showTable"> </sv-grid>
   </div>
 </template>
+
 <script>
-import { apiMecheInfo, apiSaveMecheInfo } from '@/api/records'
+import { apiMecheInfo, apiSaveMecheInfo, apiSaveFitting, apiFitting } from '@/api/records'
 import XEUtils from 'xe-utils'
 export default {
   data () {
     return {
+      name: '配件',
+      category: true,
       count: [
         { value: 1, name: '正常', color: 'color:RGB(0,191,8)', count: 0 },
         { value: 2, name: '维修', color: 'color:RGB(180,191,8)', count: 0 },
@@ -29,12 +41,6 @@ export default {
         data: [],
         params: {
           originData: []
-        },
-        addItem: {
-          defaultValue: {
-            status: 1
-          },
-          focusField: 'id'
         },
         handleInsert: this.handleInsert,
         handleUpdate: this.handleUpdate,
@@ -141,8 +147,166 @@ export default {
     }
   },
   methods: {
-    mecheStatus (status) {
-      this.refreshTable({ status })
+    fitting () {
+      this.category = !this.category
+      if (this.category === false) {
+        this.name = '设备'
+        this.svGridEvents.refresh = this.fittingInfo
+        this.svGridOptions = {
+          loading: false,
+          data: [],
+          params: {
+            originData: []
+          },
+          handleInsert: this.handleInsert,
+          handleUpdate: this.handleUpdate,
+          editConfig: {
+            activeMethod: this.activeCellMethod
+          },
+          keyboardConfig: {
+            editMethod: this.editMethod
+          },
+          handleSaveOpt: apiSaveFitting,
+          columns: [
+            {
+              field: 'id',
+              title: 'ID',
+              width: 100,
+              sortable: true,
+              fixed: 'left'
+            },
+            {
+              field: 'fitting_name',
+              title: '配件名称',
+              width: 110,
+              editRender: { name: 'input' },
+              sortable: true,
+              fixed: 'left'
+            },
+            {
+              field: 'fitting_num',
+              title: '配件数量',
+              editRender: { name: 'input' },
+              width: 110,
+              fixed: 'left'
+            }
+          ]
+        }
+        this.fittingInfo()
+      } else {
+        this.name = '配件'
+        this.svGridEvents.refresh = this.refreshTable
+        this.svGridOptions = {
+          loading: false,
+          data: [],
+          params: {
+            originData: []
+          },
+          addItem: {
+            defaultValue: {
+              status: 1
+            },
+            focusField: 'id'
+          },
+          handleInsert: this.handleInsert,
+          handleUpdate: this.handleUpdate,
+          editConfig: {
+            activeMethod: this.activeCellMethod
+          },
+          keyboardConfig: {
+            editMethod: this.editMethod
+          },
+          handleSaveOpt: apiSaveMecheInfo,
+          columns: [
+            {
+              field: 'id',
+              title: 'ID',
+              width: 100,
+              sortable: true,
+              fixed: 'left'
+            },
+            {
+              field: 'line_num',
+              title: '线号',
+              width: 140,
+              sortable: true,
+              fixed: 'left',
+              editRender: {
+                name: '$select',
+                options: [
+                  {
+                    value: 8,
+                    label: '8'
+                  },
+                  {
+                    value: 9,
+                    label: '9'
+                  },
+                  {
+                    value: 10,
+                    label: '10'
+                  }
+                ]
+              }
+            },
+            {
+              field: 'produc_num',
+              title: '工程号',
+              width: 110,
+              editRender: { name: 'input' },
+              sortable: true,
+              fixed: 'left'
+            },
+            {
+              field: 'mache_num',
+              title: '设备编号',
+              editRender: { name: 'input' },
+              width: 110,
+              fixed: 'left'
+            },
+            {
+              field: 'mache_name',
+              title: '设备名称',
+              width: 100,
+              fixed: 'left',
+              editRender: {
+                name: 'input'
+              }
+            },
+            {
+              field: 'keeper',
+              title: '管理者',
+              editRender: {
+                name: 'input'
+              },
+              width: 120,
+              sortable: true,
+              fixed: 'left'
+            },
+            {
+              field: 'create_time',
+              title: '时间',
+              editRender: {
+                name: 'input'
+              },
+              width: 100,
+              sortable: true,
+              fixed: 'left'
+            },
+            {
+              field: 'status',
+              title: '状态',
+              editRender: {
+                name: 'input'
+              },
+              width: 90,
+              sortable: true,
+              fixed: 'left'
+            }
+          ]
+        }
+        this.refreshTable()
+      }
     },
     async refreshTable (status = '') {
       this.svGridOptions.loading = true
@@ -192,6 +356,7 @@ export default {
       this.$refs.svGrid.setActiveCell(row, column.property)
       return false
     },
+
     activeCellMethod ({ row, rowIndex, column, columnIndex }) {
       if (row.id && column.property === 'id' && !/^row_/.test(row.id)) {
         return false
@@ -214,6 +379,7 @@ export default {
       })
       return updateFields
     },
+
     handleInsert: function (insertItem) {
       const o = {}
       for (const key in insertItem) {
@@ -224,6 +390,24 @@ export default {
         }
       }
       return o
+    },
+    mecheStatus (status) {
+      this.refreshTable({ status })
+    },
+    async fittingInfo () {
+      this.svGridOptions.loading = true
+      await apiFitting()
+        .then(result => {
+          if (result.code === 0) {
+            this.svGridOptions.data = result.result.map(e => {
+              const row = XEUtils.clone(e, true)
+              return row
+            })
+            this.svGridOptions.params.originData = this.svGridOptions.data.map(e => XEUtils.clone(e))
+          }
+        })
+        .catch(() => {})
+      this.svGridOptions.loading = false
     }
   },
   mounted () {
