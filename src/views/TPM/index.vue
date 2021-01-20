@@ -11,6 +11,10 @@
         {{ item.name }}
         <div>{{ item.count }}</div>
       </vxe-button>
+      <vxe-button v-show="!category" @click="fittingNumber">
+        需补充
+        <div>{{ fittingCount }}</div>
+      </vxe-button>
       <vxe-button @click="fitting">
         查看
         <div>{{ name }}</div>
@@ -26,6 +30,7 @@ import XEUtils from 'xe-utils'
 export default {
   data () {
     return {
+      fittingCount: 0,
       name: '配件',
       category: true,
       count: [
@@ -147,6 +152,9 @@ export default {
     }
   },
   methods: {
+    fittingNumber () {
+      console.log('111')
+    },
     fitting () {
       this.category = !this.category
       if (this.category === false) {
@@ -178,7 +186,7 @@ export default {
             {
               field: 'fitting_name',
               title: '配件名称',
-              width: 110,
+              width: 130,
               editRender: { name: 'input' },
               sortable: true,
               fixed: 'left'
@@ -189,6 +197,22 @@ export default {
               editRender: { name: 'input' },
               width: 110,
               fixed: 'left'
+            },
+            {
+              field: 'fitting_msg_number',
+              title: '最低配件数量',
+              editRender: {
+                name: 'input'
+              },
+              width: 130
+            },
+            {
+              field: 'fitting_msg_status',
+              title: '状态',
+              editRender: {
+                name: 'input'
+              },
+              width: 100
             }
           ]
         }
@@ -351,45 +375,6 @@ export default {
         })
         .catch(() => {})
       this.svGridOptions.loading = false
-    },
-    editMethod ({ row, column }) {
-      this.$refs.svGrid.setActiveCell(row, column.property)
-      return false
-    },
-
-    activeCellMethod ({ row, rowIndex, column, columnIndex }) {
-      if (row.id && column.property === 'id' && !/^row_/.test(row.id)) {
-        return false
-      }
-      return true
-    },
-    handleUpdate: function (updateItem, columns, originData) {
-      const originRecord = originData.find(e => e.id === updateItem.id)
-      const updateFields = {}
-      columns.forEach(key => {
-        if (Array.isArray(updateItem[key])) {
-          if (updateItem[key].toString() !== originRecord[key].toString()) {
-            updateFields[key] = updateItem[key].join(',')
-          }
-        } else {
-          if (updateItem[key] !== originRecord[key]) {
-            updateFields[key] = updateItem[key]
-          }
-        }
-      })
-      return updateFields
-    },
-
-    handleInsert: function (insertItem) {
-      const o = {}
-      for (const key in insertItem) {
-        if (Array.isArray(insertItem[key])) {
-          o[key] = insertItem[key].join(',')
-        } else {
-          o[key] = insertItem[key]
-        }
-      }
-      return o
     },
     mecheStatus (status) {
       this.refreshTable({ status })

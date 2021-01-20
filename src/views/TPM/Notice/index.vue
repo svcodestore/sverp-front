@@ -1,8 +1,8 @@
 <!--
  * @Date: 2020-12-07 10:50:51
  * @LastEditors: yu chen
- * @LastEditTime: 2021-01-06 14:03:12
- * @FilePath: \webapp\src\views\TPM\Notice\index.vue
+ * @LastEditTime: 2021-01-20 16:45:07
+ * @FilePath: \sverp-front\src\views\TPM\Notice\index.vue
 -->
 <template>
   <div>
@@ -45,7 +45,7 @@
         ]"
       ></vxe-table-column>
     </vxe-table>
-    <vxe-modal v-model="showDetails" title="故障初次判断" width="600" height="300" resize>
+    <vxe-modal v-model="showDetails" title="故障初次判断" width="600" height="400" resize>
       <template v-slot>
         <vxe-select
           v-model="param.cause"
@@ -68,7 +68,8 @@
         <vxe-button status="primary" @click="submitOption(param)">发送短信</vxe-button>
       </template>
     </vxe-modal>
-    <div class="department" v-show="showDepartment">
+    <!-- <div class="department" v-show="showDepartment"> -->
+    <div class="department" v-show="false">
       <vxe-select v-model="content.noticeDepartment" class="depart" placeholder="请选择所在部门" clearable>
         <vxe-option v-for="item in departmentList" :key="item.name" :value="item.name" :label="item.name"></vxe-option>
       </vxe-select>
@@ -107,14 +108,39 @@
         <vxe-option v-for="(item, index) in notice" :key="index" :value="item.phone" :label="item.name"></vxe-option>
       </vxe-select>
       <vxe-input type="text" v-model="phoneFour" placeholder="请输入到场人手机号后四位"></vxe-input>
-      <vxe-button style="margin-right:10px" @click="Arrived()">我已到场</vxe-button>
+      <vxe-button style="margin-right:10px" @click="arrived()">我已到场</vxe-button>
       <span v-show="checkMsg" style="color:red;">验证错误</span>
+    </div>
+    <div v-show="fittingShow">
+      <vxe-input
+        v-model="repairCause"
+        class="fitting-public"
+        style="width:356px"
+        type="text"
+        placeholder="请输入维修原因"
+      /><br />
+      <vxe-input
+        v-model="repairMethod"
+        class="fitting-public"
+        style="width:356px"
+        type="text"
+        placeholder="请输入处理方法"
+      /><br />
+      有无消耗配件：<br />
+      <vxe-radio @change="fittingName()" name="isrow" content="有"></vxe-radio
+      ><vxe-radio @change="fittingArr = null" name="isrow" content="无"></vxe-radio><br />
+      <div v-for="(item, index) in fittingArr" style="display:block;margin:10px 0px;" :key="index">
+        <span>{{ item.fitting_name }} :</span
+        ><input type="number" v-model="fittingNumber[item.id]" style="border-color:rgb(210,210,210);margin:0px 10px;" />
+      </div>
+      <vxe-button @click="refreshTable">未维修完</vxe-button>
+      <vxe-button @click="repairSubmit" style="background:#1890ff;color:white">维修完成</vxe-button>
     </div>
   </div>
 </template>
 
 <script>
-import { apiMecheInfo, apiSendMsg, apiCheckCode } from '@/api/records'
+import { apiMecheInfo, apiSendMsg, apiCheckCode, apiFitting, apiRepairComp } from '@/api/records'
 import XEUtils from 'xe-utils'
 function getBase64 (img, callback) {
   const reader = new FileReader()
@@ -124,6 +150,11 @@ function getBase64 (img, callback) {
 export default {
   data () {
     return {
+      fittingNumber: [],
+      fittingShow: false,
+      repairCause: null,
+      repairMethod: null,
+      fittingArr: {},
       cateArr: ['维修', '保养', '调试'],
       checkMsg: false,
       content: {
@@ -320,7 +351,7 @@ export default {
       this.show = !this.show
       this.showDepartment = !this.showDepartment
     },
-    async Arrived () {
+    async arrived () {
       this.checkMsg = false
       const phone = this.noticeName
       const phoneFour = this.phoneFour
@@ -333,15 +364,42 @@ export default {
         await apiCheckCode({ id, phone, phoneFour })
           .then(result => {
             if (result.code === 0) {
-              this.show = true
+              this.show = false
               this.delay = false
+              this.fittingShow = true
             } else {
-              console.log(result.msg)
+              console.log(result)
             }
           })
           .catch(() => {})
         this.loading = false
       }
+    },
+    async fittingName () {
+      await apiFitting()
+        .then(result => {
+          if (result.code === 0) {
+            this.fittingArr = result.result
+          }
+        })
+        .catch(() => {})
+    },
+    async repairSubmit () {
+      const content = this.repairCause
+      const action = this.repairMethod
+      const number = this.fittingNumber
+      const id = localStorage.getItem('sid')
+      await apiRepairComp({ id, content, action, number })
+        .then(result => {
+          if (result.code === 0) {
+             this.show = true
+             this.delay = false
+             this.fittingShow = false
+          } else {
+            console.log(result.msg)
+          }
+        })
+        .catch(() => {})
     }
   },
   computed: {
@@ -418,5 +476,12 @@ export default {
 .ant-upload-select-picture-card .ant-upload-text {
   margin-top: 8px;
   color: #666;
+}
+.fitting {
+  width: 176px;
+  height: 130px;
+}
+.fitting-public {
+  margin: 10px 0px;
 }
 </style>

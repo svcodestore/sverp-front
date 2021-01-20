@@ -1,7 +1,7 @@
 /*
  * @Author: yu chen
  * @Date: 2020-12-07 14:44:49
- * @LastEditTime: 2021-01-18 14:21:21
+ * @LastEditTime: 2021-01-20 08:05:46
  * @LastEditors: yu chen
  * @Description: In User Settings Edit
  * @FilePath: \sverp-front\src\api\records.js
@@ -18,7 +18,8 @@ const recordsApi = {
   apiSaveNotify: '/record/apiSaveNotify',
   apiCheckCode: '/record/apiCheckCode',
   apiFitting: '/record/apiFitting',
-  apiSaveFitting: '/record/apiSaveFitting'
+  apiSaveFitting: '/record/apiSaveFitting',
+  apiRepairComp: '/record/apiRepairComp'
 }
 export function apiRepairList (paramter = '') {
   return request({
@@ -96,5 +97,12 @@ export function apiSaveFitting (saveFittingList) {
     url: recordsApi.apiSaveFitting,
     method: 'post',
     data: stringify({ saveFittingList })
+  })
+}
+export function apiRepairComp (params) {
+  return request({
+    url: recordsApi.apiRepairComp,
+    method: 'post',
+    data: stringify({ params })
   })
 }
