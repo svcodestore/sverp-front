@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-01-18 17:37:11
+ * @LastEditTime: 2021-01-19 16:12:42
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: \client\src\components\SV\SvGrid\grid.vue
@@ -60,8 +60,11 @@
               </a-button>
             </a-popconfirm>
           </div>
-          <div class="toolbar-item">
-            {{ title }}
+          <div v-if="title" class="toolbar-item toolbar-item-table-title">
+            <a-tooltip placement="top" :title="desc" v-if="desc">
+              <span>{{ title }}</span>
+            </a-tooltip>
+            <span v-else>{{ title }}</span>
           </div>
           <slot name="svgridToolbar"></slot>
           <div class="toolbar-item toolbar-item-right">
@@ -409,6 +412,12 @@ export default {
       const optData = Object.assign({}, fmtInsertRecords, fmtRmRecords, fmtUpdateRecords)
 
       return optData
+    },
+    /**
+     * @description: antd vue, tooltip 自动调整
+     */
+    _getPopupContainer (trigger) {
+      return trigger.parentElement
     },
     /**
      * @description: 表格全屏转换
