@@ -166,7 +166,7 @@ export default {
   },
   async beforeCreate () {
     await getGroups()
-      .then(res => res.result && (groups = res.data))
+      .then(res => res.result && (groups = res.data.filter(d => d.sgd_is_dept === 1)))
       .catch(() => {})
     this.svGridOptions.columns = [
       {
