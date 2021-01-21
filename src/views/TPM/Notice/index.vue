@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-12-07 10:50:51
  * @LastEditors: yu chen
- * @LastEditTime: 2021-01-21 16:12:22
+ * @LastEditTime: 2021-01-21 16:22:12
  * @FilePath: \sverp-front\src\views\TPM\Notice\index.vue
 -->
 <template>
@@ -60,8 +60,7 @@
         <vxe-button status="primary" @click="submitOption(param)">发送短信</vxe-button>
       </template>
     </vxe-modal>
-    <!-- <div class="department" v-show="showDepartment"> -->
-    <div class="department" v-show="false">
+    <div class="department" v-show="showDepartment">
       <vxe-select v-model="content.noticeDepartment" class="depart" placeholder="请选择所在部门" clearable>
         <vxe-option v-for="item in departmentList" :key="item.name" :value="item.name" :label="item.name"></vxe-option>
       </vxe-select>
