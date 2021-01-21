@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-20 10:31:49
- * @LastEditTime: 2021-01-20 17:20:58
+ * @LastEditTime: 2021-01-21 11:23:11
  * @LastEditors: yanbuw1911
  * @Description: 领料申请
  * @FilePath: \client\src\views\HRD\MaterialManagement\storehouse\apply.vue
@@ -10,23 +10,8 @@
   <div class="container">
     <center><h2>领料申请表单填写</h2></center>
     <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-model-item ref="dept" label="领料部门" prop="dept">
-        <a-select
-          v-model="form.dept"
-          allowClear
-          @blur="
-            () => {
-              $refs.dept.onFieldBlur()
-            }
-          "
-        >
-          <a-select-option v-for="item in groups" :key="item.sgd_code" :value="item.sgd_code">
-            {{ item.sgd_alias }}
-          </a-select-option>
-        </a-select>
-      </a-form-model-item>
       <a-form-model-item label="领料日期" required prop="date">
-        <a-date-picker v-model="form.date" show-time type="date" placeholder="请选择日期" style="width: 100%;" />
+        <a-date-picker v-model="form.date" type="date" placeholder="请选择日期" style="width: 100%;" />
       </a-form-model-item>
       <a-form-model-item ref="name" label="出库用料" prop="name">
         <a-select
@@ -42,7 +27,7 @@
         >
           <a-spin v-if="fetching" slot="notFoundContent" size="small" />
           <a-select-option
-            v-for="item in materails"
+            v-for="item in materials"
             :key="`${item.id}/${item.hmu_material_name}|${item.hmu_material_stock}${item.hmu_material_unit}`"
           >
             {{ item.hmu_material_name }}
@@ -65,7 +50,6 @@
                   .join('')
               )
             "
-            :title="form.qty[idx].id.split('/')[1].split('|')[0]"
             :placeholder="
               '剩余' +
                 form.qty[idx].id
@@ -103,9 +87,8 @@
 </template>
 
 <script>
-import { getGroups } from '@/api/user'
-import { getMaterialList } from '@/api/hrd'
-import { debounce } from 'xe-utils'
+import { getMaterialList, setOutboundMaterialOrder } from '@/api/hrd'
+import { debounce, clone } from 'xe-utils'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 
@@ -114,23 +97,18 @@ export default {
     this.fetchMaterial = debounce(this.fetchMaterial, 200)
 
     return {
-      stock: undefined,
-      maxQty: 100,
-      materails: [],
+      materials: [],
       fetching: false,
-      groups: [],
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
       other: '',
       form: {
         name: [],
-        dept: '',
         qty: [],
         date: moment(),
         desc: []
       },
       rules: {
-        dept: [{ required: true, message: '请选择部门', trigger: 'blur' }],
         name: [{ required: true, message: '请选择用料', trigger: 'blur' }],
         qty: [{ required: true, message: '请输入数量', trigger: 'blur' }, { validator: this.qtyValidator }],
         date: [{ required: true, message: '请选择日期', trigger: 'blur' }]
@@ -142,9 +120,37 @@ export default {
   },
   methods: {
     onSubmit () {
-      this.$refs.ruleForm.validate(valid => {
+      this.$refs.ruleForm.validate(async valid => {
         if (valid) {
-          console.log(this.form)
+          const data = clone(this.form, true)
+          data.orderNo = data.date.format('YYYYMMDD').toString() + Math.ceil(Math.random() * 100000)
+          data.applyList = data.name.map((e, i) => ({
+            materialId: e.key.split('/')[0],
+            qty: data.qty[i].value,
+            remark: data.desc[i].value
+          }))
+
+          delete data.name
+          delete data.qty
+          delete data.date
+          delete data.desc
+
+          const info = { name: this.userInfo.con_name, dept: this.userInfo.con_dept }
+          await setOutboundMaterialOrder(data, info).then(res => {
+            if (res.result) {
+              this.resetForm()
+
+              this.$notification.success({
+                message: '领料申请成功',
+                icon: <a-icon type='smile' style='color: #108ee9' />
+              })
+            } else {
+              this.$notification.error({
+                message: '领料申请失败',
+                icon: <a-icon type='frown' style='color: #108ee9' />
+              })
+            }
+          })
         }
       })
     },
@@ -152,26 +158,26 @@ export default {
       this.$refs.ruleForm.resetFields()
     },
     handleChange (value) {
-      console.log(value)
       this.form.name = value
 
+      // 更新数量和备注
       this.form.qty = value.map(e => ({ value: null, id: e.key }))
       this.form.desc = value.map(e => ({ value: null, id: e.key }))
 
       Object.assign(this, {
-        materails: [],
+        materials: [],
         fetching: false
       })
     },
     fetchMaterial (val) {
-      this.materails = []
+      this.materials = []
       this.fetching = true
       getMaterialList(val).then(res => {
         if (res.result) {
           if (val) {
-            this.materails = res.data.filter(e => e.hmu_material_model !== '0' && e.hmu_material_stock !== '0')
+            this.materials = res.data.filter(e => e.hmu_material_model !== '0' && e.hmu_material_stock !== '0')
           } else {
-            this.materails = res.data
+            this.materials = res.data
           }
         }
 
@@ -185,12 +191,6 @@ export default {
         callback()
       }
     }
-  },
-  async beforeCreate () {
-    await getGroups().then(res => res.result && (this.groups = res.data.filter(d => d.sgd_is_dept === 1)))
-  },
-  mounted () {
-    this.form.dept = this.userInfo.con_dept
   }
 }
 </script>

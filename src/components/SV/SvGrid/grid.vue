@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-01-19 16:12:42
+ * @LastEditTime: 2021-01-21 13:56:31
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: \client\src\components\SV\SvGrid\grid.vue
@@ -412,6 +412,20 @@ export default {
       const optData = Object.assign({}, fmtInsertRecords, fmtRmRecords, fmtUpdateRecords)
 
       return optData
+    },
+    /**
+     * @description: 验证单元格是否符合验证规则
+     * @return Promise
+     */
+    async fullValidate () {
+      let err
+      await this.$refs.xGrid.fullValidate().catch(errMap => {
+        if (errMap) {
+          err = errMap
+        }
+      })
+
+      return Promise.reject(err)
     },
     /**
      * @description: antd vue, tooltip 自动调整

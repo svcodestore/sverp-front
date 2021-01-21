@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-08 11:08:16
- * @LastEditTime: 2021-01-16 15:13:47
+ * @LastEditTime: 2021-01-21 14:28:31
  * @LastEditors: yanbuw1911
  * @Description: 出库管理
  * @FilePath: \client\src\views\HRD\MaterialManagement\storehouse\outbound.vue
@@ -37,7 +37,7 @@
         </div>
       </div>
       <div id="outbound-detail-grid-printable">
-        <sv-grid v-bind="detailGridOptions">
+        <sv-grid v-bind="detailGridOptions" ref="detailGrid">
           <template #toolbar>
             <center style="letter-spacing: 16px;font-weight: bolder;"><h1>东莞斯达文星皮具有限公司</h1></center>
             <center style="letter-spacing: 12px;font-weight: bolder;"><h2>出库清单</h2></center>
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { getOutboundOrder, getOutboundMaterial } from '@/api/hrd'
+import { getOutboundOrder, getOutboundMaterialList, approveOutbound } from '@/api/hrd'
 
 export default {
   data () {
@@ -122,12 +122,12 @@ export default {
         'cell-dblclick': this.handleDblClick
       },
       detailGridOptions: {
-        border: false,
+        showOverflow: false,
         height: null,
         data: [],
         editRules: {
-          hom_apply_qty: [{ pattern: '[0-9]{1,4}', message: '非法输入' }],
-          hom_out_qty: [{ pattern: '[0-9]{1,4}', message: '非法输入' }]
+          hom_apply_qty: [{ validator: this.validator }],
+          hom_out_qty: [{ validator: this.validator }]
         },
         columns: [
           {
@@ -148,13 +148,11 @@ export default {
           },
           {
             title: '申请数量',
-            field: 'hom_apply_qty',
-            editRender: { name: 'input' }
+            field: 'hom_apply_qty'
           },
           {
             title: '出库数量',
-            field: 'hom_out_qty',
-            editRender: { name: 'input' }
+            field: 'hom_out_qty'
           },
           {
             title: '备注',
@@ -170,10 +168,19 @@ export default {
       await getOutboundOrder().then(res => res.result && (this.gridOptions.data = res.data))
       this.gridOptions.loading = false
     },
-    async handleDblClick ({ row }) {
+    handleDblClick ({ row }) {
       this.gridCurrRow = row
-      await getOutboundMaterial(row.id).then(res => res.result && (this.detailGridOptions.data = res.data))
       this.outboundVisible = true
+      if (row.hoo_is_approved) {
+        delete this.detailGridOptions.columns[4].editRender
+        delete this.detailGridOptions.columns[5].editRender
+        delete this.detailGridOptions.columns[6].editRender
+      } else {
+        this.detailGridOptions.columns[4].editRender = { name: 'input' }
+        this.detailGridOptions.columns[5].editRender = { name: 'input' }
+        this.detailGridOptions.columns[6].editRender = { name: 'input' }
+      }
+      getOutboundMaterialList(row.id).then(res => res.result && (this.detailGridOptions.data = res.data))
     },
     handleRowColor ({ row, rowIndex }) {
       return row.hoo_is_approved === 1 ? 'outbound-svgrid-col-green' : 'outbound-svgrid-col-blue'
@@ -193,7 +200,42 @@ export default {
         })
       })
     },
-    handleApprove () {}
+    async handleApprove () {
+      const data = {
+        outboundId: this.gridCurrRow.id
+      }
+
+      let err
+      await this.$refs.detailGrid.fullValidate().catch(e => {
+        err = e
+      })
+      if (!err) {
+        const opt = this.$refs.detailGrid.getGridOpt()
+        opt && (data.modify = opt)
+      }
+
+      await approveOutbound(data).then(res => {
+        if (res.result) {
+          this.$notification.success({
+            message: '已审核',
+            icon: <a-icon type='smile' style='color: #108ee9' />
+          })
+
+          this.outboundVisible = false
+          this.getOutboundOrder()
+        } else {
+          this.$notification.error({
+            message: '审核失败',
+            icon: <a-icon type='frown' style='color: #108ee9' />
+          })
+        }
+      })
+    },
+    validator ({ cellValue }) {
+      if (!new RegExp(/^\d{1,4}$/).test(cellValue)) {
+        return new Error('1-4位数字')
+      }
+    }
   },
   async mounted () {
     await this.getOutboundOrder()
