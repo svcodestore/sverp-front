@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-08 11:08:16
- * @LastEditTime: 2021-01-21 14:28:31
+ * @LastEditTime: 2021-01-21 16:55:49
  * @LastEditors: yanbuw1911
  * @Description: 出库管理
  * @FilePath: \client\src\views\HRD\MaterialManagement\storehouse\outbound.vue
@@ -71,6 +71,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { getOutboundOrder, getOutboundMaterialList, approveOutbound } from '@/api/hrd'
 
 export default {
@@ -162,6 +163,9 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters(['userInfo'])
+  },
   methods: {
     async getOutboundOrder () {
       this.gridOptions.loading = true
@@ -202,9 +206,14 @@ export default {
     },
     async handleApprove () {
       const data = {
-        outboundId: this.gridCurrRow.id
+        outboundId: this.gridCurrRow.id,
+        approver: this.userInfo.con_name,
+        stock: {
+          usr: this.gridCurrRow.hoo_creator,
+          data: this.detailGridOptions.data.map(e => ({ materialId: e.hom_material_id, qty: e.hom_out_qty }))
+        }
       }
-
+      console.log(this.gridCurrRow, this.detailGridOptions.data)
       let err
       await this.$refs.detailGrid.fullValidate().catch(e => {
         err = e
