@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2021-01-07 14:20:06
- * @LastEditTime: 2021-01-16 16:57:22
+ * @LastEditTime: 2021-01-21 14:25:40
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\api\hrd.js
@@ -14,8 +14,11 @@ const hrdApi = {
   getMaterialList: '/hrd/getMaterialList',
   saveMaterialUsedOpt: '/hrd/saveMaterialUsedOpt',
   getOutboundOrder: '/hrd/getOutboundOrder',
-  getOutboundMaterial: '/hrd/getOutboundMaterial',
-  getMaterialLogList: '/hrd/getMaterialLogList'
+  getOutboundMaterialList: '/hrd/getOutboundMaterialList',
+  getMaterialLogList: '/hrd/getMaterialLogList',
+  setMaterialStock: '/hrd/setMaterialStock',
+  setOutboundMaterialOrder: '/hrd/setOutboundMaterialOrder',
+  approveOutbound: '/hrd/approveOutbound'
 }
 
 export const getMaterialCategory = () =>
@@ -44,9 +47,9 @@ export const getOutboundOrder = () =>
     method: 'post'
   })
 
-export const getOutboundMaterial = materialId =>
+export const getOutboundMaterialList = materialId =>
   request({
-    url: hrdApi.getOutboundMaterial,
+    url: hrdApi.getOutboundMaterialList,
     method: 'post',
     data: stringify({ materialId })
   })
@@ -56,4 +59,25 @@ export const getMaterialLogList = materialId =>
     url: hrdApi.getMaterialLogList,
     method: 'post',
     data: stringify({ materialId })
+  })
+
+export const setMaterialStock = (data, usr) =>
+  request({
+    url: hrdApi.setMaterialStock,
+    method: 'post',
+    data: stringify({ data, usr })
+  })
+
+export const setOutboundMaterialOrder = (data, usr) =>
+  request({
+    url: hrdApi.setOutboundMaterialOrder,
+    method: 'post',
+    data: stringify({ data, usr })
+  })
+
+export const approveOutbound = data =>
+  request({
+    url: hrdApi.approveOutbound,
+    method: 'post',
+    data: stringify(data)
   })
