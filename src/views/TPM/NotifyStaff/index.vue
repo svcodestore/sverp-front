@@ -1,3 +1,9 @@
+<!--
+ * @Date: 2021-01-18 09:16:25
+ * @LastEditors: yu chen
+ * @LastEditTime: 2021-01-21 15:38:42
+ * @FilePath: \sverp-front\src\views\TPM\NotifyStaff\index.vue
+-->
 <template>
   <div>
     <sv-grid ref="svGrid" v-bind="svGridOptions" v-on="svGridEvents"> </sv-grid>
@@ -56,6 +62,25 @@ export default {
             editRender: { name: 'input' },
             width: 110,
             fixed: 'left'
+          },
+          {
+            field: 'notify_people',
+            title: '是否通知',
+            editRender: {
+              name: '$select',
+              options: [
+                {
+                  value: 1,
+                  label: '否'
+                },
+                {
+                  value: 2,
+                  label: '是'
+                }
+              ]
+            },
+            width: 140,
+            fixed: 'left'
           }
         ]
       },
@@ -81,44 +106,6 @@ export default {
         })
         .catch(() => {})
       this.svGridOptions.loading = false
-    },
-    editMethod ({ row, column }) {
-      this.$refs.svGrid.setActiveCell(row, column.property)
-      return false
-    },
-    activeCellMethod ({ row, rowIndex, column, columnIndex }) {
-      if (row.id && column.property === 'id' && !/^row_/.test(row.id)) {
-        return false
-      }
-      return true
-    },
-    handleUpdate: function (updateItem, columns, originData) {
-      const originRecord = originData.find(e => e.id === updateItem.id)
-      const updateFields = {}
-      columns.forEach(key => {
-        if (Array.isArray(updateItem[key])) {
-          if (updateItem[key].toString() !== originRecord[key].toString()) {
-            updateFields[key] = updateItem[key].join(',')
-          }
-        } else {
-          if (updateItem[key] !== originRecord[key]) {
-            updateFields[key] = updateItem[key]
-          }
-        }
-      })
-      return updateFields
-    },
-    handleInsert: function (insertItem) {
-      const o = {}
-      for (const key in insertItem) {
-        if (Array.isArray(insertItem[key])) {
-          o[key] = insertItem[key].join(',')
-        } else {
-          o[key] = insertItem[key]
-        }
-      }
-      delete o.id
-      return o
     }
   },
   mounted () {
