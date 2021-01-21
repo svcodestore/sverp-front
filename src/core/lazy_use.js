@@ -48,7 +48,10 @@ import {
   Carousel,
   Calendar,
   AutoComplete,
-  Pagination
+  Pagination,
+  FormModel,
+  Timeline,
+  Space
 } from 'ant-design-vue'
 import Viser from 'viser-vue'
 
@@ -105,6 +108,9 @@ Vue.use(Carousel)
 Vue.use(Calendar)
 Vue.use(AutoComplete)
 Vue.use(Pagination)
+Vue.use(FormModel)
+Vue.use(Timeline)
+Vue.use(Space)
 
 Vue.prototype.$confirm = Modal.confirm
 Vue.prototype.$message = message

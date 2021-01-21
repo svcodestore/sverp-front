@@ -1,3 +1,9 @@
+/*
+ * @Date: 2021-01-18 09:16:25
+ * @LastEditors: yu chen
+ * @LastEditTime: 2021-01-21 14:19:54
+ * @FilePath: \sverp-front\src\store\index.js
+ */
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -22,6 +28,7 @@ export default new Vuex.Store({
   state: {
     userLists: '',
     userCounts: 0,
+    noticePeople: '',
     responMsg: ''
   },
   mutations: {},

@@ -11,10 +11,6 @@
         {{ item.name }}
         <div>{{ item.count }}</div>
       </vxe-button>
-      <vxe-button v-show="!category" @click="fittingNumber">
-        需补充
-        <div>{{ fittingCount }}</div>
-      </vxe-button>
       <vxe-button @click="fitting">
         查看
         <div>{{ name }}</div>
@@ -210,7 +206,17 @@ export default {
               field: 'fitting_msg_status',
               title: '状态',
               editRender: {
-                name: 'input'
+                name: '$select',
+                options: [
+                  {
+                    value: 1,
+                    label: '未发送'
+                  },
+                  {
+                    value: -1,
+                    label: '已发送'
+                  }
+                ]
               },
               width: 100
             }

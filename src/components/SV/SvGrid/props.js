@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:27:12
- * @LastEditTime: 2021-01-14 13:23:36
+ * @LastEditTime: 2021-01-19 16:07:19
  * @LastEditors: yanbuw1911
  * @Description: 参考 vxe-grid
  * @FilePath: \client\src\components\SV\SvGrid\props.js
@@ -79,8 +79,12 @@ const gridProps = {
 
 const svGridProps = {
   title: {
-    type: null,
-    default: null
+    type: String,
+    default: () => ''
+  },
+  desc: {
+    type: String,
+    default: () => ''
   },
   btnSize: {
     type: String,

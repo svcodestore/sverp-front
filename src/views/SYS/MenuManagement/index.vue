@@ -71,8 +71,7 @@ export default {
             title: '名称',
             editRender: { name: 'input' },
             width: 110,
-            sortable: true,
-            filters: []
+            sortable: true
           },
           {
             field: 'mnu_alias',
@@ -130,29 +129,25 @@ export default {
             field: 'mnu_join_date',
             title: '创建时间',
             width: 110,
-            sortable: true,
-            filters: []
+            sortable: true
           },
           {
             field: 'mnu_mod_date',
             title: '修改时间',
             width: 110,
-            sortable: true,
-            filters: []
+            sortable: true
           },
           {
             field: 'creator',
             title: '创建人',
             width: 120,
-            sortable: true,
-            filters: []
+            sortable: true
           },
           {
             field: 'modifier',
             title: '修改人',
             width: 120,
-            sortable: true,
-            filters: []
+            sortable: true
           }
         ]
       },

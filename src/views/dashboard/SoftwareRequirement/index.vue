@@ -1,14 +1,14 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-09 19:48:29
- * @LastEditTime: 2021-01-15 09:49:11
+ * @LastEditTime: 2021-01-20 08:06:28
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\views\dashboard\SoftwareRequirement\index.vue
 -->
 <template>
   <div>
-    <a-tabs>
+    <a-tabs defaultActiveKey="1" type="card">
       <a-tab-pane key="1" tab="提案">
         <data-show></data-show>
       </a-tab-pane>

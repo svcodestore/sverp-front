@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-07 16:32:16
- * @LastEditTime: 2021-01-16 17:25:21
+ * @LastEditTime: 2021-01-20 10:29:07
  * @LastEditors: yanbuw1911
  * @Description: 库存列表
  * @FilePath: \client\src\views\HRD\MaterialManagement\stock\index.vue
@@ -10,14 +10,16 @@
   <div>
     <sv-grid v-bind="svGridOptions" v-on="svGridEvents"></sv-grid>
     <a-modal :visible="modalVisible" title="用料操作明细" :footer="null" @cancel="modalVisible = false">
-      <ul style="max-height: 500px; overflow: auto;">
-        <li class="log-list" v-for="(item, idx) in logList" :key="idx">
-          {{
-            `${item.hml_creator} ${operType(item.hml_operate_type)} ${item.hmu_material_name} ${item.hml_operate_qty}
-            ${item.hmu_material_unit} ${item.hml_join_date}`
-          }}
-        </li>
-      </ul>
+      <a-timeline style="max-height: 500px; overflow: auto; padding: 5px 0;">
+        <a-timeline-item class="log-list" v-for="(item, idx) in logList" :key="idx">
+          <div class="log-content">
+            <ul v-html="logConentHtml(item)"></ul>
+            <div class="log-count">
+              <p></p>
+            </div>
+          </div>
+        </a-timeline-item>
+      </a-timeline>
     </a-modal>
   </div>
 </template>
@@ -31,6 +33,8 @@ export default {
       modalVisible: false,
       logList: [],
       svGridOptions: {
+        title: '用料库存列表',
+        desc: '',
         loading: false,
         data: [],
         columns: [
@@ -85,6 +89,18 @@ export default {
       }
     }
   },
+  computed: {
+    logField () {
+      return [
+        'hml_creator',
+        'hml_operate_type',
+        'hmu_material_name',
+        'hml_operate_qty',
+        'hmu_material_unit',
+        'hml_join_date'
+      ]
+    }
+  },
   methods: {
     async getData () {
       this.svGridOptions.loading = true
@@ -97,8 +113,27 @@ export default {
       await getMaterialLogList(row.id).then(res => res.result && (this.logList = res.data))
       this.modalVisible = true
     },
-    operType (val) {
-      return val === 'put' ? '入账' : val === 'out' ? '出账' : '建账'
+    logConentHtml (item) {
+      return this.logField.reduce((pre, curr) => {
+        let html = `<li>${item[curr]}</li>`
+        if (item[curr] === 'put') {
+          html = '<li style="text-shadow: 1px 1px 1px #a8ee58;">入账</li>'
+        }
+        if (item[curr] === 'out') {
+          html = '<li style="text-shadow: 1px 1px 1px rgb(235, 184, 17);">出账</li>'
+        }
+        if (item[curr] === 'set') {
+          html = '<li>建账</li>'
+        }
+        if (/入账/.test(pre) && typeof item[curr] === 'number') {
+          html = `<li style="color: #a8ee58;">${item[curr]}</li>`
+        }
+        if (/出账/.test(pre) && typeof item[curr] === 'number') {
+          html = `<li style="color: rgb(235, 184, 17);">${item[curr]}</li>`
+        }
+
+        return pre + html
+      }, '')
     }
   },
   mounted () {
@@ -109,13 +144,30 @@ export default {
 
 <style lang="less" scoped>
 .log-list {
-  list-style: none;
   counter-increment: number;
-}
 
-.log-list::before {
-  content: counter(number) ' ';
-  font-weight: bold;
-  color: rgba(37, 172, 250, 0.815);
+  .log-content {
+    display: flex;
+
+    ul {
+      padding: 0;
+      display: flex;
+      width: 80%;
+      justify-content: space-between;
+    }
+
+    .log-count {
+      margin-left: auto;
+
+      p {
+        margin: 0 15px;
+      }
+
+      p::before {
+        content: counter(number) ' ';
+        color: rgba(107, 109, 110, 0.562);
+      }
+    }
+  }
 }
 </style>

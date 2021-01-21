@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-07 11:11:38
- * @LastEditTime: 2021-01-16 15:18:59
+ * @LastEditTime: 2021-01-19 16:14:29
  * @LastEditors: yanbuw1911
  * @Description: 商品用料
  * @FilePath: \client\src\views\HRD\MaterialManagement\materialUsed\index.vue
@@ -27,6 +27,8 @@ export default {
     return {
       materialCurrRow: null,
       materialOptions: {
+        title: '用料分类',
+        desc: '设置用料分类',
         zoomBtn: false,
         loading: false,
         data: [],
@@ -44,13 +46,15 @@ export default {
           {
             title: '种类名称',
             field: 'hmu_material_name',
-            editRender: { name: 'input' }
+            editRender: { name: 'input' },
+            sortable: true
           },
           {
             align: 'right',
             title: '种类编码',
             field: 'hmu_material_code',
-            editRender: { name: 'input' }
+            editRender: { name: 'input' },
+            sortable: true
           }
         ]
       },
@@ -59,6 +63,8 @@ export default {
         'current-change': this.handleMaterialChange
       },
       subMaterialOptions: {
+        title: '用料列表',
+        desc: '设置用料',
         zoomBtn: false,
         loading: false,
         data: [],
@@ -75,22 +81,26 @@ export default {
           {
             title: '种类编码',
             field: 'hmu_material_code',
-            editRender: { name: 'input' }
+            editRender: { name: 'input' },
+            sortable: true
           },
           {
             title: '种类名称',
             field: 'hmu_material_name',
-            editRender: { name: 'input' }
+            editRender: { name: 'input' },
+            sortable: true
           },
           {
             title: '规格型号',
             field: 'hmu_material_model',
-            editRender: { name: 'input' }
+            editRender: { name: 'input' },
+            sortable: true
           },
           {
             title: '计量单位',
             field: 'hmu_material_unit',
-            editRender: { name: 'input' }
+            editRender: { name: 'input' },
+            sortable: true
           }
         ]
       },

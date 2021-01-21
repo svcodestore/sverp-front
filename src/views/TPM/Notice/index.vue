@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-12-07 10:50:51
  * @LastEditors: yu chen
- * @LastEditTime: 2021-01-20 16:45:07
+ * @LastEditTime: 2021-01-21 15:31:25
  * @FilePath: \sverp-front\src\views\TPM\Notice\index.vue
 -->
 <template>
@@ -54,22 +54,13 @@
         >
           <vxe-option :value="item.value" v-for="item in repair" :key="item.phone" :label="item.name"></vxe-option>
         </vxe-select>
-        <vxe-select
-          style="width:200px;display: block;padding:20px 20px;"
-          v-model="param.cate"
-          placeholder="请选择类型"
-          clearable
-        >
-          <vxe-option v-for="(item, index) in cateArr" :key="index" :value="item" :label="item"></vxe-option>
-        </vxe-select>
         <vxe-select v-model="param.arr" placeholder="通知给" style="width:290px;padding:20px 20px;" multiple clearable>
-          <vxe-option v-for="(item, index) in notice" :key="index" :value="item.phone" :label="item.name"></vxe-option>
+          <vxe-option v-for="(item, index) in notice" :key="index" :value="item.notify_phone" :label="item.notify_name"></vxe-option>
         </vxe-select>
         <vxe-button status="primary" @click="submitOption(param)">发送短信</vxe-button>
       </template>
     </vxe-modal>
-    <!-- <div class="department" v-show="showDepartment"> -->
-    <div class="department" v-show="false">
+    <div class="department" v-show="showDepartment">
       <vxe-select v-model="content.noticeDepartment" class="depart" placeholder="请选择所在部门" clearable>
         <vxe-option v-for="item in departmentList" :key="item.name" :value="item.name" :label="item.name"></vxe-option>
       </vxe-select>
@@ -98,14 +89,14 @@
         </div>
       </a-upload>
       <vxe-select v-model="content.noticeName" class="notice" placeholder="请选择通知人" multiple clearable>
-        <vxe-option v-for="(item, index) in notice" :key="index" :value="item.phone" :label="item.name"></vxe-option>
+        <vxe-option v-for="(item, index) in notice" :key="index" :value="item.notify_phone" :label="item.notify_name"></vxe-option>
       </vxe-select>
       <vxe-input class="mecheCause" v-model="content.cause" clearable placeholder="请输入原因" type="text"></vxe-input>
       <vxe-button style="margin-left:0px" @click="submitContent" class="msg">发送短信</vxe-button>
     </div>
     <div v-show="delay">
       <vxe-select v-model="noticeName" class="notice" placeholder="请选择通知人" clearable>
-        <vxe-option v-for="(item, index) in notice" :key="index" :value="item.phone" :label="item.name"></vxe-option>
+        <vxe-option v-for="(item, index) in notice" :key="index" :value="item.notify_phone" :label="item.notify_name"></vxe-option>
       </vxe-select>
       <vxe-input type="text" v-model="phoneFour" placeholder="请输入到场人手机号后四位"></vxe-input>
       <vxe-button style="margin-right:10px" @click="arrived()">我已到场</vxe-button>
@@ -136,18 +127,24 @@
       <vxe-button @click="refreshTable">未维修完</vxe-button>
       <vxe-button @click="repairSubmit" style="background:#1890ff;color:white">维修完成</vxe-button>
     </div>
+    <p>通知人员设置：</p>
+    <notice-people></notice-people>
   </div>
 </template>
 
 <script>
-import { apiMecheInfo, apiSendMsg, apiCheckCode, apiFitting, apiRepairComp } from '@/api/records'
+import { apiMecheInfo, apiSendMsg, apiCheckCode, apiFitting, apiRepairComp, apiNotify } from '@/api/records'
 import XEUtils from 'xe-utils'
+import NotifyStaff from '../NotifyStaff/index'
 function getBase64 (img, callback) {
   const reader = new FileReader()
   reader.addEventListener('load', () => callback(reader.result))
   reader.readAsDataURL(img)
 }
 export default {
+  components: {
+    'notice-people': NotifyStaff
+  },
   data () {
     return {
       fittingNumber: [],
@@ -192,18 +189,7 @@ export default {
           cate: null
         }
       ],
-      notice: [
-        { name: '符超', phone: '18912637465' },
-        { name: '杨頔', phone: '13662989475' },
-        { name: '王草凡', phone: '15899635935' },
-        { name: '吴丹', phone: '18676616052' },
-        { name: '黄明中', phone: '13600355664' },
-        { name: '周飞', phone: '13929469779' },
-        { name: '包文钦', phone: '13609059608' },
-        { name: '施跃敏', phone: '15387858563' },
-        { name: '陈宇test', phone: '15391033249' },
-        { name: '陈宇test1', phone: '19820721127' }
-      ],
+      notice: [],
       repair: [
         { value: '电源(无法开机,断电,接电源)', name: '电源(无法开机,断电,接电源)' },
         { value: '马达(马达烧掉,有异响)', name: '马达(马达烧掉,有异响)' },
@@ -271,6 +257,7 @@ export default {
   },
   created () {
     this.refreshTable()
+    this.noticePeople()
     //  this.tableData = window.MOCK_TREE_DATA_LIST
   },
   methods: {
@@ -295,6 +282,52 @@ export default {
     },
     async submitOption (e) {
       this.loading = true
+      const repair = [
+        '电源(无法开机,断电,接电源)',
+        '马达(马达烧掉,有异响)',
+        '油封(高压油管漏油,压力不足)',
+        '气压(气管漏气,气压不足)',
+        '针车(针车调车,梭床走位,断线,跳针,烂线)',
+        '换配件(捅皮机削边机换刀,其他设备换配件)',
+        '定位(XY轴走位,火力、效能不足)',
+        '喷枪(喷不出胶水,气压不足)(控制异常,程式乱码)',
+        '喷枪(喷不出胶水,气压不足)',
+        '其他(辅助设备故障)',
+        '死机、如压脚过低导致主马达死机，机箱散热风扇故障',
+        '数据无法录入',
+        '自动断网',
+        '无法开机',
+        '程序自动退出',
+        '死机',
+        '自动关机',
+        '不在上面选项中'
+      ]
+      const maintenance = [
+        '梭床调整、厚料、薄料、针的选择',
+        '压脚提升调整',
+        '配件的更换',
+        '牙齿没安装正确，压脚没调好，没保养清洁加油、皮带轮卡线'
+      ]
+      const debug = [
+        '操作不当、或选择针线过粗、胶水过多',
+        '粗线、细线、油腊线、鱼丝线、梭床的选择与更换调整',
+        '特种样板，或特种要求的单与特种针车的效果调试',
+        '压脚、针、针板、牙齿、选择与更换配合，不同物料及加工要求调整',
+        '针车的调整更换、如：双针车',
+        '高车、包边筒的调整与修改、根据不同规格的包边条，以及不同订单的包边要求进行调整',
+        '压脚调整，伸缩长度力度行程高低及压脚大小斜度，车货顺畅度调整',
+        '跳线、烂线：梭床被针打花，针板有毛刺、针有问题，梭床损坏、针杆深浅度'
+      ]
+      if (repair.indexOf(this.param.cause) > -1) {
+        this.param.cate = '维修'
+      }
+      if (maintenance.indexOf(this.param.cause) > -1) {
+        this.param.cate = '保养'
+      }
+      if (debug.indexOf(this.param.cause) > -1) {
+        this.param.cate = '调试'
+      }
+      console.log(e)
       await apiSendMsg(e)
         .then(result => {
           if (result.code === 0) {
@@ -392,11 +425,20 @@ export default {
       await apiRepairComp({ id, content, action, number })
         .then(result => {
           if (result.code === 0) {
-             this.show = true
-             this.delay = false
-             this.fittingShow = false
+            this.show = true
+            this.delay = false
+            this.fittingShow = false
           } else {
             console.log(result.msg)
+          }
+        })
+        .catch(() => {})
+    },
+    async noticePeople () {
+      await apiNotify()
+        .then(result => {
+          if (result.code === 0) {
+            this.notice = result.result
           }
         })
         .catch(() => {})
