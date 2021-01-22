@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-12-07 10:50:51
  * @LastEditors: yu chen
- * @LastEditTime: 2021-01-21 16:22:12
+ * @LastEditTime: 2021-01-22 17:04:27
  * @FilePath: \sverp-front\src\views\TPM\Notice\index.vue
 -->
 <template>
@@ -55,7 +55,12 @@
           <vxe-option :value="item.value" v-for="item in repair" :key="item.phone" :label="item.name"></vxe-option>
         </vxe-select>
         <vxe-select v-model="param.arr" placeholder="通知给" style="width:290px;padding:20px 20px;" multiple clearable>
-          <vxe-option v-for="(item, index) in notice" :key="index" :value="item.notify_phone" :label="item.notify_name"></vxe-option>
+          <vxe-option
+            v-for="(item, index) in notice"
+            :key="index"
+            :value="item.notify_phone"
+            :label="item.notify_name"
+          ></vxe-option>
         </vxe-select>
         <vxe-button status="primary" @click="submitOption(param)">发送短信</vxe-button>
       </template>
@@ -89,18 +94,29 @@
         </div>
       </a-upload>
       <vxe-select v-model="content.noticeName" class="notice" placeholder="请选择通知人" multiple clearable>
-        <vxe-option v-for="(item, index) in notice" :key="index" :value="item.notify_phone" :label="item.notify_name"></vxe-option>
+        <vxe-option
+          v-for="(item, index) in notice"
+          :key="index"
+          :value="item.notify_phone"
+          :label="item.notify_name"
+        ></vxe-option>
       </vxe-select>
       <vxe-input class="mecheCause" v-model="content.cause" clearable placeholder="请输入原因" type="text"></vxe-input>
       <vxe-button style="margin-left:0px" @click="submitContent" class="msg">发送短信</vxe-button>
     </div>
     <div v-show="delay">
       <vxe-select v-model="noticeName" class="notice" placeholder="请选择通知人" clearable>
-        <vxe-option v-for="(item, index) in notice" :key="index" :value="item.notify_phone" :label="item.notify_name"></vxe-option>
+        <vxe-option
+          v-for="(item, index) in notice"
+          :key="index"
+          :value="item.notify_phone"
+          :label="item.notify_name"
+        ></vxe-option>
       </vxe-select>
       <vxe-input type="text" v-model="phoneFour" placeholder="请输入到场人手机号后四位"></vxe-input>
       <vxe-button style="margin-right:10px" @click="arrived()">我已到场</vxe-button>
       <span v-show="checkMsg" style="color:red;">验证错误</span>
+      <span id="timeOutId" style="color:red;display:none">{{ timeOutMsg }}</span>
     </div>
     <div v-show="fittingShow">
       <vxe-input
@@ -147,6 +163,7 @@ export default {
   },
   data () {
     return {
+      timeOutMsg: '已超时，您15分钟之内未到现场',
       fittingNumber: [],
       fittingShow: false,
       repairCause: null,
@@ -327,7 +344,6 @@ export default {
       if (debug.indexOf(this.param.cause) > -1) {
         this.param.cate = '调试'
       }
-      console.log(e)
       await apiSendMsg(e)
         .then(result => {
           if (result.code === 0) {
@@ -337,11 +353,37 @@ export default {
             this.showDepartment = false
             this.showSearch = false
             this.delay = true
+            var self = this
+            setTimeout(function () {
+              const param = self.param
+              document.getElementById('timeOutId').style.display = 'inline'
+              apiSendMsg(param)
+                .then(result => {
+                  console.log('已发出请求')
+                  if (result.code === 0) {
+                    console.log('第二条短信发送成功')
+                  }
+                })
+                .catch(() => {})
+            }, 900000)
           }
         })
         .catch(() => {})
       this.loading = false
     },
+    // addOneMsg () {
+    //   const timer = setInterval(function (e) {
+    //     document.getElementById('timeOutId').style.display = 'inline'
+    //     apiSendMsg(e)
+    //       .then(result => {
+    //         if (result.code === 0) {
+    //           console.log('第二条短信发送成功')
+    //         }
+    //       })
+    //       .catch(() => {})
+    //     clearInterval(timer)
+    //   }, 5000)
+    // },
     async submitContent () {
       this.content.mecheImg = localStorage.getItem('imgUrl')
       const content = this.content

@@ -308,7 +308,7 @@ export default {
         },
         {
           field: 'expendtime',
-          title: '总耗时(分)',
+          title: '耗时(分)',
           editRender: { name: 'input' },
           width: 100
         },

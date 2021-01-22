@@ -67,21 +67,7 @@ export default {
             sortable: true,
             fixed: 'left',
             editRender: {
-              name: '$select',
-              options: [
-                {
-                  value: 8,
-                  label: '8'
-                },
-                {
-                  value: 9,
-                  label: '9'
-                },
-                {
-                  value: 10,
-                  label: '10'
-                }
-              ]
+              name: 'input'
             }
           },
           {
@@ -120,11 +106,11 @@ export default {
           },
           {
             field: 'create_time',
-            title: '时间',
+            title: '添加时间',
             editRender: {
               name: 'input'
             },
-            width: 100,
+            width: 130,
             sortable: true,
             fixed: 'left'
           },
@@ -132,9 +118,31 @@ export default {
             field: 'status',
             title: '状态',
             editRender: {
-              name: 'input'
+              name: '$select',
+              options: [
+                {
+                  value: 1,
+                  label: '正常'
+                },
+                {
+                  value: 2,
+                  label: '维修'
+                },
+                {
+                  value: 3,
+                  label: '保养'
+                },
+                {
+                  value: 4,
+                  label: '调试'
+                },
+                {
+                  value: 5,
+                  label: '停用'
+                }
+              ]
             },
-            width: 90,
+            width: 100,
             sortable: true,
             fixed: 'left'
           }
@@ -148,9 +156,6 @@ export default {
     }
   },
   methods: {
-    fittingNumber () {
-      console.log('111')
-    },
     fitting () {
       this.category = !this.category
       if (this.category === false) {
@@ -196,6 +201,7 @@ export default {
             },
             {
               field: 'fitting_msg_number',
+              fixed: 'left',
               title: '最低配件数量',
               editRender: {
                 name: 'input'
@@ -205,6 +211,7 @@ export default {
             {
               field: 'fitting_msg_status',
               title: '状态',
+              fixed: 'left',
               editRender: {
                 name: '$select',
                 options: [
@@ -219,6 +226,13 @@ export default {
                 ]
               },
               width: 100
+            },
+            {
+              field: 'fitting_consume_num',
+              title: '已消耗配件数量',
+              editRender: { name: 'input' },
+              width: 150,
+              fixed: 'left'
             }
           ]
         }
@@ -262,21 +276,7 @@ export default {
               sortable: true,
               fixed: 'left',
               editRender: {
-                name: '$select',
-                options: [
-                  {
-                    value: 8,
-                    label: '8'
-                  },
-                  {
-                    value: 9,
-                    label: '9'
-                  },
-                  {
-                    value: 10,
-                    label: '10'
-                  }
-                ]
+                name: 'input'
               }
             },
             {
@@ -315,11 +315,11 @@ export default {
             },
             {
               field: 'create_time',
-              title: '时间',
+              title: '添加时间',
               editRender: {
                 name: 'input'
               },
-              width: 100,
+              width: 130,
               sortable: true,
               fixed: 'left'
             },
@@ -327,9 +327,31 @@ export default {
               field: 'status',
               title: '状态',
               editRender: {
-                name: 'input'
+                name: '$select',
+                options: [
+                  {
+                    value: 1,
+                    label: '正常'
+                  },
+                  {
+                    value: 2,
+                    label: '维修'
+                  },
+                  {
+                    value: 3,
+                    label: '保养'
+                  },
+                  {
+                    value: 4,
+                    label: '调试'
+                  },
+                  {
+                    value: 5,
+                    label: '停用'
+                  }
+                ]
               },
-              width: 90,
+              width: 100,
               sortable: true,
               fixed: 'left'
             }
