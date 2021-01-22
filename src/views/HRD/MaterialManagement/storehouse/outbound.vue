@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-08 11:08:16
- * @LastEditTime: 2021-01-21 16:55:49
+ * @LastEditTime: 2021-01-22 09:13:20
  * @LastEditors: yanbuw1911
  * @Description: 出库管理
  * @FilePath: \client\src\views\HRD\MaterialManagement\storehouse\outbound.vue
@@ -59,7 +59,7 @@
             发料人：
           </a-col>
           <a-col :span="4">
-            审核人：
+            审核人：<span>{{ gridCurrRow.approver_name }}</span>
           </a-col>
           <a-col :span="4">
             领料员：
@@ -104,7 +104,13 @@ export default {
           },
           {
             title: '创建人',
-            field: 'hoo_creator'
+            field: 'hoo_creator',
+            sortable: true
+          },
+          {
+            title: '审核人',
+            field: 'approver_name',
+            sortable: true
           },
           {
             title: '审核状态',
@@ -169,11 +175,19 @@ export default {
   methods: {
     async getOutboundOrder () {
       this.gridOptions.loading = true
-      await getOutboundOrder().then(res => res.result && (this.gridOptions.data = res.data))
+      await getOutboundOrder().then(
+        res =>
+          res.result &&
+          (this.gridOptions.data = res.data.map(e => {
+            e.creator_name && (e.hoo_creator = e.creator_name)
+            return e
+          }))
+      )
       this.gridOptions.loading = false
     },
     handleDblClick ({ row }) {
       this.gridCurrRow = row
+      console.log(this.gridCurrRow)
       this.outboundVisible = true
       if (row.hoo_is_approved) {
         delete this.detailGridOptions.columns[4].editRender
@@ -207,13 +221,13 @@ export default {
     async handleApprove () {
       const data = {
         outboundId: this.gridCurrRow.id,
-        approver: this.userInfo.con_name,
+        approver: this.userInfo.con_id,
         stock: {
-          usr: this.gridCurrRow.hoo_creator,
+          usr: this.gridCurrRow.creator_id,
           data: this.detailGridOptions.data.map(e => ({ materialId: e.hom_material_id, qty: e.hom_out_qty }))
         }
       }
-      console.log(this.gridCurrRow, this.detailGridOptions.data)
+
       let err
       await this.$refs.detailGrid.fullValidate().catch(e => {
         err = e
