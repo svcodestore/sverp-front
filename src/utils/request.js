@@ -1,11 +1,11 @@
 /*
- * @Author: yanbuw1911
- * @Date: 2020-10-27 17:02:14
-<<<<<<< HEAD
- * @LastEditTime: 2021-01-22 17:07:00
+ * @LastEditTime: 2021-01-22 17:09:23
  * @LastEditors: yu chen
 =======
  * @LastEditTime: 2021-01-20 10:40:49
+=======
+ * @LastEditTime: 2021-01-22 09:19:01
+>>>>>>> a5f6fe4548db1497d747253e2561dd8b40a8e563
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \sverp-front\src\utils\request.js

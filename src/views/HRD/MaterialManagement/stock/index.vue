@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-07 16:32:16
- * @LastEditTime: 2021-01-20 10:29:07
+ * @LastEditTime: 2021-01-22 09:01:06
  * @LastEditors: yanbuw1911
  * @Description: 库存列表
  * @FilePath: \client\src\views\HRD\MaterialManagement\stock\index.vue
@@ -110,7 +110,14 @@ export default {
       this.svGridOptions.loading = false
     },
     async handleDblClick ({ row }) {
-      await getMaterialLogList(row.id).then(res => res.result && (this.logList = res.data))
+      await getMaterialLogList(row.id).then(
+        res =>
+          res.result &&
+          (this.logList = res.data.map(e => {
+            e.con_name && (e.hml_creator = e.con_name)
+            return e
+          }))
+      )
       this.modalVisible = true
     },
     logConentHtml (item) {

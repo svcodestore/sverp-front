@@ -104,7 +104,7 @@ export default {
           data.materialId = data.name[0].key
           delete data.name
 
-          await setMaterialStock(data, this.userInfo.con_name).then(res => {
+          await setMaterialStock(data, this.userInfo.con_id).then(res => {
             if (res.result) {
               this.resetForm()
 

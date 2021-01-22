@@ -135,7 +135,7 @@ export default {
           delete data.date
           delete data.desc
 
-          const info = { name: this.userInfo.con_name, dept: this.userInfo.con_dept }
+          const info = { name: this.userInfo.con_id, dept: this.userInfo.con_dept }
           await setOutboundMaterialOrder(data, info).then(res => {
             if (res.result) {
               this.resetForm()
