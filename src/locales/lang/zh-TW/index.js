@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:33
- * @LastEditTime: 2021-01-18 10:05:49
- * @LastEditors: yu chen
+ * @LastEditTime: 2021-01-22 11:12:00
+ * @LastEditors: yanbuw1911
  * @Description:
- * @FilePath: \sverp-front\src\locales\lang\zh-TW\index.js
+ * @FilePath: \client\src\locales\lang\zh-TW\index.js
  */
 import antd from 'ant-design-vue/es/locale-provider/zh_CN'
 import momentCN from 'moment/locale/zh-cn'
@@ -56,7 +56,8 @@ const menuNodes = {
   PERSONAL_CENTER: '個人中心',
   PERSONAL_SETTING: '個人設定',
   CHAT: '聊天室',
-  CHAT_IDX: '聊天主页'
+  CHAT_IDX: '聊天主页',
+  PROD_PROCEDURES: '工站管理'
 }
 
 const svGrid = {

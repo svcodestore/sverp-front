@@ -1,14 +1,14 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-11-16 16:58:35
- * @LastEditTime: 2021-01-20 08:07:04
+ * @LastEditTime: 2021-01-22 17:09:08
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\views\SYS\PrivilegeManagement\index.vue
 -->
 <template>
   <div>
-    <a-tabs defaultActiveKey="1" type="card">
+    <a-tabs defaultActiveKey="1">
       <a-tab-pane key="1" tab="权限集合">
         <privilege></privilege>
       </a-tab-pane>

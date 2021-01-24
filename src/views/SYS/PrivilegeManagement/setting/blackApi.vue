@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-14 10:50:30
- * @LastEditTime: 2021-01-11 14:01:05
+ * @LastEditTime: 2021-01-22 17:10:34
  * @LastEditors: yanbuw1911
  * @Description: 设置用户、组、角色的黑名单接口（API）
  * @FilePath: \client\src\views\SYS\PrivilegeManagement\setting\blackApi.vue
@@ -46,7 +46,7 @@ export default {
     return {
       users: [],
       apiGridOptions: {
-        title: '【接口列表】',
+        title: '接口列表',
         height: 300,
         loading: false,
         data: [],
@@ -68,7 +68,7 @@ export default {
         refresh: this.getData
       },
       blackApiGridOptions: {
-        title: '【黑名单列表】',
+        title: '黑名单列表',
         loading: false,
         data: [],
         handleSaveOpt: saveBlackApiOpt,
