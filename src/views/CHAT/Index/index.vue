@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-12-30 15:09:50
  * @LastEditors: yu chen
- * @LastEditTime: 2021-01-18 10:10:21
+ * @LastEditTime: 2021-01-25 08:51:07
  * @FilePath: \sverp-front\src\views\CHAT\Index\index.vue
 -->
 <template>
@@ -28,8 +28,7 @@
       <div class="box-right">
         <div class="box-right-header" :v-model="name">{{ name }}</div>
         <div class="box-right-center">
-          <ul id="ul">
-          </ul>
+          <ul id="ul"></ul>
         </div>
         <div class="box-right-footer">
           <div class="box-right-footer-fast">

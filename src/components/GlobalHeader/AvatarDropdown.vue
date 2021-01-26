@@ -1,10 +1,10 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2021-01-12 15:13:03
- * @LastEditors: yanbuw1911
+ * @LastEditTime: 2021-01-26 08:00:46
+ * @LastEditors: yu chen
  * @Description:
- * @FilePath: \client\src\components\GlobalHeader\AvatarDropdown.vue
+ * @FilePath: \sverp-front\src\components\GlobalHeader\AvatarDropdown.vue
 -->
 <template>
   <a-dropdown v-if="currentUser && currentUser.name" placement="bottomRight">
@@ -65,7 +65,7 @@
 
 <script>
 import { Modal } from 'ant-design-vue'
-
+import { apiSendMsg } from '@/api/chat'
 export default {
   name: 'AvatarDropdown',
   props: {
@@ -93,12 +93,28 @@ export default {
           // return new Promise((resolve, reject) => {
           //   setTimeout(Math.random() > 0.5 ? resolve : reject, 1500)
           // }).catch(() => console.log('Oops errors!'))
-          return this.$store.dispatch('Logout').then(() => {
-            this.$router.push({ name: 'login' })
-          })
+          this.loginout()
         },
         onCancel () {}
       })
+    },
+    async loginout () {
+      const clientName = localStorage.getItem('userid')
+      const clientId = localStorage.getItem('client_id')
+      const type = 'loginout'
+      await apiSendMsg({ clientName, clientId, type })
+        .then(result => {
+          if (result.code === 0) {
+            localStorage.removeItem('client_id')
+            console.log('sign out')
+            return this.$store.dispatch('Logout').then(() => {
+              this.$router.push({ name: 'login' })
+            })
+          } else {
+            console.log('sign out error')
+          }
+        })
+        .catch(() => {})
     }
   }
 }
