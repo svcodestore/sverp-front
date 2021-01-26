@@ -196,12 +196,13 @@ export default {
           break
         case 'say':
           if (data.content) {
-            localStorage.setItem('responMsg', data.to_uid + '：' + data.content)
+            // this.$store.state.responMsg = data.content
+            localStorage.setItem('responMsg', data.uid + '：' + data.content)
           }
           break
         case 'all':
           if (data.content) {
-            localStorage.setItem('responMsg', data.to_uid + '对所有人说：' + data.content)
+            localStorage.setItem('responMsg', data.uid + '对所有人说：' + data.content)
           }
           break
         case 'logout':

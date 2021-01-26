@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2021-01-26 08:00:46
+ * @LastEditTime: 2021-01-26 10:44:35
  * @LastEditors: yu chen
  * @Description:
  * @FilePath: \sverp-front\src\components\GlobalHeader\AvatarDropdown.vue
@@ -109,6 +109,7 @@ export default {
             console.log('sign out')
             return this.$store.dispatch('Logout').then(() => {
               this.$router.push({ name: 'login' })
+              location.reload()
             })
           } else {
             console.log('sign out error')

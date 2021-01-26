@@ -1,5 +1,5 @@
 /*
- * @LastEditTime: 2021-01-26 09:10:52
+ * @LastEditTime: 2021-01-26 09:19:03
  * @LastEditors: yu chen
 =======
  * @LastEditTime: 2021-01-25 08:00:56
@@ -16,7 +16,8 @@ import { VueAxios } from './axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 const options = {
-  baseURL: process.env.VUE_APP_API_BASE_URL,
+  baseURL: 'http://192.168.123.51:9600/webApi',
+  // baseURL: process.env.VUE_APP_API_BASE_URL,
   timeout: 15000
 }
 

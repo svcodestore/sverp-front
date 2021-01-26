@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-12-30 15:09:50
  * @LastEditors: yu chen
- * @LastEditTime: 2021-01-25 08:51:07
+ * @LastEditTime: 2021-01-26 17:24:16
  * @FilePath: \sverp-front\src\views\CHAT\Index\index.vue
 -->
 <template>
@@ -72,6 +72,7 @@ export default {
           localStorage.setItem('tmpMsg', this.sayMsg)
         }
       }, 1000)
+
       // this.userList = JSON.parse(localStorage.getItem('userList'))
     },
     userName (index) {
@@ -82,18 +83,21 @@ export default {
     async sendMsg () {
       const content = this.list
       const li = document.getElementById('ul')
-      const clientName = localStorage.getItem('userid')
+      const clientName = localStorage
+        .getItem('userid')
+        .replace('"', '')
+        .replace('"', '')
       const id = localStorage.getItem('id')
       let param = {}
       if (content !== null && clientName !== null && id !== null) {
         if (this.type === 'say') {
           if (this.to_uid !== null) {
-            param = { to_uid: this.name, content: content, type: this.type }
+            param = { to_uid: this.name, content: content, type: this.type, uid: clientName }
           } else {
-            param = { to_group_id: this.to_group_id, content: content, type: this.type }
+            param = { to_group_id: this.to_group_id, content: content, type: this.type, uid: clientName }
           }
         } else {
-          param = { content: content, type: this.type }
+          param = { content: content, type: this.type, uid: clientName }
         }
         li.innerHTML +=
           '<li class="box-say-right"><div class="box-img"><img src="http://5b0988e595225.cdn.sohucs.com/images/20190324/26b14ff8956b4661a456a7e6751ce085.jpeg" style="width:100%" alt=""/></div><div class="say-right">' +
@@ -117,6 +121,23 @@ export default {
   },
   created () {
     this.userCount()
+  },
+  updated () {
+    this.$nextTick(() => {
+      // setTimeout(() => {
+        document.querySelector('.box-right-center').scrollTop = document.querySelector('.box-right-center').scrollHeight
+      // }, 13)
+    })
+  },
+  mounted () {
+    document.addEventListener('keydown', e => {
+      if (e.keyCode === 13 && !e.ctrlKey) {
+        this.sendMsg()
+      }
+      if (e.keyCode === 13 && e.ctrlKey) {
+        this.list = this.list + '\n'
+      }
+    })
   }
 }
 </script>
@@ -207,7 +228,7 @@ export default {
   flex: 6;
   overflow-y: scroll;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  /* -webkit-overflow-scrolling: touch; */
   border-bottom: 1px solid #d6c8c8;
   padding: 10px;
   background: white;
@@ -312,5 +333,6 @@ export default {
   width: 40px;
   float: left;
   display: block;
+  cursor: pointer;
 }
 </style>
