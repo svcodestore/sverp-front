@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2021-01-13 16:31:04
+ * @LastEditTime: 2021-01-22 17:01:04
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\permission.js
@@ -74,7 +74,7 @@ router.beforeEach(async (to, from, next) => {
       next(store.getters.addRouters)
     } else {
       notification.error({
-        message: '授权失败',
+        message: '未授权',
         description: '授权凭证已丢失，请重新登陆'
       })
       store.dispatch('Logout').then(() => {

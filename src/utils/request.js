@@ -1,11 +1,9 @@
 /*
- * @LastEditTime: 2021-01-26 09:09:26
+ * @LastEditTime: 2021-01-26 09:10:52
  * @LastEditors: yu chen
 =======
- * @LastEditTime: 2021-01-20 10:40:49
-=======
- * @LastEditTime: 2021-01-22 09:19:01
->>>>>>> a5f6fe4548db1497d747253e2561dd8b40a8e563
+ * @LastEditTime: 2021-01-25 08:00:56
+>>>>>>> 38fd14e390ff8929f864597bc0ad3a5ed0ac90a4
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \sverp-front\src\utils\request.js
@@ -42,13 +40,23 @@ const errorHandler = error => {
       })
     } else if (error.response.status === 401 && !data.result) {
       notification.error({
-        message: '授权失败',
-        description: (token && '登录已过期，请重新登陆') || '授权凭证已丢失，请重新登陆'
+        message: '未授权',
+        description: '授权凭证已丢失，请重新登陆'
       })
       store.dispatch('Logout').then(() => {
         setTimeout(() => {
           window.location.reload()
-        }, 1500)
+        }, 200)
+      })
+    } else if (error.response.status === 402 && !data.result) {
+      notification.error({
+        message: '授权失败',
+        description: token && '登录已过期，请重新登陆'
+      })
+      store.dispatch('Logout').then(() => {
+        setTimeout(() => {
+          window.location.reload()
+        }, 200)
       })
     } else if (error.response.status === 500) {
       notification.error({

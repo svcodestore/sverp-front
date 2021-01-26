@@ -1,14 +1,14 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-09 15:07:26
- * @LastEditTime: 2020-12-16 15:06:24
+ * @LastEditTime: 2021-01-22 17:09:50
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\views\SYS\PrivilegeManagement\setting\index.vue
 -->
 <template>
   <div>
-    <a-tabs defaultActiveKey="5" tabPosition="right">
+    <a-tabs defaultActiveKey="5" tabPosition="right" type="card">
       <a-tab-pane key="5" tab="用户权限">
         <usr-privilege></usr-privilege>
       </a-tab-pane>

@@ -56,7 +56,8 @@ const menuNodes = {
   PERSONAL_CENTER: '个人中心',
   PERSONAL_SETTING: '个人设置',
   CHAT: '聊天室',
-  CHAT_IDX: '聊天主页'
+  CHAT_IDX: '聊天主页',
+  PROD_PROCEDURES: '工站管理'
 }
 
 const svGrid = {
