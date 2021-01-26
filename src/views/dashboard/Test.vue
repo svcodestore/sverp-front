@@ -1,16 +1,17 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-28 12:10:41
- * @LastEditTime: 2020-12-29 08:16:00
+ * @LastEditTime: 2021-01-25 10:11:11
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \client\src\views\dashboard\Test.vue
 -->
 <template>
   <div>
+    <div class="three-cube"></div>
     <div class="container-wrapper">
       <div class="container">
-        <div class="box" @click="test">
+        <div class="box">
           <div class="img">
             <svg
               t="1609136489600"
@@ -442,16 +443,83 @@
 </template>
 
 <script>
+import * as THREE from 'three'
+
 export default {
-  methods: {
-    test () {
-      console.log(111)
+  data () {
+    return {
+      cubeMesh: null,
+      renderer: null,
+      scene: null,
+      camera: null
     }
+  },
+  methods: {
+    // 让立方体动起来
+    render () {
+      this.cubeMesh.rotation.x += 0.02
+      this.cubeMesh.rotation.y += 0.02
+      this.cubeMesh.rotation.z += 0.02
+      this.renderer.render(this.scene, this.camera)
+      window.requestAnimationFrame(this.render)
+    },
+    cube () {
+      const cubeGeo = new THREE.CubeGeometry(40, 40, 40, 8, 8, 8) // 创建立方体
+      const cubeMat = new THREE.MeshLambertMaterial({
+        // 创建材料
+        color: '#00ACC1',
+        wireframe: false,
+        transparent: true,
+        opacity: 0.8
+      })
+      this.cubeMesh = new THREE.Mesh(cubeGeo, cubeMat) // 创建立方体网格模型
+      this.cubeMesh.position.set(0, 0, 0) // 设置立方体的坐标
+      this.scene.add(this.cubeMesh) // 将立方体添加到场景中
+    },
+    main () {
+      // 添加一个div元素
+      const container = document.createElement('div')
+      document.querySelector('.three-cube').appendChild(container)
+
+      this.scene = new THREE.Scene() // 创建新场景
+
+      // 添加一个透视相机
+      this.camera = new THREE.PerspectiveCamera(30, 500 / 500, 1, 1000)
+      this.camera.position.set(100, 300, 100) // 设置相机位置
+      this.camera.lookAt(new THREE.Vector3(0, 0, 0)) // 让相机指向原点
+
+      // 渲染
+      // antialias:true增加抗锯齿效果
+      this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+      // renderer.setClearColor(new THREE.Color(0xa0a0a0)) // 设置窗口背景颜色为黑
+      this.renderer.setSize(500, 500) // 设置窗口尺寸
+      // 将renderer关联到container，这个过程类似于获取canvas元素
+      container.appendChild(this.renderer.domElement)
+
+      // 给场景添加光源
+      // 自然光
+      var ambientLight = new THREE.AmbientLight(0x606060)
+      this.scene.add(ambientLight)
+
+      // 平行光源
+      const directionalLight = new THREE.DirectionalLight(0xffffff)
+      directionalLight.position.set(1, 0.75, 0.5).normalize()
+      this.scene.add(directionalLight)
+      this.cube()
+    }
+  },
+  mounted () {
+    this.main()
+    this.render()
   }
 }
 </script>
 
 <style lang="less" scoped>
+.three-cube {
+  width: 100%;
+}
+
 // @import url('https://fonts.googleapis.com/css2?family=Jura:wght@500&display=swap');
 .glassmorphism-container {
   width: 100%;
