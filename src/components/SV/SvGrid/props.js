@@ -1,31 +1,31 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:27:12
- * @LastEditTime: 2021-01-19 16:07:19
+ * @LastEditTime: 2021-01-26 14:03:54
  * @LastEditors: yanbuw1911
  * @Description: 参考 vxe-grid
  * @FilePath: \client\src\components\SV\SvGrid\props.js
  */
 const gridProps = {
-  id: { type: String, default: () => '' },
+  id: { type: String, default: () => 'svGrid' },
   columns: { type: Array, default: () => [] },
   data: { type: Array, default: () => [] },
   height: { type: [Number, String], default: () => 500 },
   masHeight: [Number, String],
-  autoResize: Boolean,
-  syncResize: [Boolean, String, Number],
-  resizable: Boolean,
-  stripe: Boolean,
-  border: [Boolean, String],
-  round: Boolean,
+  autoResize: { type: Boolean, default: () => true },
+  syncResize: { type: [Boolean, String, Number], default: () => true },
+  resizable: { type: Boolean, default: () => true },
+  stripe: { type: Boolean, default: () => true },
+  border: { type: [Boolean, String], default: () => true },
+  round: { type: Boolean, default: () => true },
   size: String,
   loading: Boolean,
   align: String,
   headerAlign: String,
   footerAlign: String,
-  showHeader: Boolean,
-  highlightCurrentRow: Boolean,
-  highlightHoverRow: Boolean,
+  showHeader: { type: Boolean, default: () => true },
+  highlightCurrentRow: { type: Boolean, default: () => true },
+  highlightHoverRow: { type: Boolean, default: () => true },
   highlightCurrentColumn: Boolean,
   highlightHoverColumn: Boolean,
   highlightCell: Boolean, // draft
@@ -44,8 +44,8 @@ const gridProps = {
   showFooterOverflow: [Boolean, String],
   columnKey: Boolean,
   rowKey: Boolean,
-  rowId: String,
-  keepSource: Boolean,
+  rowId: { type: String, default: () => 'id' },
+  keepSource: { type: Boolean, default: () => true },
   columnConfig: Object,
   seqConfig: Object,
   sortConfig: Object,
@@ -59,9 +59,12 @@ const gridProps = {
   expandConfig: Object,
   treeConfig: Object,
   menuConfig: Object,
-  mouseConfig: Object,
-  keyboardConfig: Object,
-  editConfig: Object,
+  mouseConfig: { type: Object, default: () => ({ selected: true }) },
+  keyboardConfig: {
+    type: Object,
+    default: () => ({ isArrow: true, isDel: true, isEnter: true, isTab: true, isEdit: true })
+  },
+  editConfig: { type: Object, default: () => ({ trigger: 'dblclick', mode: 'cell', showStatus: true }) },
   validConfig: Object,
   editRules: Object,
   emptyText: String,
