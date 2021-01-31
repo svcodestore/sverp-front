@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2021-01-29 09:43:19
+ * @LastEditTime: 2021-02-01 07:49:04
  * @LastEditors: yu chen
  * @Description:
  * @FilePath: \sverp-front\src\components\GlobalHeader\AvatarDropdown.vue
@@ -89,12 +89,7 @@ export default {
       Modal.confirm({
         title: '登出',
         content: '确定登出系统？',
-        onOk: () => {
-          // return new Promise((resolve, reject) => {
-          //   setTimeout(Math.random() > 0.5 ? resolve : reject, 1500)
-          // }).catch(() => console.log('Oops errors!'))
-          this.loginout()
-        },
+        onOk: this.loginout,
         onCancel () {}
       })
     },
@@ -110,15 +105,17 @@ export default {
           if (result.code === 0) {
             localStorage.removeItem('client_id')
             console.log('sign out')
-            return this.$store.dispatch('Logout').then(() => {
-              this.$router.push({ name: 'login' })
-              location.reload()
-            })
           } else {
             console.log('sign out error')
           }
         })
         .catch(() => {})
+
+      // 退出登录，清除 localStorage 和 Vuex 中的存的数据
+      this.$store.dispatch('Logout').then(() => {
+        this.$router.push({ name: 'login' })
+        location.reload()
+      })
     }
   }
 }

@@ -24,6 +24,8 @@
     "dayjs": "^1.9.5",
     "enquire.js": "^2.1.6",
     "file-saver": "^2.0.2",
+    "gantt-elastic": "^1.0.12",
+    "gantt-elastic-header": "^0.1.11",
     "lodash.clonedeep": "^4.5.0",
     "lodash.get": "^4.4.2",
     "lodash.pick": "^4.4.0",

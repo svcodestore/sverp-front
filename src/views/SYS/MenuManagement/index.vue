@@ -30,13 +30,18 @@ export default {
           mnu_modifier: this.$store.state.user.info.con_id
         },
         handleSaveOpt: saveMenuOpt,
+        treeConfig: {
+          children: 'children',
+          accordion: true
+        },
         columns: [
           {
             field: 'id',
             title: 'ID',
             width: 60,
             sortable: true,
-            fixed: 'left'
+            fixed: 'left',
+            treeNode: true
           },
           {
             field: 'pid',

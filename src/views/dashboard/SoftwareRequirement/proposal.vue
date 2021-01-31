@@ -393,7 +393,7 @@ export default {
     handleCurrentRowChange ({ row }) {
       this.currRow = row
     },
-    activeRowMethod ({ row, rowIndex, column }) {
+    activeRowMethod ({ row }) {
       if (this.isDev && !row.approver) {
         return true
       }
@@ -401,7 +401,7 @@ export default {
       return false
     },
     // 设置列禁止编辑，vxe-table bug,下拉框设置无效
-    editActived ({ row, rowIndex, $rowIndex, column, columnIndex, $columnIndex }) {
+    editActived ({ row }) {
       if (row.isr_leader !== this.userInfo.con_id) {
         const devColumn = this.$refs.svGrid.getColumnByField('isr_dev')
         devColumn.editRender.attrs.disabled = true

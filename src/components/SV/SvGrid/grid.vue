@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-01-25 07:50:54
+ * @LastEditTime: 2021-01-26 14:53:34
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: \client\src\components\SV\SvGrid\grid.vue
@@ -118,7 +118,7 @@
 
 <script>
 /* eslint-disable no-unused-expressions */
-import XEUtils from 'xe-utils'
+import { toString, clone, toArrayTree } from 'xe-utils'
 import { gridProps, svGridProps } from './props'
 
 export default {
@@ -140,24 +140,28 @@ export default {
   watch: {
     data (now) {
       // 记录表格初始数据
-      this.originData = now.map(e => XEUtils.clone(e, true))
+      this.originData = now.map(e => clone(e, true))
     }
   },
   computed: {
     // 表格属性
     attrs () {
-      const { filteredData, wrappedColumns, loading, editRules, rowClassName, align } = this
+      const { filteredData, wrappedColumns, defaultAttrs, treeConfig } = this
 
-      return {
-        class: this.class,
-        loading,
+      const o = {}
+      Object.keys(gridProps).forEach(prop => {
+        if (this[prop] !== void 0) {
+          o[prop] = this[prop]
+        }
+      })
+
+      return Object.assign(o, {
         columns: wrappedColumns,
-        data: filteredData,
-        editRules,
-        rowClassName,
-        align,
-        ...this.defaultAttrs
-      }
+        data: treeConfig
+          ? toArrayTree(filteredData, { key: 'id', parentKey: 'pid', children: 'children' })
+          : filteredData,
+        ...defaultAttrs
+      })
     },
     // 过滤后的数据
     filteredData () {
@@ -170,7 +174,7 @@ export default {
           .map(col => col.field)
           .some(
             key =>
-              XEUtils.toString(item[key])
+              toString(item[key])
                 .toLowerCase()
                 .indexOf(filterStr) > -1
           )
@@ -178,30 +182,9 @@ export default {
     },
     // 默认表格属性
     defaultAttrs () {
-      const {
-        border,
-        height,
-        showHeaderOverflow,
-        showOverflow,
-        mergedEditConfig,
-        mergedMouseConfig,
-        mergedKeyboardConfig
-      } = this
+      const { height, mergedEditConfig, mergedMouseConfig, mergedKeyboardConfig } = this
       const defaultAttrs = {
-        id: 'svGrid',
         height: height === null ? null : height || 500,
-        rowId: 'id',
-        stripe: true,
-        round: true,
-        autoResize: true,
-        syncResize: true,
-        highlightHoverRow: true,
-        highlightCurrentRow: true,
-        border: border || true,
-        resizable: true,
-        showHeaderOverflow,
-        showOverflow,
-        keepSource: true,
         editConfig: mergedEditConfig,
         mouseConfig: mergedMouseConfig,
         keyboardConfig: mergedKeyboardConfig
@@ -381,7 +364,7 @@ export default {
         if (typeof handleUpdate === 'function') {
           updateFields = handleUpdate(updateRecord, columns, originData)
         } else {
-          const originRecord = originData.find(e => e.id === updateRecord.id)
+          const originRecord = originData.find(e => e.id === updateRecord.id) || {}
           columns.forEach(key => {
             // 处理下拉框多选
             if (Array.isArray(updateRecord[key])) {
