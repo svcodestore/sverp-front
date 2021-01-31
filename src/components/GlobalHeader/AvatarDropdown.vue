@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2021-01-26 10:44:35
+ * @LastEditTime: 2021-01-29 09:43:19
  * @LastEditors: yu chen
  * @Description:
  * @FilePath: \sverp-front\src\components\GlobalHeader\AvatarDropdown.vue
@@ -99,7 +99,10 @@ export default {
       })
     },
     async loginout () {
-      const clientName = localStorage.getItem('userid')
+      const clientName = localStorage
+        .getItem('userid')
+        .replace('"', '')
+        .replace('"', '')
       const clientId = localStorage.getItem('client_id')
       const type = 'loginout'
       await apiSendMsg({ clientName, clientId, type })

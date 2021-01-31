@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-12-30 15:09:50
  * @LastEditors: yu chen
- * @LastEditTime: 2021-01-26 17:24:16
+ * @LastEditTime: 2021-01-30 15:10:16
  * @FilePath: \sverp-front\src\views\CHAT\Index\index.vue
 -->
 <template>
@@ -45,7 +45,7 @@
   </div>
 </template>
 <script>
-import { apiSendMsg } from '@/api/chat'
+import { apiSendMsg, apiChatRecord } from '@/api/chat'
 export default {
   data () {
     return {
@@ -56,29 +56,93 @@ export default {
       group_id: null,
       to_group_id: null,
       type: 'all',
-      sayMsg: null
+      record: false,
+      clickUser: [],
+      user: [
+        {
+          show: false,
+          sayMsg: null,
+          header: null,
+          toName: null,
+          content: null,
+          sent: null
+        }
+      ]
     }
   },
   methods: {
     userCount () {
       setInterval(function () {
         const li = document.getElementById('ul')
-        this.sayMsg = localStorage.getItem('responMsg')
-        if (this.sayMsg !== localStorage.getItem('tmpMsg') && this.sayMsg !== null) {
+        // if (this.sayMsg !== localStorage.getItem('tmpMsg') && this.sayMsg !== null) {
+        //   li.innerHTML +=
+        //     '<li class="box-say-left"><div class="box-img"><img  src="http://5b0988e595225.cdn.sohucs.com/images/20190324/26b14ff8956b4661a456a7e6751ce085.jpeg"  style="width:100%"  alt="" /></div><div class="say-left">' +
+        //     this.sayMsg +
+        //     '</div></li>'
+        //   localStorage.setItem('tmpMsg', this.sayMsg)
+        // }
+        if (localStorage.getItem('responMsg') !== null) {
+          this.sayMsg = localStorage.getItem('responMsg')
           li.innerHTML +=
             '<li class="box-say-left"><div class="box-img"><img  src="http://5b0988e595225.cdn.sohucs.com/images/20190324/26b14ff8956b4661a456a7e6751ce085.jpeg"  style="width:100%"  alt="" /></div><div class="say-left">' +
             this.sayMsg +
             '</div></li>'
-          localStorage.setItem('tmpMsg', this.sayMsg)
+          localStorage.removeItem('responMsg')
         }
       }, 1000)
-
-      // this.userList = JSON.parse(localStorage.getItem('userList'))
     },
-    userName (index) {
-      this.name = index.replace('"', '').replace('"', '')
-      this.to_uid = this.name
+    async userName (index) {
+      this.to_uid = index.replace('"', '').replace('"', '')
+      this.name = this.to_uid
       this.type = 'say'
+      const uid = localStorage
+        .getItem('userid')
+        .replace('"', '')
+        .replace('"', '')
+      var seft = this
+      // if (this.clickUser.length !== 0) {
+      //   for (var f = 0; f < this.clickUser.length; f++) {
+      //     if (seft.name === this.clickUser[f]) {
+      //       seft.record = true
+      //       console.log('false')
+      //       break
+      //     } else {
+      //       seft.record = false
+      //     }
+      //   }
+      //   console.log(1)
+      //   console.log(seft.record)
+      //   console.log(seft.clickUser)
+      // }
+      const toUid = seft.name
+      await apiChatRecord({ uid, toUid }).then(result => {
+        seft.clickUser.push(seft.name)
+        if (result.result) {
+          const li = document.getElementById('ul')
+          if (li.childNodes.length !== 0) {
+            li.innerHTML = ''
+          }
+          result.result.forEach(function (value, index) {
+            const data = JSON.parse(value)
+            // seft.user.name = data.uid
+            // seft.user.toName = data.to_uid
+            // seft.user.content = data.content
+            // seft.user.sent = data.sent
+            // 发送者是自己
+            if (uid === data.uid) {
+              li.innerHTML +=
+                '<li class="box-say-right"><div class="box-img"><img src="http://5b0988e595225.cdn.sohucs.com/images/20190324/26b14ff8956b4661a456a7e6751ce085.jpeg" style="width:100%" alt=""/></div><div class="say-right">' +
+                data.content +
+                '</div></li>'
+            } else {
+              li.innerHTML +=
+                '<li class="box-say-left"><div class="box-img"><img  src="http://5b0988e595225.cdn.sohucs.com/images/20190324/26b14ff8956b4661a456a7e6751ce085.jpeg"  style="width:100%"  alt="" /></div><div class="say-left">' +
+                data.content +
+                '</div></li>'
+            }
+          })
+        }
+      })
     },
     async sendMsg () {
       const content = this.list
@@ -125,7 +189,7 @@ export default {
   updated () {
     this.$nextTick(() => {
       // setTimeout(() => {
-        document.querySelector('.box-right-center').scrollTop = document.querySelector('.box-right-center').scrollHeight
+      document.querySelector('.box-right-center').scrollTop = document.querySelector('.box-right-center').scrollHeight
       // }, 13)
     })
   },

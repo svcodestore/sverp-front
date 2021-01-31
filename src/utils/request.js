@@ -1,9 +1,6 @@
 /*
- * @LastEditTime: 2021-01-26 17:41:05
+ * @LastEditTime: 2021-02-01 07:46:28
  * @LastEditors: yu chen
-=======
- * @LastEditTime: 2021-01-25 08:00:56
->>>>>>> 38fd14e390ff8929f864597bc0ad3a5ed0ac90a4
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: \sverp-front\src\utils\request.js
