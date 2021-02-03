@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-12-30 15:09:50
  * @LastEditors: yu chen
- * @LastEditTime: 2021-02-03 10:49:08
+ * @LastEditTime: 2021-02-03 16:00:14
  * @FilePath: \sverp-front\src\views\CHAT\Index\index.vue
 -->
 <template>
@@ -9,7 +9,7 @@
     <div class="box-chat">
       <div class="box-left"></div>
       <ul class="box-content" id="userList" style="line-style:none">
-        <li @click="userName(item.name)" v-for="(item, index) in this.$store.state.userLists" :key="index">
+        <li @click="userName(item)" v-for="(item, index) in this.$store.state.userLists" :key="index">
           <div class="box-content-left">
             <img style="width:100%" :src="item.imgUrl" alt="" />
           </div>
@@ -180,7 +180,8 @@ export default {
           header: null,
           toName: null,
           content: null,
-          sent: null
+          sent: null,
+          to_headerImg: null
         }
       ]
     }
@@ -188,21 +189,26 @@ export default {
   methods: {
     ejiom () {},
     userCount () {
+      const tmp = this
       setInterval(function () {
         const li = document.getElementById('ul')
         if (localStorage.getItem('responMsg') !== null) {
-          this.sayMsg = localStorage.getItem('responMsg')
-          this.sayMsg = replaceStr(this.sayMsg)
+          tmp.user.sayMsg = localStorage.getItem('responMsg')
+          tmp.user.to_headerImg = localStorage.getItem('to_headerImg')
+          tmp.user.sayMsg = replaceStr(tmp.user.sayMsg)
           li.innerHTML +=
-            '<li class="box-say-left"><div class="box-img"><img  src="http://5b0988e595225.cdn.sohucs.com/images/20190324/26b14ff8956b4661a456a7e6751ce085.jpeg"  style="width:100%"  alt="" /></div><div class="say-left">' +
-            this.sayMsg +
+            '<li class="box-say-left"><div class="box-img"><img  src=' +
+            tmp.user.to_headerImg +
+            '  style="width:100%"  alt="" /></div><div class="say-left">' +
+            tmp.user.sayMsg +
             '</div></li>'
           localStorage.removeItem('responMsg')
+          localStorage.removeItem('to_headerImg')
         }
       }, 1000)
     },
     async userName (index) {
-      this.to_uid = index.replace('"', '').replace('"', '')
+      this.to_uid = index.name
       this.name = this.to_uid
       this.type = 'say'
       const uid = localStorage
@@ -218,18 +224,24 @@ export default {
           if (li.childNodes.length !== 0) {
             li.innerHTML = ''
           }
+          const toHeaderImg = result.to_headerImg
+          const headerImg = result.headerImg
           result.result.forEach(function (value, index) {
             const data = JSON.parse(value)
             data.content = replaceStr(data.content)
             // 发送者是自己
             if (uid === data.uid) {
               li.innerHTML +=
-                '<li class="box-say-right"><div class="box-img"><img src="http://5b0988e595225.cdn.sohucs.com/images/20190324/26b14ff8956b4661a456a7e6751ce085.jpeg" style="width:100%" alt=""/></div><div class="say-right">' +
+                '<li class="box-say-right"><div class="box-img"><img src=' +
+                headerImg +
+                ' style="width:100%" alt=""/></div><div class="say-right">' +
                 data.content +
                 '</div></li>'
             } else {
               li.innerHTML +=
-                '<li class="box-say-left"><div class="box-img"><img  src="http://5b0988e595225.cdn.sohucs.com/images/20190324/26b14ff8956b4661a456a7e6751ce085.jpeg"  style="width:100%"  alt="" /></div><div class="say-left">' +
+                '<li class="box-say-left"><div class="box-img"><img  src=' +
+                toHeaderImg +
+                '  style="width:100%"  alt="" /></div><div class="say-left">' +
                 data.content +
                 '</div></li>'
             }
@@ -241,7 +253,7 @@ export default {
       const content = this.list
       this.list = replaceStr(this.list)
       const li = document.getElementById('ul')
-      const headerUrl = localStorage.getItem('headerImg')
+      const headerimgUrl = localStorage.getItem('headerimgUrl')
       const clientName = localStorage
         .getItem('userid')
         .replace('"', '')
@@ -251,16 +263,26 @@ export default {
       if (content !== null && clientName !== null && id !== null) {
         if (this.type === 'say') {
           if (this.to_uid !== null) {
-            param = { to_uid: this.name, content: content, type: this.type, uid: clientName }
+            param = {
+              to_uid: this.name,
+              content: content,
+              type: this.type,
+              uid: clientName
+            }
           } else {
-            param = { to_group_id: this.to_group_id, content: content, type: this.type, uid: clientName }
+            param = {
+              to_group_id: this.to_group_id,
+              content: content,
+              type: this.type,
+              uid: clientName
+            }
           }
         } else {
           param = { content: content, type: this.type, uid: clientName }
         }
         li.innerHTML +=
           '<li class="box-say-right"><div class="box-img"><img src=' +
-          headerUrl +
+          headerimgUrl +
           ' style="width:100%" alt=""/></div><div class="say-right">' +
           this.list +
           '</div></li>'
