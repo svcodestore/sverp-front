@@ -189,9 +189,11 @@ export default {
           break
         case 'init':
           localStorage.setItem('client_id', data.client_id)
+          localStorage.setItem('imgUrl', data.imgUrl)
           break
         case 'login':
           this.$store.state.userLists = data.uidAll
+          console.log(this.$store.state.userLists)
           this.$store.state.userCounts = data.uidCount
           break
         case 'say':
