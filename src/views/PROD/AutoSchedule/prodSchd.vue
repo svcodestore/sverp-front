@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-select placeholder="input search text" style="width: 140px" v-model="prodLine" @change="initData">
+    <a-select placeholder="请选择生产线" style="width: 140px" v-model="prodLine" @change="initData">
       <a-select-option v-for="item in prodLines" :key="item.value" :value="item.value" :disabled="item.disabled">
         {{ item.label }}
       </a-select-option>
@@ -202,7 +202,7 @@ import DataSet from '@antv/data-set'
 export default {
   data () {
     return {
-      prodLine: null,
+      prodLine: void 0,
       prodDate: null,
       schdMode: 'MAX_COST',
       phases: [],
