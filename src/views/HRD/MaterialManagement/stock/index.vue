@@ -1,10 +1,10 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-07 16:32:16
- * @LastEditTime: 2021-01-22 09:01:06
+ * @LastEditTime: 2021-02-04 10:02:18
  * @LastEditors: yanbuw1911
  * @Description: 库存列表
- * @FilePath: \client\src\views\HRD\MaterialManagement\stock\index.vue
+ * @FilePath: /sverp-front/src/views/HRD/MaterialManagement/stock/index.vue
 -->
 <template>
   <div>
@@ -35,6 +35,7 @@ export default {
       svGridOptions: {
         title: '用料库存列表',
         desc: '',
+        border: 'none',
         loading: false,
         data: [],
         columns: [

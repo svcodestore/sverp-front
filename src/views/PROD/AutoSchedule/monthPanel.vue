@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-27 10:52:47
- * @LastEditTime: 2021-02-03 17:36:53
+ * @LastEditTime: 2021-02-04 08:26:31
  * @LastEditors: yanbuw1911
  * @Description: 月看板
  * @FilePath: /sverp-front/src/views/PROD/AutoSchedule/monthPanel.vue
@@ -105,7 +105,7 @@ const options = {
         expander: true,
         html: true,
         events: {
-          click ({ data, column }) {
+          dblClick ({ data, column }) {
             alert('description clicked!\n' + data.label)
             console.log(column)
           }
@@ -207,7 +207,13 @@ export default {
     async handleSchdSearch () {
       this.schdSearchLoading = true
       const date = dayjs(this.prodDate).format('YYYY-MM')
-      this.options.title.label = `<span style="color: rgb(240, 40, 46, 0.747); text-shadow: 2px 5px 15px rgb(240, 9, 1, 0.547); text-decoration: underline; font-weight: 900; font-family: Tahoma, Helvetica, Arial, '\\5b8b\\4f53', sans-serif;">${date} ${
+      this.options.title.label = `<span style="
+                                            color: rgb(240, 40, 46, 0.747); 
+                                            text-shadow: 2px 5px 15px rgb(240, 9, 1, 0.547); 
+                                            text-decoration: underline; 
+                                            font-weight: 900; 
+                                            font-family: Tahoma, Helvetica, Arial, '\\5b8b\\4f53', 
+                                            sans-serif;">${date} ${
         this.prodLines.find(e => e.value === this.prodLine).label
       } 月看板</span>`
 
@@ -226,7 +232,7 @@ export default {
                       dayjs(e.phases.pop().ppi_phs_complete).valueOf() - dayjs(e.phases[0].ppi_phs_start).valueOf(),
                     category: '生产项目',
                     type: 'project',
-                    percent: 0,
+                    percent: 50,
                     collapsed: true,
                     phases: e.phases
                   }

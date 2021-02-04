@@ -1,10 +1,10 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-08 11:08:16
- * @LastEditTime: 2021-01-22 09:13:20
+ * @LastEditTime: 2021-02-04 10:09:12
  * @LastEditors: yanbuw1911
  * @Description: 出库管理
- * @FilePath: \client\src\views\HRD\MaterialManagement\storehouse\outbound.vue
+ * @FilePath: /sverp-front/src/views/HRD/MaterialManagement/storehouse/outbound.vue
 -->
 <template>
   <div>
@@ -83,6 +83,7 @@ export default {
       isPrinting: false,
       gridOptions: {
         class: 'outbound-svgrid',
+        border: 'none',
         height: 700,
         loading: false,
         rowClassName: this.handleRowColor,
@@ -241,7 +242,7 @@ export default {
         if (res.result) {
           this.$notification.success({
             message: '已审核',
-            icon: <a-icon type='smile' style='color: #108ee9' />
+            icon: <a-icon type="smile" style="color: #108ee9" />
           })
 
           this.outboundVisible = false
@@ -249,7 +250,7 @@ export default {
         } else {
           this.$notification.error({
             message: '审核失败',
-            icon: <a-icon type='frown' style='color: #108ee9' />
+            icon: <a-icon type="frown" style="color: #108ee9" />
           })
         }
       })
