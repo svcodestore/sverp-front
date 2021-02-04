@@ -1,31 +1,47 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:27:12
- * @LastEditTime: 2021-01-26 14:03:54
+ * @LastEditTime: 2021-02-04 10:01:16
  * @LastEditors: yanbuw1911
  * @Description: 参考 vxe-grid
- * @FilePath: \client\src\components\SV\SvGrid\props.js
+ * @FilePath: /sverp-front/src/components/SV/SvGrid/props.js
  */
 const gridProps = {
   id: { type: String, default: () => 'svGrid' },
   columns: { type: Array, default: () => [] },
   data: { type: Array, default: () => [] },
   height: { type: [Number, String], default: () => 500 },
-  masHeight: [Number, String],
   autoResize: { type: Boolean, default: () => true },
   syncResize: { type: [Boolean, String, Number], default: () => true },
   resizable: { type: Boolean, default: () => true },
   stripe: { type: Boolean, default: () => true },
-  border: { type: [Boolean, String], default: () => true },
+  border: {
+    type: [Boolean, String],
+    default: () => true,
+    validator: function (value) {
+      return ['inner', 'outer', 'none', 'full', true].includes(value)
+    }
+  },
   round: { type: Boolean, default: () => true },
+  showHeader: { type: Boolean, default: () => true },
+  highlightCurrentRow: { type: Boolean, default: () => true },
+  highlightHoverRow: { type: Boolean, default: () => true },
+  showOverflow: { type: [Boolean, String], default: () => true },
+  showHeaderOverflow: { type: [Boolean, String], default: () => true },
+  rowId: { type: String, default: () => 'id' },
+  keepSource: { type: Boolean, default: () => true },
+  mouseConfig: { type: Object, default: () => ({ selected: true }) },
+  keyboardConfig: {
+    type: Object,
+    default: () => ({ isArrow: true, isDel: true, isEnter: true, isTab: true, isEdit: true })
+  },
+  editConfig: { type: Object, default: () => ({ trigger: 'dblclick', mode: 'cell', showStatus: true }) },
+  maxHeight: [Number, String],
   size: String,
   loading: Boolean,
   align: String,
   headerAlign: String,
   footerAlign: String,
-  showHeader: { type: Boolean, default: () => true },
-  highlightCurrentRow: { type: Boolean, default: () => true },
-  highlightHoverRow: { type: Boolean, default: () => true },
   highlightCurrentColumn: Boolean,
   highlightHoverColumn: Boolean,
   highlightCell: Boolean, // draft
@@ -39,13 +55,9 @@ const gridProps = {
   footerMethod: Function,
   mergeCells: Array,
   mergeFooterItems: Array,
-  showOverflow: { type: [Boolean, String], default: () => true },
-  showHeaderOverflow: { type: [Boolean, String], default: () => true },
   showFooterOverflow: [Boolean, String],
   columnKey: Boolean,
   rowKey: Boolean,
-  rowId: { type: String, default: () => 'id' },
-  keepSource: { type: Boolean, default: () => true },
   columnConfig: Object,
   seqConfig: Object,
   sortConfig: Object,
@@ -59,12 +71,6 @@ const gridProps = {
   expandConfig: Object,
   treeConfig: Object,
   menuConfig: Object,
-  mouseConfig: { type: Object, default: () => ({ selected: true }) },
-  keyboardConfig: {
-    type: Object,
-    default: () => ({ isArrow: true, isDel: true, isEnter: true, isTab: true, isEdit: true })
-  },
-  editConfig: { type: Object, default: () => ({ trigger: 'dblclick', mode: 'cell', showStatus: true }) },
   validConfig: Object,
   editRules: Object,
   emptyText: String,

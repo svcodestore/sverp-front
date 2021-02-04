@@ -1,10 +1,10 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-01-26 14:53:34
+ * @LastEditTime: 2021-02-04 10:05:30
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
- * @FilePath: \client\src\components\SV\SvGrid\grid.vue
+ * @FilePath: /sverp-front/src/components/SV/SvGrid/grid.vue
 -->
 <template>
   <vxe-grid ref="xGrid" v-bind="attrs" v-on="events">
@@ -243,7 +243,7 @@ export default {
 
       return slots
     },
-    // 是否为可编辑表格
+    /* 是否为可编辑表格 */
     isEditable () {
       return this.wrappedColumns && this.wrappedColumns.findIndex(col => !!col.editRender) > -1
     },
@@ -492,10 +492,10 @@ export default {
             this.currRow = null
             this._handleRefreshGrid()
             o.message = this.$t('saveSucc')
-            o.icon = <a-icon type='smile' style='color: #108ee9' />
+            o.icon = <a-icon type="smile" style="color: #108ee9" />
           } else {
             o.message = this.$t('saveFail')
-            o.icon = <a-icon type='frown' style='color: #108ee9' />
+            o.icon = <a-icon type="frown" style="color: #108ee9" />
           }
           this.$notification.open(o)
         })
@@ -503,7 +503,7 @@ export default {
           this.$notification.error({
             message: error.response.status,
             description: error.response.data.message,
-            icon: <a-icon type='frown' style='color: #108ee9' />
+            icon: <a-icon type="frown" style="color: #108ee9" />
           })
         })
     }

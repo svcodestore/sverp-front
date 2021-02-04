@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-select placeholder="input search text" style="width: 140px" v-model="prodLine" @change="initData">
+    <a-select placeholder="请选择生产线" style="width: 140px" v-model="prodLine" @change="initData">
       <a-select-option v-for="item in prodLines" :key="item.value" :value="item.value" :disabled="item.disabled">
         {{ item.label }}
       </a-select-option>
@@ -99,73 +99,6 @@
       </div>
     </div>
 
-    <div style="display: flex; justify-content: space-between; overflow: auto;" v-show="dataShowStyle === '1'">
-      <a-modal
-        centered
-        title="生产单图表"
-        :width="modalWidth"
-        :footer="null"
-        v-model="prdSchdVisible"
-        @cancel="handleModalOncancel"
-      >
-      </a-modal>
-
-      <vxe-grid
-        ref="xGridPrdSchd"
-        v-bind="gridPrdSchdOptions"
-        v-if="!!prodLine && !!prodDate && gridPrdSchdOptions.data.length"
-        @current-change="currPrdSchdRowChg"
-      >
-        <template v-slot:toolbar>
-          <div style="display: flex;">
-            <div style="font-size: 16px;margin: 5px 14px; letter-spacing: 3px;">
-              【生产排程表】
-              <a-button title="图表" shape="circle" @click="handleSetChartData([gridPrdSchdOptions.data])">
-                <a-icon type="bar-chart" />
-              </a-button>
-            </div>
-            <div style="font-size: 16px;margin: 5px 14px; letter-spacing: 3px; margin-left: auto;">
-              {{ `${gridPrdSchdOptions.data.length}条记录` }}
-            </div>
-          </div>
-        </template>
-      </vxe-grid>
-
-      <vxe-grid
-        ref="xGridPrdPhs"
-        v-bind="gridPrdPhsOptions"
-        v-if="!!prodLine && !!prodDate && gridPrdSchdOptions.data.length"
-      >
-        <template v-slot:toolbar>
-          <div style="display: flex;">
-            <div style="font-size: 16px;margin: 5px 14px; letter-spacing: 3px;">
-              【排程工序表】
-            </div>
-            <div style="font-size: 16px;margin: 5px 14px; letter-spacing: 3px; margin-left: auto;">
-              {{ `${gridPrdPhsOptions.data.length}条记录` }}
-            </div>
-          </div>
-        </template>
-        <template v-slot:ismaster="{ row, column }">
-          {{ row[column.property] === 1 ? '主流程' : '辅流程' }}
-        </template>
-      </vxe-grid>
-    </div>
-    <div id="dataShowStyle2" v-show="dataShowStyle === '2'" style="overflow: auto; height: 600px;">
-      <table
-        cellpadding="5"
-        border="1"
-        cellspacing="5"
-        style="text-align: center; margin: 10px;"
-        v-for="(t, i) in tblData"
-        :key="i"
-      >
-        <tr>
-          <td style="padding: 0px;" v-for="(v, idx) in t" :key="idx" v-html="v"></td>
-        </tr>
-      </table>
-    </div>
-
     <vxe-grid ref="xGridPrd" v-bind="gridPrdOptions" v-if="!!prodLine && !!prodDate && gridPrdOptions.data.length">
       <template v-slot:toolbar>
         <div style="display: flex;">
@@ -181,6 +114,71 @@
         </div>
       </template>
     </vxe-grid>
+
+    <div v-show="dataShowStyle === '1'">
+      <a-row :gutter="10">
+        <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="11">
+          <a-modal
+            centered
+            title="生产单图表"
+            :width="modalWidth"
+            :footer="null"
+            v-model="prdSchdVisible"
+            @cancel="handleModalOncancel"
+          >
+          </a-modal>
+
+          <vxe-grid
+            ref="xGridPrdSchd"
+            v-bind="gridPrdSchdOptions"
+            v-if="!!prodLine && !!prodDate && gridPrdSchdOptions.data.length"
+            @current-change="currPrdSchdRowChg"
+          >
+            <template v-slot:toolbar>
+              <div style="display: flex;">
+                <div style="font-size: 16px;margin: 5px 14px; letter-spacing: 3px;">
+                  【生产排程表】
+                  <a-button title="图表" shape="circle" @click="handleSetChartData([gridPrdSchdOptions.data])">
+                    <a-icon type="bar-chart" />
+                  </a-button>
+                </div>
+                <div style="font-size: 16px;margin: 5px 14px; letter-spacing: 3px; margin-left: auto;">
+                  {{ `${gridPrdSchdOptions.data.length}条记录` }}
+                </div>
+              </div>
+            </template>
+          </vxe-grid>
+        </a-col>
+        <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="13">
+          <vxe-grid
+            ref="xGridPrdPhs"
+            v-bind="gridPrdPhsOptions"
+            v-if="!!prodLine && !!prodDate && gridPrdSchdOptions.data.length"
+          >
+            <template v-slot:toolbar>
+              <div style="display: flex;">
+                <div style="font-size: 16px;margin: 5px 14px; letter-spacing: 3px;">
+                  【排程工序表】
+                </div>
+                <div style="font-size: 16px;margin: 5px 14px; letter-spacing: 3px; margin-left: auto;">
+                  {{ `${gridPrdPhsOptions.data.length}条记录` }}
+                </div>
+              </div>
+            </template>
+            <template v-slot:ismaster="{ row, column }">
+              {{ row[column.property] === 1 ? '主流程' : '辅流程' }}
+            </template>
+          </vxe-grid>
+        </a-col>
+      </a-row>
+    </div>
+    <div id="dataShowStyle2" v-show="dataShowStyle === '2'">
+      <table v-for="(t, i) in tblData" :key="i">
+        <tr>
+          <td v-for="(v, idx) in t" :key="idx" v-html="v"></td>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -199,10 +197,34 @@ import {
 import { Chart } from '@antv/g2'
 import DataSet from '@antv/data-set'
 
+const cnf = {
+  rowId: 'prdoid',
+  round: true,
+  stripe: true,
+  highlightHoverRow: true,
+  highlightCurrentRow: true,
+  scrollY: { gt: -1 },
+  loading: false,
+  border: 'none',
+  resizable: true,
+  syncResize: true,
+  autoResize: true,
+  keepSource: true,
+  data: [],
+  mouseConfig: { selected: true },
+  keyboardConfig: {
+    isArrow: true,
+    isDel: true,
+    isEnter: true,
+    isTab: true,
+    isEdit: true
+  }
+}
+
 export default {
   data () {
     return {
-      prodLine: null,
+      prodLine: void 0,
       prodDate: null,
       schdMode: 'MAX_COST',
       phases: [],
@@ -237,164 +259,89 @@ export default {
       ],
       tblData: [],
       gridPrdOptions: {
-        highlightHoverRow: true,
-        highlightCurrentRow: true,
-        scrollY: { gt: -1 },
-        loading: false,
-        border: true,
-        resizable: true,
-        showHeaderOverflow: true,
-        showOverflow: true,
-        keepSource: true,
+        ...cnf,
         id: 'full_edit_1',
         height: 300,
-        rowId: 'prdoid',
-        data: [],
-        mouseConfig: { selected: true },
-        keyboardConfig: {
-          isArrow: true,
-          isDel: true,
-          isEnter: true,
-          isTab: true,
-          isEdit: true
-        },
         columns: [
           {
             field: 'ppi_customer_no',
             title: '客户代号',
-            width: 120
+            sortable: true
           },
           {
             field: 'ppi_customer_pono',
             title: '客户订单号',
             align: 'right',
-            width: 120
+            sortable: true
           },
           {
             field: 'ppi_prd_item',
             title: '工厂品号',
-            width: 120
+            sortable: true
           },
           {
             field: 'ppi_po_qty',
             title: '订单数量',
             align: 'right',
-            width: 120
+            sortable: true
           },
           {
             field: 'ppi_expected_qty',
             title: '计划数量',
             align: 'right',
-            width: 120
+            sortable: true
           },
           {
             field: 'ppi_workshop_name',
             title: '生产单位',
-            width: 120
-          },
-          {
-            field: 'map_ppi_phs',
-            title: '工站',
-            width: 120
-          },
-          {
-            field: 'map_ppi_phs_desc',
-            title: '描述',
-            width: 180
-          },
-          {
-            field: 'map_ppi_ismaster',
-            title: '流程',
-            width: 100,
-            slots: {
-              default: 'ismaster'
-            }
-          },
-          { field: 'map_ppi_cost_time', title: '耗时（s）', width: 100, align: 'right' },
-          {
-            field: 'ppi_phs_start',
-            title: '开始于',
-            width: 160
-          },
-          {
-            field: 'ppi_phs_complete',
-            title: '完成于',
-            width: 160
+            sortable: true
           }
         ]
       },
       gridPrdSchdOptions: {
-        highlightHoverRow: true,
-        highlightCurrentRow: true,
-        scrollY: { gt: -1 },
-        loading: false,
-        border: true,
-        resizable: true,
-        showHeaderOverflow: true,
-        showOverflow: true,
-        keepSource: true,
-        id: 'full_edit_1',
-        height: 450,
-        rowId: 'prdoid',
-        data: [],
-        mouseConfig: { selected: true },
-        keyboardConfig: {
-          isArrow: true,
-          isDel: true,
-          isEnter: true,
-          isTab: true,
-          isEdit: true
-        },
+        ...cnf,
+        id: 'full_edit_3',
+        height: 440,
         columns: [
           {
             field: 'ppi_customer_no',
             title: '客户代号',
-            width: 120
+            sortable: true
           },
           {
             field: 'ppi_customer_pono',
             title: '客户订单号',
-            width: 120,
-            align: 'right'
+            align: 'right',
+            sortable: true
           },
           {
             field: 'ppi_prd_item',
             title: '工厂品号',
-            width: 120
+            sortable: true
           },
           {
             field: 'ppi_po_qty',
             title: '订单数量',
-            width: 120,
-            align: 'right'
+            align: 'right',
+            sortable: true
           },
           {
             field: 'ppi_expected_qty',
             title: '计划数量',
-            width: 120,
-            align: 'right'
+            align: 'right',
+            sortable: true
           },
           {
             field: 'ppi_workshop_name',
             title: '生产单位',
-            width: 120
+            sortable: true
           }
         ]
       },
       gridPrdPhsOptions: {
-        highlightHoverRow: true,
-        highlightCurrentRow: true,
-        scrollY: { gt: -1 },
-        loading: false,
-        border: true,
-        resizable: true,
-        showHeaderOverflow: true,
-        showOverflow: true,
-        keepSource: true,
-        id: 'full_edit_1',
-        height: 450,
-        rowId: 'prdoid',
-        data: [],
+        ...cnf,
+        id: 'full_edit_2',
+        height: 440,
         mouseConfig: { selected: true },
         keyboardConfig: {
           isArrow: true,
@@ -408,31 +355,34 @@ export default {
           {
             field: 'map_ppi_phs',
             title: '工站',
-            width: 120
+            sortable: true
           },
           {
             field: 'map_ppi_phs_desc',
             title: '描述',
-            width: 180
+            width: 180,
+            sortable: true
           },
           {
             field: 'map_ppi_ismaster',
             title: '流程',
-            width: 100,
             slots: {
               default: 'ismaster'
-            }
+            },
+            sortable: true
           },
-          { field: 'map_ppi_cost_time', title: '耗时（s）', width: 100, align: 'right' },
+          { field: 'map_ppi_cost_time', title: '耗时（s）', width: 100, align: 'right', sortable: true },
           {
             field: 'ppi_phs_start',
             title: '开始于',
-            width: 160
+            width: 160,
+            sortable: true
           },
           {
             field: 'ppi_phs_complete',
             title: '完成于',
-            width: 160
+            width: 160,
+            sortable: true
           }
         ]
       }
@@ -494,6 +444,7 @@ export default {
       this.gridPrdSchdOptions.data = []
       this.gridPrdPhsOptions.data = []
       this.currPrdSchdRow = null
+      this.tblData = []
     },
     /**
      * @description: 调试开关变化事件
@@ -522,8 +473,12 @@ export default {
           .catch(() => {})
         this.genReportLoading = false
       } else {
-        // window.print(document.querySelector('#dataShowStyle2'))
-        printjs('dataShowStyle2', 'html')
+        printjs({
+          printable: 'dataShowStyle2',
+          type: 'html',
+          header: '<center><h2>排程计划报表</h2></center>',
+          style: '#dataShowStyle2 table { margin: 25px 0; border-top: 1px solid rgba(0, 0, 0, 0.377); }'
+        })
       }
     },
     /**
@@ -590,7 +545,7 @@ export default {
           this.$notification.error({
             message: `${err.response.status} ${err.response.statusText}`,
             description: err.response.data.message,
-            icon: <a-icon type='frown' style='color: #108ee9' />
+            icon: <a-icon type="frown" style="color: #108ee9" />
           })
         })
       this.autoSchdLoading = false
@@ -630,7 +585,14 @@ export default {
                   ppi_workshop_name
                 } = item
 
-                const keys = ['<di>客户代号</di>', '客户订单号', '工厂品号', '订单数量', '计划数量', '生产单位']
+                const keys = [
+                  '客户代号<br>',
+                  '客户订单号<br>',
+                  '工厂品号<br>',
+                  '订单数量<br>',
+                  '计划数量<br>',
+                  '生产单位<br>'
+                ]
                 const values = [
                   // eslint-disable-next-line camelcase
                   ppi_customer_no,
@@ -659,13 +621,13 @@ export default {
                     ppi_phs_complete
                   } = e
                   // eslint-disable-next-line camelcase
-                  keys.push(`${map_ppi_phs} ${map_ppi_cost_time} ${map_ppi_ismaster === 1 ? '' : '辅'}`)
+                  keys.push(`${map_ppi_phs} | ${map_ppi_cost_time} ${map_ppi_ismaster === 1 ? '' : '辅'}`)
                   // eslint-disable-next-line camelcase
-                  values.push(`${ppi_phs_start}\n${ppi_phs_complete}`)
+                  values.push(`<br>${ppi_phs_start}<br>${ppi_phs_complete}`)
                 })
                 arr.push(
                   keys.map((k, i) => {
-                    if (i === 13) {
+                    if (i === 10) {
                       return `<div style="page-break-after: always;">${k}\n${values[i]}</div>`
                     }
                     return `<div>${k}\n${values[i]}</div>`
@@ -683,7 +645,7 @@ export default {
           } else {
             this.$notification.error({
               message: '排程失败',
-              icon: <a-icon type='frown' style='color: #108ee9' />
+              icon: <a-icon type="frown" style="color: #108ee9" />
             })
           }
         })
@@ -691,7 +653,7 @@ export default {
           this.$notification.error({
             message: `${err.response.status} ${err.response.statusText}`,
             description: err.response.data.message,
-            icon: <a-icon type='frown' style='color: #108ee9' />
+            icon: <a-icon type="frown" style="color: #108ee9" />
           })
         })
 
@@ -712,12 +674,13 @@ export default {
       data.forEach(schedule => {
         prdo.forEach(orderNo => {
           if (schedule.ppi_customer_pono === orderNo) {
+            if (!(schedule.ppi_customer_no in colorMap)) {
+              colorMap[schedule.ppi_customer_no] = color[Object.keys(colorMap).length]
+            }
+
             const idx = arr.findIndex(e => e.name === orderNo)
             if (idx > -1) {
               arr[idx].value += 1
-              if (!(schedule.ppi_customer_no in colorMap)) {
-                colorMap[schedule.ppi_customer_no] = color[Object.keys(colorMap).length]
-              }
             } else {
               arr.push({
                 name: schedule.ppi_customer_pono,
@@ -728,6 +691,7 @@ export default {
           }
         })
       })
+
       return { data: arr, colorMap }
     },
     /**
@@ -880,7 +844,32 @@ export default {
           this.modalWidth = 700
           cfg = [600, 400]
         }
-        const color = ['#1890ff', '#13c2c2', '#ffc53d', '#73d13d']
+        const color = [
+          '#1890ff',
+          '#13c2c2',
+          '#ffc53d',
+          '#73d13d',
+          '#5B8FF9',
+          '#CDDDFD',
+          '#61DDAA',
+          '#CDF3E4',
+          '#65789B',
+          '#CED4DE',
+          '#F6BD16',
+          '#FCEBB9',
+          '#6F5EF9',
+          '#D3CEFD',
+          '#78D3F8',
+          '#D3EEF9',
+          '#9661BC',
+          '#DECFEA',
+          '#F6903D',
+          '#FFE0C7',
+          '#008685',
+          '#BBDEDE',
+          '#F08BB4',
+          '#FFE0ED'
+        ]
         data.forEach(e => {
           this.genChart(e, color, 'chartContainer', ...cfg)
         })
@@ -954,7 +943,7 @@ export default {
                   ppi_workshop_name
                 } = item
 
-                const keys = ['<di>客户代号</di>', '客户订单号', '工厂品号', '订单数量', '计划数量', '生产单位']
+                const keys = ['客户代号', '客户订单号', '工厂品号', '订单数量', '计划数量', '生产单位']
                 const values = [
                   // eslint-disable-next-line camelcase
                   ppi_customer_no,
@@ -983,20 +972,20 @@ export default {
                     ppi_phs_complete
                   } = e
                   // eslint-disable-next-line camelcase
-                  keys.push(`${map_ppi_phs} ${map_ppi_cost_time} ${map_ppi_ismaster === 1 ? '' : '辅'}`)
+                  keys.push(`${map_ppi_phs} ${map_ppi_cost_time} ${map_ppi_ismaster === 1 ? '' : '辅'}<br>`)
                   // eslint-disable-next-line camelcase
-                  values.push(`${ppi_phs_start}\n${ppi_phs_complete}`)
+                  values.push(` | <br>${ppi_phs_start}<br>${ppi_phs_complete}`)
                 })
                 arr.push(
                   keys.map((k, i) => {
                     if (i === 13) {
-                      return `<div style="page-break-after: always;">${k}\n${values[i]}</div>`
+                      return `<div style="page-break-after: always;">${k}<br>${values[i]}</div>`
                     }
-                    return `<div>${k}\n${values[i]}</div>`
+                    return `<div>${k}<br>${values[i]}</div>`
                   })
                 )
               })
-              this.tblData = arr
+              // this.tblData = arr
               this.$nextTick(() => {
                 this.gridPrdPhsOptions.data = res.data[0].phases
                 this.$refs.xGridPrdSchd.setCurrentRow(res.data[0])
@@ -1007,7 +996,7 @@ export default {
           } else {
             this.$notification.error({
               message: '排程失败',
-              icon: <a-icon type='frown' style='color: #108ee9' />
+              icon: <a-icon type="frown" style="color: #108ee9" />
             })
           }
         })
@@ -1025,5 +1014,22 @@ export default {
 /deep/.ant-modal-body {
   display: flex;
   overflow: auto;
+}
+
+#dataShowStyle2 {
+  overflow: auto;
+  height: 600px;
+  margin: 10px 0;
+  padding: 0 10px;
+
+  table {
+    margin: 5px 0;
+    text-align: center;
+    width: 100%;
+
+    tr {
+      border: 1px solid rgba(0, 0, 0, 0.377);
+    }
+  }
 }
 </style>
