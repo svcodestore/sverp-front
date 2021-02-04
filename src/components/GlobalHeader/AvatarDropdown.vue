@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2021-02-01 07:49:04
+ * @LastEditTime: 2021-02-04 16:32:39
  * @LastEditors: yu chen
  * @Description:
  * @FilePath: \sverp-front\src\components\GlobalHeader\AvatarDropdown.vue
@@ -15,6 +15,7 @@
         class="antd-pro-global-header-index-avatar"
       />
       <span>{{ currentUser.name }}</span>
+      <span class="msgNum">{{ this.$store.state.unReadCount }}</span>
     </span>
     <template v-slot:overlay>
       <a-menu class="ant-pro-drop-down menu" :selected-keys="[]">
@@ -129,5 +130,11 @@ export default {
   /deep/ .ant-dropdown-menu-item {
     min-width: 160px;
   }
+}
+.msgNum {
+  position: relative;
+  color: #1890ff;
+  top: -10px;
+  left: 5px;
 }
 </style>
