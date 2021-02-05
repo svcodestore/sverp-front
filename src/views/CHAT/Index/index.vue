@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-12-30 15:09:50
  * @LastEditors: yu chen
- * @LastEditTime: 2021-02-05 10:54:42
+ * @LastEditTime: 2021-02-05 16:08:42
  * @FilePath: \sverp-front\src\views\CHAT\Index\index.vue
 -->
 <template>
@@ -199,7 +199,8 @@ export default {
           // tmp.user.to_headerImg = localStorage.getItem('to_headerImg')
           // tmp.user.sayMsg = replaceStr(tmp.user.sayMsg)
           // test
-          tmp.respond = JSON.parse(localStorage.getItem('msgArr'))
+          // tmp.respond = JSON.parse(localStorage.getItem('msgArr'))
+          tmp.respond = JSON.parse(localStorage.getItem('temMsg'))
           const li = document.getElementById('ul')
           if (li !== null) {
             tmp.name = '未读消息'
@@ -221,13 +222,14 @@ export default {
                 '</div></li>'
             })
             localStorage.removeItem('responMsg')
+            // localStorage.removeItem('msgArr')
             // localStorage.removeItem('to_headerImg')
           }
         }
       }, 500)
     },
     async userName (index) {
-      localStorage.removeItem('msgArr')
+      localStorage.removeItem('temMsg')
       this.to_uid = index.name
       this.name = this.to_uid
       this.type = 'say'

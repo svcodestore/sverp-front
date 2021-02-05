@@ -90,7 +90,8 @@ export default {
         time: 60,
         loginBtn: false,
         smsSendBtn: false
-      }
+      },
+      msg: []
     }
   },
   methods: {
@@ -218,7 +219,18 @@ export default {
             localStorage.setItem('responMsg', data.uid + '：' + data.content)
             // localStorage.setItem('to_uid', data.uid)
             // localStorage.setItem('to_headerImg', data.to_headerImg)
-            localStorage.setItem('msgArr', JSON.stringify([{ name: data.uid, msg: data.content, img: data.to_headerImg }]))
+            if (localStorage.getItem('temMsg')) {
+              this.msg = JSON.parse(localStorage.getItem('temMsg'))
+              this.msg.push({ name: data.uid, msg: data.content, img: data.to_headerImg })
+              localStorage.setItem('temMsg', JSON.stringify(this.msg))
+            } else {
+              this.msg = []
+              this.msg.push({ name: data.uid, msg: data.content, img: data.to_headerImg })
+              localStorage.setItem(
+                'temMsg',
+                JSON.stringify([{ name: data.uid, msg: data.content, img: data.to_headerImg }])
+              )
+            }
           }
           break
         case 'all':
@@ -289,7 +301,6 @@ export default {
         color: #1890ff;
       }
     }
-
     .register {
       float: right;
     }

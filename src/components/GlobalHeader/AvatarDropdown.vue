@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2021-02-05 08:59:54
+ * @LastEditTime: 2021-02-05 16:09:13
  * @LastEditors: yu chen
  * @Description:
  * @FilePath: \sverp-front\src\components\GlobalHeader\AvatarDropdown.vue
@@ -104,14 +104,13 @@ export default {
       await apiSendMsg({ clientName, clientId, type })
         .then(result => {
           if (result.code === 0) {
-            localStorage.removeItem('client_id')
+            localStorage.clear()
             console.log('sign out')
           } else {
             console.log('sign out error')
           }
         })
         .catch(() => {})
-
       // 退出登录，清除 localStorage 和 Vuex 中的存的数据
       this.$store.dispatch('Logout').then(() => {
         this.$router.push({ name: 'login' })

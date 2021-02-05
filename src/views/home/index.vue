@@ -1,10 +1,10 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-09 19:48:29
- * @LastEditTime: 2021-02-05 08:23:01
- * @LastEditors: yanbuw1911
+ * @LastEditTime: 2021-02-05 16:18:22
+ * @LastEditors: yu chen
  * @Description:
- * @FilePath: /sverp-front/src/views/home/index.vue
+ * @FilePath: \sverp-front\src\views\home\index.vue
 -->
 <template>
   <div>
@@ -112,13 +112,7 @@
           </a-card-grid>
         </a-card>
       </a-col>
-      <a-col
-        v-if="isShowSysRel === 'true'"
-        :xs="24"
-        :sm="24"
-        :md="24"
-        :lg="24"
-        :xl="12">
+      <a-col v-if="isShowSysRel === 'true'" :xs="24" :sm="24" :md="24" :lg="24" :xl="12">
         <a-card :loading="cardLoading" hoverable>
           <template #title>
             <span title="功能的更新修改和补丁等说明">系统更新信息</span>
