@@ -1,16 +1,17 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-29 11:02:07
- * @LastEditTime: 2020-12-29 11:15:30
+ * @LastEditTime: 2021-02-05 08:51:48
  * @LastEditors: yanbuw1911
  * @Description:
- * @FilePath: \client\src\api\mis.js
+ * @FilePath: /sverp-front/src/api/mis.js
  */
 import request from '@/utils/request'
 import { stringify } from 'qs'
 
 const misApi = {
-  downloadClient: '/mis/downloadClient'
+  downloadClient: '/mis/downloadClient',
+  sysUpdate: '/mis/sysUpdate'
 }
 
 export const downloadClient = platform =>
@@ -19,4 +20,10 @@ export const downloadClient = platform =>
     method: 'post',
     responseType: 'blob',
     data: stringify({ platform })
+  })
+
+export const sysUpdate = () =>
+  request({
+    url: misApi.sysUpdate,
+    method: 'post'
   })
