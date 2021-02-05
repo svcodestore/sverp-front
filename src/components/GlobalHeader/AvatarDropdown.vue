@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2021-02-04 16:32:39
+ * @LastEditTime: 2021-02-05 08:59:54
  * @LastEditors: yu chen
  * @Description:
  * @FilePath: \sverp-front\src\components\GlobalHeader\AvatarDropdown.vue

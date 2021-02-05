@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-12-30 15:09:50
  * @LastEditors: yu chen
- * @LastEditTime: 2021-02-04 16:28:53
+ * @LastEditTime: 2021-02-05 10:54:42
  * @FilePath: \sverp-front\src\views\CHAT\Index\index.vue
 -->
 <template>
@@ -46,7 +46,7 @@
   </div>
 </template>
 <script>
-import { apiSendMsg, apiChatRecord, replaceStr, apiUnreadCount } from '@/api/chat'
+import { apiSendMsg, apiChatRecord, replaceStr } from '@/api/chat'
 export default {
   data () {
     return {
@@ -173,6 +173,7 @@ export default {
       type: 'all',
       record: false,
       clickUser: [],
+      respond: [],
       user: [
         {
           show: false,
@@ -191,34 +192,42 @@ export default {
       const tmp = this
       setInterval(function () {
         if (localStorage.getItem('responMsg') !== null) {
-          tmp.user.sayMsg = localStorage.getItem('responMsg')
-          tmp.name = localStorage.getItem('to_uid')
-          tmp.to_uid = tmp.name
-          tmp.type = 'say'
-          tmp.user.to_headerImg = localStorage.getItem('to_headerImg')
-          tmp.user.sayMsg = replaceStr(tmp.user.sayMsg)
+          // tmp.user.sayMsg = localStorage.getItem('responMsg')
+          // // tmp.name = localStorage.getItem('to_uid')
+          // // tmp.to_uid = tmp.name
+          // // tmp.type = 'say'
+          // tmp.user.to_headerImg = localStorage.getItem('to_headerImg')
+          // tmp.user.sayMsg = replaceStr(tmp.user.sayMsg)
+          // test
+          tmp.respond = JSON.parse(localStorage.getItem('msgArr'))
           const li = document.getElementById('ul')
           if (li !== null) {
-            li.innerHTML +=
-              '<li class="box-say-left"><div class="box-img"><img  src=' +
-              tmp.user.to_headerImg +
-              '  style="width:100%"  alt="" /></div><div class="say-left">' +
-              tmp.user.sayMsg +
-              '</div></li>'
+            tmp.name = '未读消息'
+            tmp.$store.state.unReadCount = 0
+            // li.innerHTML +=
+            //   '<li class="box-say-left"><div class="box-img"><img  src=' +
+            //   tmp.user.to_headerImg +
+            //   '  style="width:100%"  alt="" /></div><div class="say-left">' +
+            //   tmp.user.sayMsg +
+            //   '</div></li>'
+            tmp.respond.forEach(function (v, i) {
+              li.innerHTML +=
+                '<li class="box-say-left"><div class="box-img"><img  src=' +
+                v.img +
+                '  style="width:100%"  alt="" /></div><div class="say-left">' +
+                v.name +
+                ':' +
+                replaceStr(v.msg) +
+                '</div></li>'
+            })
             localStorage.removeItem('responMsg')
-            localStorage.removeItem('to_headerImg')
+            // localStorage.removeItem('to_headerImg')
           }
         }
       }, 500)
     },
-    async unreadCount (uid) {
-      await apiUnreadCount({ uid }).then(result => {
-        if (result.code === 0) {
-          console.log(result.result)
-        }
-      })
-    },
     async userName (index) {
+      localStorage.removeItem('msgArr')
       this.to_uid = index.name
       this.name = this.to_uid
       this.type = 'say'
@@ -261,55 +270,58 @@ export default {
       })
     },
     async sendMsg () {
-      const content = this.list.trim()
-      this.list = replaceStr(this.list)
-      const li = document.getElementById('ul')
-      const headerimgUrl = localStorage.getItem('headerimgUrl')
-      const clientName = localStorage
-        .getItem('userid')
-        .replace('"', '')
-        .replace('"', '')
-      const id = localStorage.getItem('id')
-      let param = {}
-      if (content !== '' && content !== null && clientName !== null && id !== null) {
-        if (this.type === 'say') {
-          if (this.to_uid !== null) {
-            param = {
-              to_uid: this.name,
-              content: content,
-              type: this.type,
-              uid: clientName
+      if (this.list !== '' && this.list !== null && this.list !== undefined) {
+        const content = this.list.trim()
+        this.list = replaceStr(this.list)
+        const li = document.getElementById('ul')
+        const headerimgUrl = localStorage.getItem('headerimgUrl')
+        const clientName = localStorage
+          .getItem('userid')
+          .replace('"', '')
+          .replace('"', '')
+        const id = localStorage.getItem('id')
+        let param = {}
+        if (content !== '' && content !== null && clientName !== null && id !== null) {
+          if (this.type === 'say') {
+            if (this.to_uid !== null) {
+              param = {
+                to_uid: this.name,
+                content: content,
+                type: this.type,
+                uid: clientName
+              }
+            } else {
+              param = {
+                to_group_id: this.to_group_id,
+                content: content,
+                type: this.type,
+                uid: clientName
+              }
             }
           } else {
-            param = {
-              to_group_id: this.to_group_id,
-              content: content,
-              type: this.type,
-              uid: clientName
-            }
+            param = { content: content, type: this.type, uid: clientName }
           }
-        } else {
-          param = { content: content, type: this.type, uid: clientName }
+          await apiSendMsg(param)
+            .then(result => {
+              if (result.code === 0) {
+                li.innerHTML +=
+                  '<li class="box-say-right"><div class="box-img"><img src=' +
+                  headerimgUrl +
+                  ' style="width:100%" alt=""/></div><div class="say-right">' +
+                  this.list +
+                  '</div></li>'
+                this.list = ''
+                console.log('success')
+              } else {
+                console.log('error')
+              }
+            })
+            .catch(() => {})
         }
         // console.log(param)
-        await apiSendMsg(param)
-          .then(result => {
-            if (result.code === 0) {
-              li.innerHTML +=
-                '<li class="box-say-right"><div class="box-img"><img src=' +
-                headerimgUrl +
-                ' style="width:100%" alt=""/></div><div class="say-right">' +
-                this.list +
-                '</div></li>'
-              this.list = ''
-              console.log('success')
-            } else {
-              console.log('error')
-            }
-          })
-          .catch(() => {})
       } else {
         console.log('非法请求')
+        return false
       }
     },
     emoticons () {

@@ -69,7 +69,7 @@
 import md5 from 'md5'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
-import { apiSendMsg } from '@/api/chat'
+import { apiSendMsg, apiUnreadCount } from '@/api/chat'
 if (!localStorage.getItem('Access-Token')) {
   var webSocket = new WebSocket('ws://192.168.123.51:7272')
   heartBeat()
@@ -121,6 +121,13 @@ export default {
           setTimeout(() => {
             state.loginBtn = false
           }, 600)
+        }
+      })
+    },
+    async unreadCount (uid) {
+      await apiUnreadCount({ uid }).then(result => {
+        if (result.code === 0) {
+          console.log(result.result)
         }
       })
     },
@@ -195,20 +202,23 @@ export default {
         case 'login':
           this.$store.state.userLists = data.uidAll
           this.$store.state.userCounts = data.uidCount
-          if (localStorage
-            .getItem('userid')
-            .replace('"', '')
-            .replace('"', '') === data.client_name) {
-            localStorage.setItem('headerimgUrl', data.imgUrl)
+          if (localStorage.getItem('userid')) {
+            const userid = localStorage
+              .getItem('userid')
+              .replace('"', '')
+              .replace('"', '')
+            if (userid === data.client_name) {
+              localStorage.setItem('headerimgUrl', data.imgUrl)
+            }
           }
-
           break
         case 'say':
+          this.$store.state.unReadCount += 1
           if (data.content) {
-            // this.$store.state.responMsg = data.content
             localStorage.setItem('responMsg', data.uid + '：' + data.content)
-            localStorage.setItem('to_uid', data.uid)
-            localStorage.setItem('to_headerImg', data.to_headerImg)
+            // localStorage.setItem('to_uid', data.uid)
+            // localStorage.setItem('to_headerImg', data.to_headerImg)
+            localStorage.setItem('msgArr', JSON.stringify([{ name: data.uid, msg: data.content, img: data.to_headerImg }]))
           }
           break
         case 'all':
