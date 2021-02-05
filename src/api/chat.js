@@ -1,14 +1,15 @@
 /*
  * @Date: 2021-01-13 17:05:11
  * @LastEditors: yu chen
- * @LastEditTime: 2021-02-03 08:57:13
+ * @LastEditTime: 2021-02-04 14:59:33
  * @FilePath: \sverp-front\src\api\chat.js
  */
 import request from '@/utils/request'
 import { stringify } from 'qs'
 const chatApi = {
   apiChat: '/Chat/apiChat',
-  apiChatRecord: '/Chat/apiChatRecord'
+  apiChatRecord: '/Chat/apiChatRecord',
+  apiUnreadCount: '/Chat/apiUnreadCount'
 }
 export function apiSendMsg (param) {
   return request({
@@ -20,6 +21,13 @@ export function apiSendMsg (param) {
 export function apiChatRecord (param) {
   return request({
     url: chatApi.apiChatRecord,
+    method: 'post',
+    data: stringify(param)
+  })
+}
+export function apiUnreadCount (param) {
+  return request({
+    url: chatApi.apiUnreadCount,
     method: 'post',
     data: stringify(param)
   })
@@ -104,7 +112,6 @@ export function replaceStr (str) {
     .replace(/【呜呜】/g, '<img src="http://192.168.123.51:8088/static/emoticons/img82.png" class="sizeImg" alt="">')
     .replace(/【想哭】/g, '<img src="http://192.168.123.51:8088/static/emoticons/img83.png" class="sizeImg" alt="">')
     .replace(/【阴险】/g, '<img src="http://192.168.123.51:8088/static/emoticons/img84.png" class="sizeImg" alt="">')
-
     .replace(/【亲亲】/g, '<img src="http://192.168.123.51:8088/static/emoticons/img85.png" class="sizeImg" alt="">')
     .replace(/【可怜】/g, '<img src="http://192.168.123.51:8088/static/emoticons/img86.png" class="sizeImg" alt="">')
     .replace(/【玫瑰】/g, '<img src="http://192.168.123.51:8088/static/emoticons/img87.png" class="sizeImg" alt="">')

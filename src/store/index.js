@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-01-18 09:16:25
  * @LastEditors: yu chen
- * @LastEditTime: 2021-01-25 08:14:51
+ * @LastEditTime: 2021-02-04 09:20:58
  * @FilePath: \sverp-front\src\store\index.js
  */
 import Vue from 'vue'
@@ -28,7 +28,8 @@ export default new Vuex.Store({
   state: {
     userLists: '',
     userCounts: 0,
-    responMsg: ''
+    responMsg: '',
+    unReadCount: 0
   },
   mutations: {},
   actions: {},

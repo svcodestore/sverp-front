@@ -70,8 +70,10 @@ import md5 from 'md5'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
 import { apiSendMsg } from '@/api/chat'
-var webSocket = new WebSocket('ws://192.168.123.51:7272')
-heartBeat()
+if (!localStorage.getItem('Access-Token')) {
+  var webSocket = new WebSocket('ws://192.168.123.51:7272')
+  heartBeat()
+}
 function heartBeat () {
   setInterval(function () {
     webSocket.send("{ 'type': 'pong' }")
@@ -193,14 +195,19 @@ export default {
         case 'login':
           this.$store.state.userLists = data.uidAll
           this.$store.state.userCounts = data.uidCount
-          if (localStorage.getItem('userid').replace('"', '').replace('"', '') === data.client_name) {
+          if (localStorage
+            .getItem('userid')
+            .replace('"', '')
+            .replace('"', '') === data.client_name) {
             localStorage.setItem('headerimgUrl', data.imgUrl)
           }
+
           break
         case 'say':
           if (data.content) {
             // this.$store.state.responMsg = data.content
             localStorage.setItem('responMsg', data.uid + '：' + data.content)
+            localStorage.setItem('to_uid', data.uid)
             localStorage.setItem('to_headerImg', data.to_headerImg)
           }
           break
