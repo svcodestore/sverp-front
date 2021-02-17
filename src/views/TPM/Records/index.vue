@@ -18,9 +18,31 @@
       />
       <vxe-button style="margin-right:10px" @click="getDate((err = 0))">查询</vxe-button>
       <vxe-button style="margin:0;margin-right:10px" @click="getDate((err = 1))">故障统计</vxe-button>
+      <vxe-button style="margin:0;margin-right:10px" @click="printRecord">导出CSV</vxe-button>
     </div>
     <sv-grid ref="svGrid" v-bind="svGridOptions" v-on="svGridEvents"> </sv-grid>
     <div style="display:block;color:red">{{ count }}</div>
+    <vxe-table
+      v-show="csvShow"
+      highlight-hover-row
+      border="inner"
+      ref="xTable1"
+      height="300"
+      :export-config="{}"
+      :data="tableData1"
+    >
+      <vxe-table-column field="id" title="ID"></vxe-table-column>
+      <vxe-table-column field="mechenum" title="设备编号"></vxe-table-column>
+      <vxe-table-column field="mache_name" title="设备名称"></vxe-table-column>
+      <vxe-table-column field="repairtime" title="维修/保养/调试时间"></vxe-table-column>
+      <vxe-table-column field="alarmtime" title="警示时间"></vxe-table-column>
+      <vxe-table-column field="reachtime" title="到场时间"></vxe-table-column>
+      <vxe-table-column field="repaircontents" title="维修原因/保养内容"></vxe-table-column>
+      <vxe-table-column field="repairmethod" title="处理方法/配件"></vxe-table-column>
+      <vxe-table-column field="repairAttr" title="分类"></vxe-table-column>
+      <vxe-table-column field="expendtime" title="耗时(分)"></vxe-table-column>
+      <vxe-table-column field="repairman" title="维护员"></vxe-table-column>
+    </vxe-table>
   </div>
 </template>
 <script>
@@ -31,6 +53,8 @@ import dayjs from 'dayjs'
 export default {
   data () {
     return {
+      tableData1: null,
+      csvShow: false,
       count: null,
       mechenum: null,
       repaircontents: null,
@@ -192,6 +216,9 @@ export default {
     }
   },
   methods: {
+    printRecord () {
+      this.$refs.xTable1.exportData({ type: 'csv' })
+    },
     async refreshTable () {
       this.svGridOptions.loading = true
       this.count = null
@@ -340,6 +367,7 @@ export default {
       await apiRepairList()
         .then(result => {
           if (result.code === 0) {
+            this.tableData1 = result.data
             this.svGridOptions.data = result.data.map(e => {
               const row = XEUtils.clone(e, true)
               return row
@@ -594,6 +622,7 @@ export default {
       await apiRepairList({ leftTime, rightTime, error, mechenum, repaircontents })
         .then(result => {
           if (result.code === 0) {
+            this.tableData1 = result.data
             if (result.count) {
               this.count = '总计维修次数：' + result.count
             }

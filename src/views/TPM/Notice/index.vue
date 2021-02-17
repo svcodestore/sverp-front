@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-12-07 10:50:51
  * @LastEditors: yu chen
- * @LastEditTime: 2021-01-22 17:04:27
+ * @LastEditTime: 2021-02-17 13:22:59
  * @FilePath: \sverp-front\src\views\TPM\Notice\index.vue
 -->
 <template>
@@ -157,13 +157,14 @@ function getBase64 (img, callback) {
   reader.addEventListener('load', () => callback(reader.result))
   reader.readAsDataURL(img)
 }
+var timerSendMsg
 export default {
   components: {
     'notice-people': NotifyStaff
   },
   data () {
     return {
-      timeOutMsg: '已超时，您15分钟之内未到现场',
+      timeOutMsg: '',
       fittingNumber: [],
       fittingShow: false,
       repairCause: null,
@@ -354,18 +355,38 @@ export default {
             this.showSearch = false
             this.delay = true
             var self = this
-            setTimeout(function () {
+            const dateTime = Date.parse(new Date()) / 1000 + 900
+            document.getElementById('timeOutId').style.display = 'inline'
+            timerSendMsg = setInterval(function () {
               const param = self.param
-              document.getElementById('timeOutId').style.display = 'inline'
-              apiSendMsg(param)
-                .then(result => {
-                  console.log('已发出请求')
-                  if (result.code === 0) {
-                    console.log('第二条短信发送成功')
-                  }
-                })
-                .catch(() => {})
-            }, 900000)
+              const nowTime = Date.parse(new Date()) / 1000
+              if (dateTime > nowTime) {
+                self.timeOutMsg = dateTime - nowTime
+              } else {
+                self.timeOutMsg = '对不起，您15分钟内未到达现场'
+                clearInterval(timerSendMsg)
+                apiSendMsg(param)
+                  .then(result => {
+                    console.log('已发出请求')
+                    if (result.code === 0) {
+                      console.log('第二条短信发送成功')
+                    }
+                  })
+                  .catch(() => {})
+              }
+            }, 1000)
+            // setTimeout(function () {
+            //   const param = self.param
+            //   document.getElementById('timeOutId').style.display = 'inline'
+            //   apiSendMsg(param)
+            //     .then(result => {
+            //       console.log('已发出请求')
+            //       if (result.code === 0) {
+            //         console.log('第二条短信发送成功')
+            //       }
+            //     })
+            //     .catch(() => {})
+            // }, 900000)
           }
         })
         .catch(() => {})
@@ -436,6 +457,7 @@ export default {
       if (phoneFour !== newPhone) {
         this.checkMsg = true
       } else {
+        clearInterval(timerSendMsg)
         await apiCheckCode({ id, phone, phoneFour })
           .then(result => {
             if (result.code === 0) {

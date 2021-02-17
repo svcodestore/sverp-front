@@ -1,4 +1,10 @@
 <!--
+ * @Date: 2021-02-05 11:05:31
+ * @LastEditors: yu chen
+ * @LastEditTime: 2021-02-17 14:35:38
+ * @FilePath: \sverp-front\src\views\home\index.vue
+-->
+<!--
  * @Author: yanbuw1911
  * @Date: 2020-12-09 19:48:29
  * @LastEditTime: 2021-02-05 16:18:22
