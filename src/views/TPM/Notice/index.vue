@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-12-07 10:50:51
  * @LastEditors: yu chen
- * @LastEditTime: 2021-02-17 13:22:59
+ * @LastEditTime: 2021-02-17 15:17:59
  * @FilePath: \sverp-front\src\views\TPM\Notice\index.vue
 -->
 <template>
@@ -140,11 +140,13 @@
         <span>{{ item.fitting_name }} :</span
         ><input type="number" v-model="fittingNumber[item.id]" style="border-color:rgb(210,210,210);margin:0px 10px;" />
       </div>
-      <vxe-button @click="refreshTable">未维修完</vxe-button>
+      <vxe-button @click="reload">未维修完</vxe-button>
       <vxe-button @click="repairSubmit" style="background:#1890ff;color:white">维修完成</vxe-button>
     </div>
-    <p>通知人员设置：</p>
-    <notice-people></notice-people>
+    <div v-show = showPeople>
+      <p>通知人员设置：</p>
+      <notice-people></notice-people>
+    </div>
   </div>
 </template>
 
@@ -164,6 +166,7 @@ export default {
   },
   data () {
     return {
+      showPeople: true,
       timeOutMsg: '',
       fittingNumber: [],
       fittingShow: false,
@@ -279,6 +282,13 @@ export default {
     //  this.tableData = window.MOCK_TREE_DATA_LIST
   },
   methods: {
+    reload () {
+      this.show = false
+      this.delay = false
+      this.fittingShow = true
+      this.showPeople = true
+      this.refreshTable()
+    },
     async refreshTable () {
       this.loading = true
       await apiMecheInfo()
@@ -345,6 +355,7 @@ export default {
       if (debug.indexOf(this.param.cause) > -1) {
         this.param.cate = '调试'
       }
+      this.showPeople = false
       await apiSendMsg(e)
         .then(result => {
           if (result.code === 0) {
@@ -448,6 +459,7 @@ export default {
       this.showDepartment = !this.showDepartment
     },
     async arrived () {
+      this.showPeople = false
       this.checkMsg = false
       const phone = this.noticeName
       const phoneFour = this.phoneFour
@@ -489,6 +501,7 @@ export default {
       await apiRepairComp({ id, content, action, number })
         .then(result => {
           if (result.code === 0) {
+            this.showPeople = true
             this.show = true
             this.delay = false
             this.fittingShow = false
