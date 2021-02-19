@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-08 11:08:16
- * @LastEditTime: 2021-02-04 10:09:12
+ * @LastEditTime: 2021-02-19 10:52:37
  * @LastEditors: yanbuw1911
  * @Description: 出库管理
  * @FilePath: /sverp-front/src/views/HRD/MaterialManagement/storehouse/outbound.vue
@@ -224,7 +224,7 @@ export default {
         outboundId: this.gridCurrRow.id,
         approver: this.userInfo.con_id,
         stock: {
-          usr: this.gridCurrRow.creator_id,
+          usr: this.gridCurrRow.creator_id || this.gridCurrRow.hoo_creator,
           data: this.detailGridOptions.data.map(e => ({ materialId: e.hom_material_id, qty: e.hom_out_qty }))
         }
       }
