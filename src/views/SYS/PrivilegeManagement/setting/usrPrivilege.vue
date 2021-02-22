@@ -1,14 +1,16 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-16 15:04:35
- * @LastEditTime: 2021-01-11 13:42:21
+ * @LastEditTime: 2021-02-22 10:18:48
  * @LastEditors: yanbuw1911
  * @Description: 用户权限设定
- * @FilePath: \client\src\views\SYS\PrivilegeManagement\setting\usrPrivilege.vue
+ * @FilePath: /sverp-front/src/views/SYS/PrivilegeManagement/setting/usrPrivilege.vue
 -->
 <template>
   <div>
     <a-input-search
+      title="输入用户 ID 查询权限"
+      placeholder="输入用户 ID 查询权限"
       style="width: 180px;margin-bottom: 10px;"
       :loading="searchLoading"
       :max-length="16"
@@ -315,12 +317,12 @@ export default {
             this.isGroupEdit = false
             this.$notification.success({
               message: this.$t('saveSucc'),
-              icon: <a-icon type='smile' style='color: #108ee9' />
+              icon: <a-icon type="smile" style="color: #108ee9" />
             })
           } else {
             this.$notification.error({
               message: this.$t('saveFail'),
-              icon: <a-icon type='frown' style='color: #108ee9' />
+              icon: <a-icon type="frown" style="color: #108ee9" />
             })
           }
         })
@@ -344,12 +346,12 @@ export default {
             this.isGroupEdit = false
             this.$notification.success({
               message: this.$t('saveSucc'),
-              icon: <a-icon type='smile' style='color: #108ee9' />
+              icon: <a-icon type="smile" style="color: #108ee9" />
             })
           } else {
             this.$notification.error({
               message: this.$t('saveFail'),
-              icon: <a-icon type='frown' style='color: #108ee9' />
+              icon: <a-icon type="frown" style="color: #108ee9" />
             })
           }
         })

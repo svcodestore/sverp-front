@@ -32,7 +32,7 @@
     >
       <div class="outbound-detail-bar">
         <div class="bar" v-show="!isPrinting">
-          <a-button type="primary" @click="handleApprove" v-if="!gridCurrRow.hoo_is_approved">审核</a-button>
+          <a-button type="primary" @click="handleApprove" v-if="!gridCurrRow.hoo_is_approved">通过</a-button>
           <a-button @click="handlePrint">打印</a-button>
         </div>
       </div>
@@ -236,8 +236,7 @@ export default {
       if (!err) {
         const opt = this.$refs.detailGrid.getGridOpt()
         opt && (data.modify = opt)
-      }
-
+        
       await approveOutbound(data).then(res => {
         if (res.result) {
           this.$notification.success({
@@ -254,6 +253,8 @@ export default {
           })
         }
       })
+      }
+
     },
     validator ({ cellValue }) {
       if (!new RegExp(/^\d{1,4}$/).test(cellValue)) {
