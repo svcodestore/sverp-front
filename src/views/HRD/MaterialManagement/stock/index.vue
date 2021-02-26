@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { getMaterialList, getMaterialLogList } from '@/api/hrd'
+import { getMaterialList, getMaterialLogListById } from '@/api/hrd'
 
 export default {
   data () {
@@ -111,7 +111,7 @@ export default {
       this.svGridOptions.loading = false
     },
     async handleDblClick ({ row }) {
-      await getMaterialLogList(row.id).then(
+      await getMaterialLogListById(row.id).then(
         res =>
           res.result &&
           (this.logList = res.data.map(e => {

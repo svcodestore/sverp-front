@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-08 11:08:16
- * @LastEditTime: 2021-02-19 10:52:37
+ * @LastEditTime: 2021-02-25 09:08:21
  * @LastEditors: yanbuw1911
  * @Description: 出库管理
  * @FilePath: /sverp-front/src/views/HRD/MaterialManagement/storehouse/outbound.vue
@@ -32,12 +32,22 @@
     >
       <div class="outbound-detail-bar">
         <div class="bar" v-show="!isPrinting">
-          <a-button type="primary" @click="handleApprove" v-if="!gridCurrRow.hoo_is_approved">通过</a-button>
+          <a-popconfirm
+            placement="bottom"
+            title="确认通过下列用料申请吗"
+            :ok-text="$t('confirm')"
+            :cancel-text="$t('cancel')"
+            :disabled="popconfirmDisabled"
+            @confirm="submitApprove"
+            @cancel="popconfirmDisabled = true"
+          >
+            <a-button type="primary" @click="handleApprove" v-if="!gridCurrRow.hoo_is_approved">通过</a-button>
+          </a-popconfirm>
           <a-button @click="handlePrint">打印</a-button>
         </div>
       </div>
       <div id="outbound-detail-grid-printable">
-        <sv-grid v-bind="detailGridOptions" ref="detailGrid">
+        <sv-grid v-bind="detailGridOptions" ref="detailGrid" v-on="detailGridEvts">
           <template #toolbar>
             <center style="letter-spacing: 16px;font-weight: bolder;"><h1>东莞斯达文星皮具有限公司</h1></center>
             <center style="letter-spacing: 12px;font-weight: bolder;"><h2>出库清单</h2></center>
@@ -167,7 +177,12 @@ export default {
             field: 'hom_remark'
           }
         ]
-      }
+      },
+      detailGridEvts: {
+        'current-change': this.handleDetailCurrChg
+      },
+      detailGridCurrRowStock: void 0,
+      popconfirmDisabled: true
     }
   },
   computed: {
@@ -188,7 +203,6 @@ export default {
     },
     handleDblClick ({ row }) {
       this.gridCurrRow = row
-      console.log(this.gridCurrRow)
       this.outboundVisible = true
       if (row.hoo_is_approved) {
         delete this.detailGridOptions.columns[4].editRender
@@ -219,7 +233,7 @@ export default {
         })
       })
     },
-    async handleApprove () {
+    async submitApprove () {
       const data = {
         outboundId: this.gridCurrRow.id,
         approver: this.userInfo.con_id,
@@ -228,15 +242,9 @@ export default {
           data: this.detailGridOptions.data.map(e => ({ materialId: e.hom_material_id, qty: e.hom_out_qty }))
         }
       }
+      const opt = this.$refs.detailGrid.getGridOpt()
+      opt && (data.modify = opt)
 
-      let err
-      await this.$refs.detailGrid.fullValidate().catch(e => {
-        err = e
-      })
-      if (!err) {
-        const opt = this.$refs.detailGrid.getGridOpt()
-        opt && (data.modify = opt)
-        
       await approveOutbound(data).then(res => {
         if (res.result) {
           this.$notification.success({
@@ -253,13 +261,25 @@ export default {
           })
         }
       })
-      }
-
+    },
+    async handleApprove () {
+      let err
+      await this.$refs.detailGrid.fullValidate().catch(e => {
+        err = e
+      })
+      this.popconfirmDisabled = !!err
     },
     validator ({ cellValue }) {
-      if (!new RegExp(/^\d{1,4}$/).test(cellValue)) {
-        return new Error('1-4位数字')
+      if (Number(cellValue) === 0 || Number.isNaN(Number(cellValue))) {
+        this.$message.error('无效的数量')
+        return new Error('无效的数量')
+      } else if (Number(cellValue) > Number(this.detailGridCurrRowStock)) {
+        this.$message.error('数量不能超过库存' + this.detailGridCurrRowStock)
+        return new Error('数量不能超过库存' + this.detailGridCurrRowStock)
       }
+    },
+    handleDetailCurrChg ({ row }) {
+      this.detailGridCurrRowStock = row.hmu_material_stock
     }
   },
   async mounted () {

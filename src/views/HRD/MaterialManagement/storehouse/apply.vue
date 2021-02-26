@@ -1,14 +1,20 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-20 10:31:49
- * @LastEditTime: 2021-01-21 11:23:11
+ * @LastEditTime: 2021-02-26 09:56:52
  * @LastEditors: yanbuw1911
  * @Description: 领料申请
- * @FilePath: \client\src\views\HRD\MaterialManagement\storehouse\apply.vue
+ * @FilePath: /sverp-front/src/views/HRD/MaterialManagement/storehouse/apply.vue
 -->
 <template>
   <div class="container">
-    <center><h2>领料申请表单填写</h2></center>
+    <center>
+      <h2>
+        <a-tooltip placement="top" title="申请用料物品">
+          <span>领料申请表单</span>
+        </a-tooltip>
+      </h2>
+    </center>
     <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-model-item label="领料日期" required prop="date">
         <a-date-picker v-model="form.date" type="date" placeholder="请选择日期" style="width: 100%;" />
@@ -75,9 +81,19 @@
         </a-space>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="onSubmit">
-          保存
-        </a-button>
+        <a-popconfirm
+          placement="bottom"
+          title="确认保存以上申请信息吗？"
+          :ok-text="$t('confirm')"
+          :cancel-text="$t('cancel')"
+          :disabled="popconfirmDisabled"
+          @confirm="submitData"
+          @cancel="popconfirmDisabled = true"
+        >
+          <a-button type="primary" @click="onSubmit" :loading="loading">
+            保存
+          </a-button>
+        </a-popconfirm>
         <a-button style="margin-left: 10px;" @click="resetForm">
           重置
         </a-button>
@@ -112,46 +128,51 @@ export default {
         name: [{ required: true, message: '请选择用料', trigger: 'blur' }],
         qty: [{ required: true, message: '请输入数量', trigger: 'blur' }, { validator: this.qtyValidator }],
         date: [{ required: true, message: '请选择日期', trigger: 'blur' }]
-      }
+      },
+      popconfirmDisabled: true,
+      loading: false
     }
   },
   computed: {
     ...mapGetters(['userInfo'])
   },
   methods: {
-    onSubmit () {
-      this.$refs.ruleForm.validate(async valid => {
-        if (valid) {
-          const data = clone(this.form, true)
-          data.orderNo = data.date.format('YYYYMMDD').toString() + Math.ceil(Math.random() * 100000)
-          data.applyList = data.name.map((e, i) => ({
-            materialId: e.key.split('/')[0],
-            qty: data.qty[i].value,
-            remark: data.desc[i].value
-          }))
+    async submitData () {
+      this.loading = true
+      const data = clone(this.form, true)
+      data.orderNo = data.date.format('YYYYMMDD').toString() + Math.ceil(Math.random() * 100000)
+      data.applyList = data.name.map((e, i) => ({
+        materialId: e.key.split('/')[0],
+        qty: data.qty[i].value,
+        remark: data.desc[i].value
+      }))
 
-          delete data.name
-          delete data.qty
-          delete data.date
-          delete data.desc
+      delete data.name
+      delete data.qty
+      delete data.date
+      delete data.desc
 
-          const info = { name: this.userInfo.con_id, dept: this.userInfo.con_dept }
-          await setOutboundMaterialOrder(data, info).then(res => {
-            if (res.result) {
-              this.resetForm()
+      const info = { name: this.userInfo.con_id, dept: this.userInfo.con_dept }
+      await setOutboundMaterialOrder(data, info).then(res => {
+        if (res.result) {
+          this.resetForm()
 
-              this.$notification.success({
-                message: '领料申请成功',
-                icon: <a-icon type='smile' style='color: #108ee9' />
-              })
-            } else {
-              this.$notification.error({
-                message: '领料申请失败',
-                icon: <a-icon type='frown' style='color: #108ee9' />
-              })
-            }
+          this.$notification.success({
+            message: '领料申请成功',
+            icon: <a-icon type="smile" style="color: #108ee9" />
+          })
+        } else {
+          this.$notification.error({
+            message: '领料申请失败',
+            icon: <a-icon type="frown" style="color: #108ee9" />
           })
         }
+      })
+      this.loading = false
+    },
+    onSubmit () {
+      this.$refs.ruleForm.validate(valid => {
+        this.popconfirmDisabled = !valid
       })
     },
     resetForm () {

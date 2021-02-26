@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2021-01-07 14:20:06
- * @LastEditTime: 2021-01-21 14:25:40
+ * @LastEditTime: 2021-02-26 09:39:07
  * @LastEditors: yanbuw1911
  * @Description:
- * @FilePath: \client\src\api\hrd.js
+ * @FilePath: /sverp-front/src/api/hrd.js
  */
 import request from '@/utils/request'
 import { stringify } from 'qs'
@@ -15,10 +15,12 @@ const hrdApi = {
   saveMaterialUsedOpt: '/hrd/saveMaterialUsedOpt',
   getOutboundOrder: '/hrd/getOutboundOrder',
   getOutboundMaterialList: '/hrd/getOutboundMaterialList',
-  getMaterialLogList: '/hrd/getMaterialLogList',
+  getMaterialLogListById: '/hrd/getMaterialLogListById',
+  getMaterialLogListByUserid: '/hrd/getMaterialLogListByUserid',
   setMaterialStock: '/hrd/setMaterialStock',
   setOutboundMaterialOrder: '/hrd/setOutboundMaterialOrder',
-  approveOutbound: '/hrd/approveOutbound'
+  approveOutbound: '/hrd/approveOutbound',
+  materialLogSoftDel: '/hrd/materialLogSoftDel'
 }
 
 export const getMaterialCategory = () =>
@@ -54,11 +56,18 @@ export const getOutboundMaterialList = materialId =>
     data: stringify({ materialId })
   })
 
-export const getMaterialLogList = materialId =>
+export const getMaterialLogListById = materialId =>
   request({
-    url: hrdApi.getMaterialLogList,
+    url: hrdApi.getMaterialLogListById,
     method: 'post',
     data: stringify({ materialId })
+  })
+
+export const getMaterialLogListByUserid = userid =>
+  request({
+    url: hrdApi.getMaterialLogListByUserid,
+    method: 'post',
+    data: stringify({ userid })
   })
 
 export const setMaterialStock = (data, usr) =>
@@ -80,4 +89,11 @@ export const approveOutbound = data =>
     url: hrdApi.approveOutbound,
     method: 'post',
     data: stringify(data)
+  })
+
+export const materialLogSoftDel = (id, materialId, oprtQty, usrid) =>
+  request({
+    url: hrdApi.materialLogSoftDel,
+    method: 'post',
+    data: stringify({ id, materialId, oprtQty, usrid })
   })
