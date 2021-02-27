@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-02-05 08:52:49
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-02-27 10:42:31
+ * @LastEditTime: 2021-02-27 10:48:27
  * @Description:
  * @FilePath: /sverp-front/src/views/MIS/Index/index.vue
 -->
@@ -45,8 +45,8 @@ export default {
     async sysUpdate () {
       const start = new Date().getTime()
       this.loadingSys = true
-      await axios.post('http://192.168.123.51:3030/update').then(res => {
-        // await sysUpdate().then(res => {
+      // await axios.post('http://192.168.123.51:3030/update').then(res => {
+      await sysUpdate().then(res => {
         this.scrollEl.innerHTML += res.data
       })
       this.scrollEl.innerHTML += `<br>Spent: ${this.getSpentTime(start)}s<br><br>`
