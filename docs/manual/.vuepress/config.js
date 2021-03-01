@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 19:15:29
- * @LastEditTime: 2021-02-22 10:46:55
- * @LastEditors: yanbuw1911
+ * @LastEditTime: 2021-03-01 11:02:31
+ * @LastEditors: yu chen
  * @Description:
- * @FilePath: /sverp-front/docs/manual/.vuepress/config.js
+ * @FilePath: \sverp-front\docs\manual\.vuepress\config.js
  */
 
 module.exports = {
@@ -75,7 +75,7 @@ function getSideBar (groupA) {
     {
       title: groupA,
       collapsable: false,
-      children: ['', 'dashboard', 'production-dept', 'hr-dept']
+      children: ['', 'dashboard', 'production-dept', 'hr-dept', 'tpm']
     }
   ]
 }
