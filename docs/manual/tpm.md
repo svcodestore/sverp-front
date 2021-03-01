@@ -6,11 +6,11 @@
 
 ```mermaid
 graph TD
-	 dept([TPM])---mod1>tpm报修通知]
+	 dept([TPM])---mod1>"tpm报修通知"]
 	 dept([TPM])---mod2>其它部门报修]
    dept([TPM])---mod3>配置不足通知]
 	 mod1---section1{{发送短信}}
-	 mod3---section2{{设置配件数量，短信状态为未发送}}
+	 mod3---section2{{"设置配件数，短信状态为未发送"}}
 	 section1---fun1[/维修人到场维修\]
 	 section2---fun2[/配件不足人员提醒设置\]
 ```
