@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-12-30 15:09:50
  * @LastEditors: yu chen
- * @LastEditTime: 2021-02-05 16:08:42
+ * @LastEditTime: 2021-03-02 09:54:54
  * @FilePath: \sverp-front\src\views\CHAT\Index\index.vue
 -->
 <template>
@@ -33,7 +33,7 @@
             <img src="../../../assets/jd.png" @click="crop" />
             <img src="../../../assets/qp.png" @click="chatRecord" />
           </div>
-          <textarea v-model="list" class="box-right-footer-center"></textarea>
+          <textarea readonly ref="attr" v-model="list" class="box-right-footer-center"></textarea>
           <button @click="sendMsg" class="box-right-footer-footer">发送</button>
         </div>
       </div>
@@ -203,7 +203,7 @@ export default {
           tmp.respond = JSON.parse(localStorage.getItem('temMsg'))
           const li = document.getElementById('ul')
           if (li !== null) {
-            tmp.name = '未读消息'
+            // tmp.name = ''
             tmp.$store.state.unReadCount = 0
             // li.innerHTML +=
             //   '<li class="box-say-left"><div class="box-img"><img  src=' +
@@ -229,6 +229,7 @@ export default {
       }, 500)
     },
     async userName (index) {
+      this.$refs.attr.removeAttribute('readonly')
       localStorage.removeItem('temMsg')
       this.to_uid = index.name
       this.name = this.to_uid

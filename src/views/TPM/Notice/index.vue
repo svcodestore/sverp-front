@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-12-07 10:50:51
  * @LastEditors: yu chen
- * @LastEditTime: 2021-02-17 15:17:59
+ * @LastEditTime: 2021-03-02 08:46:03
  * @FilePath: \sverp-front\src\views\TPM\Notice\index.vue
 -->
 <template>
@@ -143,7 +143,7 @@
       <vxe-button @click="reload">未维修完</vxe-button>
       <vxe-button @click="repairSubmit" style="background:#1890ff;color:white">维修完成</vxe-button>
     </div>
-    <div v-show = showPeople>
+    <div v-show="showPeople">
       <p>通知人员设置：</p>
       <notice-people></notice-people>
     </div>
