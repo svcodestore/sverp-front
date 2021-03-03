@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-19 16:20:40
- * @LastEditTime: 2021-02-26 09:52:41
+ * @LastEditTime: 2021-03-03 14:23:46
  * @LastEditors: yanbuw1911
  * @Description: 入库界面，包括建账和入库
  * @FilePath: /sverp-front/src/views/HRD/MaterialManagement/storehouse/inbound.vue
@@ -151,6 +151,11 @@ export default {
     ...mapGetters(['userInfo'])
   },
   methods: {
+    async getData () {
+      await getMaterialLogListByUserid(this.userInfo.con_id).then(({ data }) => {
+        this.inboundRecords = data
+      })
+    },
     async handleUndo ({ id, hml_material_id: materialId, hml_operate_qty: oprtQty }) {
       await materialLogSoftDel(id, materialId, oprtQty, this.userInfo.con_id).then(async ({ result }) => {
         if (result) {
@@ -244,9 +249,7 @@ export default {
     }
   },
   async mounted () {
-    await getMaterialLogListByUserid(this.userInfo.con_id).then(({ data }) => {
-      this.inboundRecords = data
-    })
+    await this.getData()
   }
 }
 </script>

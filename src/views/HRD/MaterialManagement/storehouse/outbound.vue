@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-08 11:08:16
- * @LastEditTime: 2021-02-25 09:08:21
+ * @LastEditTime: 2021-03-03 14:28:24
  * @LastEditors: yanbuw1911
  * @Description: 出库管理
  * @FilePath: /sverp-front/src/views/HRD/MaterialManagement/storehouse/outbound.vue
@@ -136,7 +136,7 @@ export default {
       },
       gridCurrRow: {},
       gridEvts: {
-        refresh: this.getOutboundOrder,
+        refresh: this.getData,
         'cell-dblclick': this.handleDblClick
       },
       detailGridOptions: {
@@ -189,7 +189,7 @@ export default {
     ...mapGetters(['userInfo'])
   },
   methods: {
-    async getOutboundOrder () {
+    async getData () {
       this.gridOptions.loading = true
       await getOutboundOrder().then(
         res =>
@@ -283,7 +283,7 @@ export default {
     }
   },
   async mounted () {
-    await this.getOutboundOrder()
+    await this.getData()
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-07 16:32:16
- * @LastEditTime: 2021-02-04 10:02:18
+ * @LastEditTime: 2021-03-03 14:18:00
  * @LastEditors: yanbuw1911
  * @Description: 库存列表
  * @FilePath: /sverp-front/src/views/HRD/MaterialManagement/stock/index.vue
@@ -45,22 +45,22 @@ export default {
           },
           {
             align: 'right',
-            title: '种类编码',
+            title: '编码',
             field: 'hmu_material_code',
             sortable: true
           },
           {
-            title: '种类名称',
+            title: '名称',
             field: 'hmu_material_name',
             sortable: true
           },
           {
-            title: '规格型号',
+            title: '型号',
             field: 'hmu_material_model',
             sortable: true
           },
           {
-            title: '计量单位',
+            title: '单位',
             field: 'hmu_material_unit',
             sortable: true
           },

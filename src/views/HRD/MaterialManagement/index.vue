@@ -8,15 +8,15 @@
 -->
 <template>
   <div>
-    <a-tabs defaultActiveKey="1">
-      <a-tab-pane key="1" tab="用料管理">
-        <material-used></material-used>
+    <a-tabs defaultActiveKey="materialUsed" @change="refreshContent">
+      <a-tab-pane key="materialUsed" tab="用料管理">
+        <material-used ref="materialUsed"></material-used>
       </a-tab-pane>
-      <a-tab-pane key="2" tab="库存查询">
-        <stock></stock>
+      <a-tab-pane key="stock" tab="库存查询">
+        <stock ref="stock"></stock>
       </a-tab-pane>
-      <a-tab-pane key="3" tab="出库/入库">
-        <storehouse></storehouse>
+      <a-tab-pane key="storehouse" tab="出库/入库">
+        <storehouse ref="storehouse"></storehouse>
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -27,6 +27,12 @@ import materialUsed from './materialUsed/index'
 import stock from './stock/index'
 import storehouse from './storehouse/index'
 export default {
+  methods: {
+    async refreshContent (activeKey) {
+      const ref = this.$refs[activeKey]
+      ref && (await ref.getData())
+    }
+  },
   components: {
     materialUsed,
     stock,

@@ -1,10 +1,10 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-07 11:11:38
- * @LastEditTime: 2021-01-19 16:14:29
+ * @LastEditTime: 2021-03-03 14:24:04
  * @LastEditors: yanbuw1911
  * @Description: 商品用料
- * @FilePath: \client\src\views\HRD\MaterialManagement\materialUsed\index.vue
+ * @FilePath: /sverp-front/src/views/HRD/MaterialManagement/materialUsed/index.vue
 -->
 <template>
   <div>
@@ -110,6 +110,10 @@ export default {
     }
   },
   methods: {
+    async getData () {
+      await this.getMaterialCategory()
+      await this.getMaterialList(this.materialOptions.data[0].id)
+    },
     async getMaterialCategory () {
       this.materialOptions.loading = true
       await getMaterialCategory()
@@ -144,8 +148,7 @@ export default {
     }
   },
   async mounted () {
-    await this.getMaterialCategory()
-    this.getMaterialList(this.materialOptions.data[0].id)
+    await this.getData()
   }
 }
 </script>
