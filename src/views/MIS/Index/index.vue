@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-02-05 08:52:49
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-02-27 11:10:50
+ * @LastEditTime: 2021-03-03 14:41:18
  * @Description:
  * @FilePath: /sverp-front/src/views/MIS/Index/index.vue
 -->
@@ -22,7 +22,7 @@
 
 <script>
 import axios from 'axios'
-import { sysUpdate, startNodeWeb, stopNodeWeb, restartNodeWeb } from '@/api/mis'
+import { startNodeWeb, stopNodeWeb, restartNodeWeb } from '@/api/mis'
 
 export default {
   data: () => ({
@@ -46,7 +46,7 @@ export default {
       const start = new Date().getTime()
       this.loadingSys = true
 
-      await sysUpdate().then(res => {
+      await axios.post('http://192.168.123.51:3030/update').then(res => {
         this.scrollEl.innerHTML += res.data
       })
       this.scrollEl.innerHTML += `<br>Spent: ${this.getSpentTime(start)}s<br><br>`

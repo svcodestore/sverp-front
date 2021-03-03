@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-08 11:08:16
- * @LastEditTime: 2021-03-03 14:28:24
+ * @LastEditTime: 2021-03-03 15:27:13
  * @LastEditors: yanbuw1911
  * @Description: 出库管理
  * @FilePath: /sverp-front/src/views/HRD/MaterialManagement/storehouse/outbound.vue
@@ -52,26 +52,26 @@
             <center style="letter-spacing: 16px;font-weight: bolder;"><h1>东莞斯达文星皮具有限公司</h1></center>
             <center style="letter-spacing: 12px;font-weight: bolder;"><h2>出库清单</h2></center>
             <a-row class="outbound-detail-field">
-              <a-col :span="4">
+              <a-col :span="8">
                 日期：<span>{{ `${gridCurrRow.hoo_join_date.substr(0, 10)}` }}</span>
               </a-col>
-              <a-col :span="4">
+              <a-col :span="8">
                 制单人：<span>{{ gridCurrRow.hoo_creator }}</span>
               </a-col>
-              <a-col :span="4">
+              <a-col :span="8">
                 部门：<span>{{ gridCurrRow.cdw_name }}</span>
               </a-col>
             </a-row>
           </template>
         </sv-grid>
         <a-row class="outbound-detail-field">
-          <a-col :span="4">
+          <a-col :span="8">
             发料人：
           </a-col>
-          <a-col :span="4">
+          <a-col :span="8">
             审核人：<span>{{ gridCurrRow.approver_name }}</span>
           </a-col>
-          <a-col :span="4">
+          <a-col :span="8">
             领料员：
           </a-col>
         </a-row>

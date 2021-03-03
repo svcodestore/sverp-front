@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-20 10:31:49
- * @LastEditTime: 2021-03-03 14:36:16
+ * @LastEditTime: 2021-03-03 15:24:35
  * @LastEditors: yanbuw1911
  * @Description: 领料申请
  * @FilePath: /sverp-front/src/views/HRD/MaterialManagement/storehouse/apply.vue
@@ -235,8 +235,7 @@ export default {
         if (!this.userInfo.con_dept) {
           this.$message.error('账户所在部门为空，请联系管理员')
         }
-
-        if (!valid && this.userInfo.con_dept) {
+        if (valid && this.userInfo.con_dept) {
           this.popconfirmDisabled = false
         }
       })
