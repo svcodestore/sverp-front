@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-02-04 10:05:30
+ * @LastEditTime: 2021-03-04 15:00:42
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: /sverp-front/src/components/SV/SvGrid/grid.vue
@@ -60,13 +60,13 @@
               </a-button>
             </a-popconfirm>
           </div>
+          <slot name="svgridToolbar"></slot>
           <div v-if="title" class="toolbar-item toolbar-item-table-title">
             <a-tooltip placement="top" :title="desc" v-if="desc">
               <span>{{ title }}</span>
             </a-tooltip>
             <span v-else>{{ title }}</span>
           </div>
-          <slot name="svgridToolbar"></slot>
           <div class="toolbar-item toolbar-item-right">
             <a-input
               class="svgrid-search-bar"
@@ -248,7 +248,7 @@ export default {
       return this.wrappedColumns && this.wrappedColumns.findIndex(col => !!col.editRender) > -1
     },
     isShowSearch () {
-      return this.searchBar || this.data.length > 7
+      return this.searchBar && this.data.length > 7
     }
   },
   methods: {

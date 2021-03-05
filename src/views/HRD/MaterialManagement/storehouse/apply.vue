@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-20 10:31:49
- * @LastEditTime: 2021-03-03 15:24:35
+ * @LastEditTime: 2021-03-03 16:06:51
  * @LastEditors: yanbuw1911
  * @Description: 领料申请
  * @FilePath: /sverp-front/src/views/HRD/MaterialManagement/storehouse/apply.vue
@@ -42,7 +42,7 @@
           </a-select>
         </a-form-model-item>
         <a-form-model-item ref="qty" label="领料数量" prop="qty" v-if="form.name.length">
-          <a-space>
+          <a-space style="overflow: auto;width: 100%;">
             <a-input-number
               v-for="(item, idx) in form.name"
               :key="idx"

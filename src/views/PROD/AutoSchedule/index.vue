@@ -1,10 +1,10 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-11-16 16:51:26
- * @LastEditTime: 2021-01-27 10:55:41
+ * @LastEditTime: 2021-03-04 14:08:47
  * @LastEditors: yanbuw1911
  * @Description:
- * @FilePath: \client\src\views\PROD\AutoSchedule\index.vue
+ * @FilePath: /sverp-front/src/views/PROD/AutoSchedule/index.vue
 -->
 <template>
   <div>
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import ProdSchd from './prodSchd'
+import ProdSchd from './prodSchd/'
 import Calendar from './calendar'
 import ParamSetting from './paramSetting'
 import MonthPanel from './monthPanel.vue'

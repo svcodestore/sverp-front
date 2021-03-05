@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:27:12
- * @LastEditTime: 2021-02-04 10:01:16
+ * @LastEditTime: 2021-03-04 15:50:59
  * @LastEditors: yanbuw1911
  * @Description: 参考 vxe-grid
  * @FilePath: /sverp-front/src/components/SV/SvGrid/props.js
@@ -136,7 +136,7 @@ const svGridProps = {
   },
   searchBar: {
     type: Boolean,
-    default: () => false
+    default: () => true
   },
   editActivedEvt: {
     type: Function,
