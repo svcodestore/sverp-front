@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-11-18 14:53:12
- * @LastEditTime: 2020-12-25 16:26:39
+ * @LastEditTime: 2021-03-05 14:57:09
  * @LastEditors: yanbuw1911
  * @Description:
- * @FilePath: \client\src\api\prod.js
+ * @FilePath: /sverp-front/src/api/prod.js
  */
 
 import request from '@/utils/request'
@@ -20,6 +20,7 @@ const prodApi = {
   saveCalenderOpt: '/prod/saveCalenderOpt',
   setWorktime: '/prod/setWorktime',
   getAutoSchdParam: '/prod/getAutoSchdParam',
+  getProdItemSubphases: '/prod/getProdItemSubphases',
   inspectSchedule: '/prod/inspectSchedule'
 }
 
@@ -142,4 +143,11 @@ export const inspectSchedule = param =>
     url: prodApi.inspectSchedule,
     method: 'post',
     data: stringify(param)
+  })
+
+export const getProdItemSubphases = (prdItem, phsid) =>
+  request({
+    url: prodApi.getProdItemSubphases,
+    method: 'post',
+    data: stringify({ prdItem, phsid })
   })

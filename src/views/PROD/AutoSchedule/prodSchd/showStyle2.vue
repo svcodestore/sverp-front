@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-03-04 14:10:55
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-03-05 09:59:47
+ * @LastEditTime: 2021-03-05 16:48:54
  * @Description: 样式二
  * @FilePath: /sverp-front/src/views/PROD/AutoSchedule/prodSchd/showStyle2.vue
 -->
@@ -51,7 +51,7 @@ export default {
             // eslint-disable-next-line camelcase
             map_ppi_phs,
             // eslint-disable-next-line camelcase
-            map_ppi_ismaster,
+            map_ppi_isvice,
             // eslint-disable-next-line camelcase
             map_ppi_cost_time,
             // eslint-disable-next-line camelcase
@@ -61,10 +61,11 @@ export default {
           } = e
           keys.push(
             // eslint-disable-next-line camelcase
-            `<span title="工序">${map_ppi_phs}</span> <span class="header-split-line">|</span> <span title="耗时">${map_ppi_cost_time}</span> ${
+            `<span title="工序">${map_ppi_phs}${
               // eslint-disable-next-line camelcase
-              map_ppi_ismaster === 1 ? '' : '辅'
-            }`
+              map_ppi_isvice === '1' ? '·副' : ''
+              // eslint-disable-next-line camelcase
+            }</span><span class="header-split-line">|</span><span title="耗时">${map_ppi_cost_time}</span>`
           )
           values.push(
             // eslint-disable-next-line camelcase
@@ -73,7 +74,7 @@ export default {
         })
         let commonTitle = ''
         commonFields.forEach((k, i) => {
-          commonTitle += `${k}\n${vals[i]}`
+          commonTitle += `${k} | ${vals[i]}\n`
         })
         arr.push({
           title: commonTitle,
@@ -81,7 +82,7 @@ export default {
             if (i === 10) {
               return `<div style="page-break-after: always;">${k}\n${values[i]}</div>`
             }
-            return `<div>${k} | ${values[i]}\n</div>`
+            return `<div>${k}\n${values[i]}</div>`
           })
         })
       })
