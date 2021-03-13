@@ -1,20 +1,26 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-27 10:52:47
- * @LastEditTime: 2021-02-04 08:26:31
+ * @LastEditTime: 2021-03-12 16:37:01
  * @LastEditors: yanbuw1911
  * @Description: 月看板
  * @FilePath: /sverp-front/src/views/PROD/AutoSchedule/monthPanel.vue
 -->
 <template>
   <div>
-    <a-select placeholder="请选择生产线" style="width: 140px" v-model="prodLine">
+    <a-select placeholder="请选择生产线" style="width: 140px" v-model="prodLine" allowClear>
       <a-select-option v-for="item in prodLines" :key="item.value" :value="item.value" :disabled="item.disabled">
         {{ item.label }}
       </a-select-option>
     </a-select>
-    <a-month-picker placeholder="请选择月份" style="width: 120px" :disabled-date="disabledDate" v-model="prodDate" />
-    <a-select v-model="schdMode">
+    <a-month-picker
+      placeholder="请选择月份"
+      style="width: 120px"
+      :disabled-date="disabledDate"
+      v-model="prodDate"
+      allowClear
+    />
+    <a-select v-model="schdMode" allowClear style="width: 110px;" placeholder="排程模式">
       <a-select-option key="1" value="MAX_COST">最大耗时</a-select-option>
       <a-select-option key="2" value="SELF_COST">自身耗时</a-select-option>
     </a-select>
@@ -45,7 +51,7 @@
 <script>
 import GanttElastic from 'gantt-elastic'
 import GanttHeader from 'gantt-elastic-header'
-import dayjs from 'dayjs'
+import moment from 'moment'
 
 import { autoSchedule } from '@/api/prod'
 
@@ -168,7 +174,7 @@ export default {
       tasks: [],
       options,
       dynamicStyle: {},
-      prodLine: void 0,
+      prodLine: 'N',
       prodLines: [
         {
           label: '制八线皮带',
@@ -181,7 +187,7 @@ export default {
       ],
       schdSearchLoading: false,
       schdMode: 'MAX_COST',
-      prodDate: null
+      prodDate: moment()
     }
   },
   methods: {
@@ -195,18 +201,18 @@ export default {
       return (
         current &&
         (current <
-          dayjs()
+          moment()
             .add(-2, 'years')
             .endOf('year') ||
           current >
-            dayjs()
+            moment()
               .add(1, 'years')
               .endOf('year'))
       )
     },
     async handleSchdSearch () {
       this.schdSearchLoading = true
-      const date = dayjs(this.prodDate).format('YYYY-MM')
+      const date = moment(this.prodDate).format('YYYY-MM')
       this.options.title.label = `<span style="
                                             color: rgb(240, 40, 46, 0.747); 
                                             text-shadow: 2px 5px 15px rgb(240, 9, 1, 0.547); 
@@ -229,7 +235,7 @@ export default {
                     start: e.phases[0].ppi_phs_start,
                     end: e.phases.pop().ppi_phs_complete,
                     duration:
-                      dayjs(e.phases.pop().ppi_phs_complete).valueOf() - dayjs(e.phases[0].ppi_phs_start).valueOf(),
+                      moment(e.phases.pop().ppi_phs_complete).valueOf() - moment(e.phases[0].ppi_phs_start).valueOf(),
                     category: '生产项目',
                     type: 'project',
                     percent: 50,
@@ -245,7 +251,7 @@ export default {
                       label: e.map_ppi_phs || e.map_ppi_phs_desc,
                       start: e.ppi_phs_start,
                       end: e.ppi_phs_complete,
-                      duration: dayjs(e.ppi_phs_complete).valueOf() - dayjs(e.ppi_phs_start).valueOf(),
+                      duration: moment(e.ppi_phs_complete).valueOf() - moment(e.ppi_phs_start).valueOf(),
                       category: '生产工站',
                       type: 'task',
                       percent: 0

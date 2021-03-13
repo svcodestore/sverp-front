@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-03-04 14:07:18
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-03-05 10:00:28
+ * @LastEditTime: 2021-03-12 15:26:58
  * @Description: Do not edit
  * @FilePath: /sverp-front/src/views/PROD/AutoSchedule/prodSchd/index.vue
 -->
@@ -177,7 +177,7 @@ export default {
         printjs({
           printable: 'dataShowStyle2',
           type: 'html',
-          header: '<center><h2>排程计划报表</h2></center>',
+          header: `<center><h2>${this.prodDate.format('YYYY-MM')} 排程计划报表</h2></center>`,
           style: '#dataShowStyle2 table { margin: 25px 0; border-top: 1px solid rgba(0, 0, 0, 0.377); }'
         })
       }
@@ -196,12 +196,20 @@ export default {
         .then(res => {
           if (res.result) {
             if (res.data.length) {
-              this.$refs.showStyle1.gridPrdSchdOptions.data = res.data
+              const data = res.data.map(el => {
+                el.phases = el.phases.map(phs => {
+                  phs.ppi_phs_start = phs.ppi_phs_start.substr(8)
+                  phs.ppi_phs_complete = phs.ppi_phs_complete.substr(8)
+                  return phs
+                })
+                return el
+              })
+              this.$refs.showStyle1.gridPrdSchdOptions.data = data
 
-              this.tblData = res.data
+              this.tblData = data
               this.$nextTick(() => {
-                this.$refs.showStyle1.gridPrdPhsOptions.data = res.data[0].phases
-                this.$refs.showStyle1.$refs.xGridPrdSchd.setCurrentRow(res.data[0])
+                this.$refs.showStyle1.gridPrdPhsOptions.data = data[0].phases
+                this.$refs.showStyle1.$refs.xGridPrdSchd.setCurrentRow(data[0])
               })
             } else {
               this.$message.info('暂无数据')

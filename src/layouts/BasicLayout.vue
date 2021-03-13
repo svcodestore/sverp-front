@@ -11,6 +11,11 @@
     :i18nRender="i18nRender"
     v-bind="settings"
   >
+    <setting-drawer :settings="settings" @change="handleSettingChange" v-if="!this.isProdMode">
+      <div style="margin: 12px 0;">
+        This is SettingDrawer custom footer content.
+      </div>
+    </setting-drawer>
     <template v-slot:rightContentRender>
       <right-content :top-menu="settings.layout === 'topmenu'" :is-mobile="isMobile" :theme="settings.theme" />
     </template>
@@ -105,12 +110,12 @@
 </template>
 
 <script>
-import { updateTheme } from '@ant-design-vue/pro-layout'
+import { SettingDrawer, updateTheme } from '@ant-design-vue/pro-layout'
 import { i18nRender } from '@/locales'
 import { mapState, mapActions } from 'vuex'
-import { SIDEBAR_TYPE, TOGGLE_MOBILE_TYPE } from '@/store/mutation-types'
+import { SIDEBAR_TYPE, TOGGLE_MOBILE_TYPE, CONTENT_WIDTH_TYPE } from '@/store/mutation-types'
 
-import { getUserFavoritePages, setUserFavirotePage, rmUserFavirotePage } from '@/api/improve'
+import { getUserFavoritePages, setUserFavoritePage, rmUserFavoritePage } from '@/api/improve'
 
 import defaultSettings from '@/config/defaultSettings'
 import RightContent from '@/components/GlobalHeader/RightContent'
@@ -119,7 +124,8 @@ import SVPng from '../assets/starvincci'
 export default {
   name: 'BasicLayout',
   components: {
-    RightContent
+    RightContent,
+    SettingDrawer
   },
   data () {
     return {
@@ -151,6 +157,9 @@ export default {
     }
   },
   computed: {
+    isProdMode () {
+      return process.env.NODE_ENV === 'production'
+    },
     showFavPagesBtn () {
       return this.$route.meta.id !== 25
     },
@@ -188,7 +197,7 @@ export default {
 
     // first update color
     // TIPS: THEME COLOR HANDLER!! PLEASE CHECK THAT!!
-    if (process.env.NODE_ENV !== 'production' || process.env.VUE_APP_PREVIEW === 'true') {
+    if (!this.isProdMode) {
       updateTheme(this.settings.primaryColor)
     }
   },
@@ -214,6 +223,23 @@ export default {
     handleCollapse (val) {
       this.collapsed = val
     },
+    handleSettingChange ({ type, value }) {
+      console.log('type', type, value)
+      type && (this.settings[type] = value)
+      switch (type) {
+        case 'contentWidth':
+          this.settings[type] = value
+          break
+        case 'layout':
+          if (value === 'sidemenu') {
+            this.settings.contentWidth = CONTENT_WIDTH_TYPE.Fluid
+          } else {
+            this.settings.fixSiderbar = false
+            this.settings.contentWidth = CONTENT_WIDTH_TYPE.Fixed
+          }
+          break
+      }
+    },
     logoRender () {
       return <SVPng />
     },
@@ -222,7 +248,7 @@ export default {
       const menuid = String(this.$route.meta.id)
       const usrid = this.id || localStorage.getItem('id')
       if (this.isFavoritePage) {
-        await rmUserFavirotePage(menuid, usrid)
+        await rmUserFavoritePage(menuid, usrid)
           .then(res => {
             if (res.result) {
               pages = this.favPages.filter(item => item.ifp_menu_id !== menuid)
@@ -231,7 +257,7 @@ export default {
           })
           .catch(() => {})
       } else {
-        await setUserFavirotePage(menuid, usrid)
+        await setUserFavoritePage(menuid, usrid)
           .then(res => {
             if (res.result) {
               pages = [...this.favPages, { ifp_menu_id: menuid, ifp_user_id: usrid }]

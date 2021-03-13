@@ -2,14 +2,14 @@
  * @Author: yanbuw1911
  * @Date: 2021-03-04 14:10:44
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-03-05 16:34:38
+ * @LastEditTime: 2021-03-12 16:31:49
  * @Description: 样式一
  * @FilePath: /sverp-front/src/views/PROD/AutoSchedule/prodSchd/showStyle1.vue
 -->
 <template>
   <div>
     <a-row :gutter="10">
-      <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="11">
+      <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="10">
         <sv-grid
           ref="xGridPrdSchd"
           v-bind="gridPrdSchdOptions"
@@ -23,14 +23,19 @@
           </template>
         </sv-grid>
       </a-col>
-      <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="13">
+      <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="14">
         <sv-grid
           ref="xGridPrdPhs"
           v-bind="gridPrdPhsOptions"
           v-if="!!prodLine && !!prodDate && gridPrdSchdOptions.data.length"
         >
           <template #isvice="{ row, column }">
-            <a-icon type="tags" v-if="row[column.property] === '1'" title="辅流程工站" />
+            <a-icon
+              type="tags"
+              style="color: rgba(250, 20, 40, 0.69);"
+              v-if="row[column.property] === '1'"
+              title="辅流程工站"
+            />
             <a-icon type="tag" v-else title="主流程工站" />
           </template>
           <template v-slot:phases="{ row }">
@@ -41,7 +46,12 @@
               :cell-class-name="handleCellColor"
             >
               <template #name="{row, column}">
-                <a-icon type="tags" v-if="row.map_ppi_ismaster === 0" title="辅流程" />
+                <a-icon
+                  type="tags"
+                  title="辅流程"
+                  style="color: rgba(250, 20, 40, 0.69);"
+                  v-if="row.map_ppi_ismaster === 0"
+                />
                 <a-icon type="tag" v-else title="主流程" />
                 {{ row[column.property] }}
               </template>
@@ -119,11 +129,6 @@ export default {
             title: '计划数量',
             align: 'right',
             sortable: true
-          },
-          {
-            field: 'ppi_workshop_name',
-            title: '生产单位',
-            sortable: true
           }
         ]
       },
@@ -146,13 +151,13 @@ export default {
           {
             field: 'ppi_phs_start',
             title: '开始于',
-            width: 160,
+            width: 110,
             sortable: true
           },
           {
             field: 'ppi_phs_complete',
             title: '完成于',
-            width: 160,
+            width: 110,
             sortable: true
           },
           {
@@ -163,18 +168,25 @@ export default {
               default: 'isvice',
               content: 'phases'
             },
+            width: 60,
             sortable: true
           },
-          { field: 'map_ppi_cost_time', title: '耗时（s）', width: 100, align: 'right', sortable: true },
+          {
+            field: 'map_ppi_cost_time',
+            title: '耗时（s）',
+            width: 110,
+            align: 'right',
+            sortable: true
+          },
           {
             field: 'map_ppi_phs',
             title: '工站',
+            width: 110,
             sortable: true
           },
           {
             field: 'map_ppi_phs_desc',
             title: '描述',
-            width: 180,
             sortable: true
           }
         ]

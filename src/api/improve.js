@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 19:48:29
- * @LastEditTime: 2021-01-15 13:45:44
+ * @LastEditTime: 2021-03-13 08:38:02
  * @LastEditors: yanbuw1911
  * @Description:
- * @FilePath: \client\src\api\improve.js
+ * @FilePath: /sverp-front/src/api/improve.js
  */
 import request from '@/utils/request'
 import { stringify } from 'qs'
@@ -13,8 +13,8 @@ const improveApi = {
   getSoftRequire: '/improve/getSoftRequire',
   getSoftRequireInitData: '/improve/getSoftRequireInitData',
   getUserFavoritePages: '/improve/getUserFavoritePages',
-  setUserFavirotePage: '/improve/setUserFavirotePage',
-  rmUserFavirotePage: '/improve/rmUserFavirotePage',
+  setUserFavoritePage: '/improve/setUserFavoritePage',
+  rmUserFavoritePage: '/improve/rmUserFavoritePage',
   saveSoftRequireOpt: '/improve/saveSoftRequireOpt',
   setSoftwareRequireDayCheck: '/improve/setSoftwareRequireDayCheck',
   getDailyCheckList: '/improve/getDailyCheckList',
@@ -46,16 +46,16 @@ export const getUserFavoritePages = id =>
     data: stringify({ id })
   })
 
-export const setUserFavirotePage = (menuid, usrid) =>
+export const setUserFavoritePage = (menuid, usrid) =>
   request({
-    url: improveApi.setUserFavirotePage,
+    url: improveApi.setUserFavoritePage,
     method: 'post',
     data: stringify({ menuid, usrid })
   })
 
-export const rmUserFavirotePage = (menuid, usrid) =>
+export const rmUserFavoritePage = (menuid, usrid) =>
   request({
-    url: improveApi.rmUserFavirotePage,
+    url: improveApi.rmUserFavoritePage,
     method: 'post',
     data: stringify({ menuid, usrid })
   })
