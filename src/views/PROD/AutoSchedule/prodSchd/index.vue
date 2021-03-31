@@ -2,13 +2,13 @@
  * @Author: yanbuw1911
  * @Date: 2021-03-04 14:07:18
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-03-12 15:26:58
+ * @LastEditTime: 2021-03-31 09:17:32
  * @Description: Do not edit
  * @FilePath: /sverp-front/src/views/PROD/AutoSchedule/prodSchd/index.vue
 -->
 <template>
   <div>
-    <a-space>
+    <div class="operation-bar">
       <a-select placeholder="请选择生产线" style="width: 140px" allowClear v-model="prodLine" @change="initData">
         <a-select-option v-for="item in prodLines" :key="item.value" :value="item.value" :disabled="item.disabled">
           {{ item.label }}
@@ -63,7 +63,7 @@
       :checked="isInspection"
       @change="isInspection = !isInspection"
       /> -->
-    </a-space>
+    </div>
     <!-- <Debug v-if="isInspection" style="margin-top: 5px;"></Debug> -->
 
     <ShowStyle1
@@ -239,3 +239,17 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.operation-bar {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+@media screen and (min-width: 500px) {
+  .operation-bar {
+    width: 500px;
+  }
+}
+</style>
