@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-03-04 14:10:44
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-03-12 16:31:49
+ * @LastEditTime: 2021-04-13 11:12:49
  * @Description: 样式一
  * @FilePath: /sverp-front/src/views/PROD/AutoSchedule/prodSchd/showStyle1.vue
 -->
@@ -102,6 +102,7 @@ export default {
         loading: false,
         id: 'full_edit_3',
         columns: [
+          { type: 'seq', width: 50 },
           {
             field: 'ppi_customer_no',
             title: '客户代号',
@@ -213,6 +214,7 @@ export default {
         : this.gridPrdSchdOptions.data[0].ppi_prd_item
       return getProdItemSubphases(prdItem, row.map_ppi_phsid).then(res => {
         const cols = [
+          { type: 'seq', width: 50 },
           {
             field: 'map_ppi_phs_desc',
             title: '名称',

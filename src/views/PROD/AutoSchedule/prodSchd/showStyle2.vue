@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-03-04 14:10:55
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-03-05 16:48:54
+ * @LastEditTime: 2021-04-13 11:21:08
  * @Description: 样式二
  * @FilePath: /sverp-front/src/views/PROD/AutoSchedule/prodSchd/showStyle2.vue
 -->
@@ -10,6 +10,7 @@
   <div id="dataShowStyle2">
     <table v-for="(t, i) in tblData" :key="i" @mouseenter="prettyShow" @mouseleave="resumeStyle" :title="t.title">
       <tr>
+        <td>{{ i + 1 }}</td>
         <td v-for="(v, idx) in t.phases" :key="idx" v-html="v" :class="idx < 6 ? 'common-field-td' : ''"></td>
       </tr>
     </table>
