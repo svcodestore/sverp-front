@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-15 07:53:23
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-15 10:18:33
+ * @LastEditTime: 2021-04-15 15:48:56
  * @FilePath: \sverp-front\src\views\TPM\Fittings\index.vue
 -->
 <template>
@@ -74,6 +74,7 @@ export default {
             field: 'fitting_msg_status',
             title: '警示状态',
             width: 140,
+            sortable: true,
             fixed: 'left'
           }
         ]
