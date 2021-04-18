@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-08 11:08:16
- * @LastEditTime: 2021-04-16 13:40:17
+ * @LastEditTime: 2021-04-19 07:47:01
  * @LastEditors: yanbuw1911
  * @Description: 出库管理
  * @FilePath: /sverp-front/src/views/HRD/MaterialManagement/storehouse/outbound.vue
@@ -63,6 +63,7 @@
               </a-col>
               <a-col :span="1">
                 <a-button
+                  v-show="!isPrinting"
                   type="danger"
                   shape="circle"
                   size="small"
