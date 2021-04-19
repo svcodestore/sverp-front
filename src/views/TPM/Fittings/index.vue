@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-15 07:53:23
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-19 10:31:28
+ * @LastEditTime: 2021-04-19 15:41:41
  * @FilePath: \sverp-front\src\views\TPM\Fittings\index.vue
 -->
 <template>

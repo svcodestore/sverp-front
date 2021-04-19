@@ -58,6 +58,7 @@ export default {
       count: null,
       mechenum: null,
       repaircontents: null,
+      repairDefineCount: 6,
       date: {
         right: null,
         left: null
@@ -94,7 +95,7 @@ export default {
           {
             field: 'mechenum',
             title: '设备编号',
-            editRender: { name: 'input' },
+            // editRender: { name: 'input' },
             width: 110,
             fixed: 'left'
           },
@@ -102,43 +103,41 @@ export default {
             field: 'mache_name',
             title: '设备名称',
             width: 130,
-            fixed: 'left',
-            editRender: {
-              name: '$select',
-              options: [
-                {
-                  value: '压花机',
-                  label: '压花机'
-                },
-                {
-                  value: '摇臂机',
-                  label: '摇臂机'
-                },
-                {
-                  value: '压光机',
-                  label: '压光机'
-                },
-                {
-                  value: '捅皮机',
-                  label: '捅皮机'
-                },
-                {
-                  value: '分条机',
-                  label: '分条机'
-                },
-                {
-                  value: '削边机',
-                  label: '削边机'
-                }
-              ]
-            }
+            fixed: 'left'
+            // editRender: {
+            //   name: '$select',
+            //   options: [
+            //     {
+            //       value: '压花机',
+            //       label: '压花机'
+            //     },
+            //     {
+            //       value: '摇臂机',
+            //       label: '摇臂机'
+            //     },
+            //     {
+            //       value: '压光机',
+            //       label: '压光机'
+            //     },
+            //     {
+            //       value: '捅皮机',
+            //       label: '捅皮机'
+            //     },
+            //     {
+            //       value: '分条机',
+            //       label: '分条机'
+            //     },
+            //     {
+            //       value: '削边机',
+            //       label: '削边机'
+            //     }
+            //   ]
+            // }
           },
           {
             field: 'repairtime',
             title: '维修/保养/调试时间',
-            editRender: {
-              name: 'input'
-            },
+            // editRender: { name: 'input' },
             width: 170,
             sortable: true,
             fixed: 'left'
@@ -146,9 +145,7 @@ export default {
           {
             field: 'alarmtime',
             title: '警示时间',
-            editRender: {
-              name: 'input'
-            },
+            // editRender: { name: 'input' },
             width: 140,
             sortable: true,
             fixed: 'left'
@@ -156,7 +153,7 @@ export default {
           {
             field: 'reachtime',
             title: '到场时间',
-            editRender: { name: 'input' },
+            // editRender: { name: 'input' },
             width: 140,
             sortable: true
           },
@@ -197,13 +194,13 @@ export default {
           {
             field: 'expendtime',
             title: '耗时(分)',
-            editRender: { name: 'input' },
+            // editRender: { name: 'input' },
             width: 140
           },
           {
             field: 'repairman',
             title: '维护员',
-            editRender: { name: 'input' },
+            // editRender: { name: 'input' },
             width: 90
           }
         ]
@@ -233,7 +230,7 @@ export default {
         {
           field: 'mechenum',
           title: '设备编号',
-          editRender: { name: 'input' },
+          // editRender: { name: 'input' },
           width: 110,
           fixed: 'left'
         },
@@ -241,43 +238,41 @@ export default {
           field: 'mache_name',
           title: '设备名称',
           width: 100,
-          fixed: 'left',
-          editRender: {
-            name: '$select',
-            options: [
-              {
-                value: '压花机',
-                label: '压花机'
-              },
-              {
-                value: '摇臂机',
-                label: '摇臂机'
-              },
-              {
-                value: '压光机',
-                label: '压光机'
-              },
-              {
-                value: '捅皮机',
-                label: '捅皮机'
-              },
-              {
-                value: '分条机',
-                label: '分条机'
-              },
-              {
-                value: '削边机',
-                label: '削边机'
-              }
-            ]
-          }
+          fixed: 'left'
+          // editRender: {
+          //   name: '$select',
+          //   options: [
+          //     {
+          //       value: '压花机',
+          //       label: '压花机'
+          //     },
+          //     {
+          //       value: '摇臂机',
+          //       label: '摇臂机'
+          //     },
+          //     {
+          //       value: '压光机',
+          //       label: '压光机'
+          //     },
+          //     {
+          //       value: '捅皮机',
+          //       label: '捅皮机'
+          //     },
+          //     {
+          //       value: '分条机',
+          //       label: '分条机'
+          //     },
+          //     {
+          //       value: '削边机',
+          //       label: '削边机'
+          //     }
+          //   ]
+          // }
         },
         {
           field: 'repairtime',
           title: '完成处理时间',
-          editRender: {
-            name: 'input'
-          },
+          // editRender: { name: 'input' },
           width: 170,
           sortable: true,
           fixed: 'left'
@@ -285,9 +280,7 @@ export default {
         {
           field: 'alarmtime',
           title: '警示时间',
-          editRender: {
-            name: 'input'
-          },
+          // editRender: { name: 'input' },
           width: 140,
           sortable: true,
           fixed: 'left'
@@ -295,7 +288,7 @@ export default {
         {
           field: 'reachtime',
           title: '到场时间',
-          editRender: { name: 'input' },
+          // editRender: { name: 'input' },
           width: 140,
           sortable: true
         },
@@ -336,13 +329,13 @@ export default {
         {
           field: 'expendtime',
           title: '耗时(分)',
-          editRender: { name: 'input' },
+          // editRender: { name: 'input' },
           width: 100
         },
         {
           field: 'repairman',
           title: '维护员',
-          editRender: { name: 'input' },
+          // editRender: { name: 'input' },
           width: 90
         },
         {
@@ -443,7 +436,7 @@ export default {
           {
             field: 'mache_num',
             title: '设备编号',
-            editRender: { name: 'input' },
+            // editRender: { name: 'input' },
             width: 120,
             sortable: true,
             fixed: 'left'
@@ -477,15 +470,36 @@ export default {
             fixed: 'left'
           },
           {
-            field: 'create_time',
-            title: '添加时间',
-            editRender: {
-              name: 'input'
-            },
+            field: '',
+            title: '界定次数',
+            width: 90,
+            slots : {
+              default: ({ row }) => {
+                return this.repairDefineCount
+              }
+            }
+          },
+          {
+            field: '',
+            title: '故障率',
             width: 120,
-            sortable: true,
-            fixed: 'left'
+            // sortable: true,
+            slots: {
+              default: ({ row }) => {
+                return (((row.errCount / this.repairDefineCount).toFixed(2)) * 100).toString() + '%'
+              }
+            }
           }
+          // {
+          //   field: 'create_time',
+          //   title: '添加时间',
+          //   editRender: {
+          //     name: 'input'
+          //   },
+          //   width: 120,
+          //   sortable: true,
+          //   fixed: 'left'
+          // }
         ]
       } else {
         this.count = null
@@ -500,7 +514,7 @@ export default {
           {
             field: 'mechenum',
             title: '设备编号',
-            editRender: { name: 'input' },
+            // editRender: { name: 'input' },
             width: 110,
             fixed: 'left'
           },
@@ -508,43 +522,41 @@ export default {
             field: 'mache_name',
             title: '设备名称',
             width: 100,
-            fixed: 'left',
-            editRender: {
-              name: '$select',
-              options: [
-                {
-                  value: '压花机',
-                  label: '压花机'
-                },
-                {
-                  value: '摇臂机',
-                  label: '摇臂机'
-                },
-                {
-                  value: '压光机',
-                  label: '压光机'
-                },
-                {
-                  value: '捅皮机',
-                  label: '捅皮机'
-                },
-                {
-                  value: '分条机',
-                  label: '分条机'
-                },
-                {
-                  value: '削边机',
-                  label: '削边机'
-                }
-              ]
-            }
+            fixed: 'left'
+            // editRender: {
+            //   name: '$select',
+            //   options: [
+            //     {
+            //       value: '压花机',
+            //       label: '压花机'
+            //     },
+            //     {
+            //       value: '摇臂机',
+            //       label: '摇臂机'
+            //     },
+            //     {
+            //       value: '压光机',
+            //       label: '压光机'
+            //     },
+            //     {
+            //       value: '捅皮机',
+            //       label: '捅皮机'
+            //     },
+            //     {
+            //       value: '分条机',
+            //       label: '分条机'
+            //     },
+            //     {
+            //       value: '削边机',
+            //       label: '削边机'
+            //     }
+            //   ]
+            // }
           },
           {
             field: 'repairtime',
             title: '维修/保养/调试时间',
-            editRender: {
-              name: 'input'
-            },
+            // editRender: { name: 'input' },
             width: 170,
             sortable: true,
             fixed: 'left'
@@ -552,9 +564,7 @@ export default {
           {
             field: 'alarmtime',
             title: '警示时间',
-            editRender: {
-              name: 'input'
-            },
+            // editRender: { name: 'input' },
             width: 140,
             sortable: true,
             fixed: 'left'
@@ -562,7 +572,7 @@ export default {
           {
             field: 'reachtime',
             title: '到场时间',
-            editRender: { name: 'input' },
+            // editRender: { name: 'input' },
             width: 140,
             sortable: true
           },
@@ -603,7 +613,7 @@ export default {
           {
             field: 'expendtime',
             title: '耗时(分)',
-            editRender: { name: 'input' },
+            // editRender: { name: 'input' },
             width: 100
           },
           {
