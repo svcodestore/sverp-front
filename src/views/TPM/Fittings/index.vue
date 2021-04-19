@@ -1,12 +1,16 @@
 <!--
  * @Date: 2021-04-15 07:53:23
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-15 15:48:56
+ * @LastEditTime: 2021-04-19 10:31:28
  * @FilePath: \sverp-front\src\views\TPM\Fittings\index.vue
 -->
 <template>
   <div>
-    <sv-grid ref="svGrid" v-bind="svGridOptions" v-on="svGridEvents" height="800"> </sv-grid>
+    <sv-grid ref="svGrid" v-bind="svGridOptions" v-on="svGridEvents" height="800" :row-style="rowStyle">
+      <template #showStatus="column">
+        <span v-html="column"></span>
+      </template>
+    </sv-grid>
   </div>
 </template>
 
@@ -75,6 +79,19 @@ export default {
             title: '警示状态',
             width: 140,
             sortable: true,
+            slots: {
+              default: ({ row }) => {
+                if (row.fitting_msg_status === -1) {
+                  return [
+                    <span style="color:red">少于阈值</span>
+                  ]
+                } else {
+                  return [
+                    <span>正常</span>
+                  ]
+                }
+              }
+            },
             fixed: 'left'
           }
         ]
@@ -93,11 +110,11 @@ export default {
             this.tableData1 = result.result
             this.svGridOptions.data = result.result.map(e => {
               const row = XEUtils.clone(e, true)
-              if (row.fitting_msg_status === 1) {
-                row.fitting_msg_status = '正常'
-              } else {
-                row.fitting_msg_status = '少于阈值'
-              }
+              // if (row.fitting_msg_status === 1) {
+              //   row.fitting_msg_status = '正常'
+              // } else {
+              //   row.fitting_msg_status = '少于阈值'
+              // }
               return row
             })
             this.svGridOptions.params.originData = this.svGridOptions.data.map(e => XEUtils.clone(e))
@@ -141,6 +158,9 @@ export default {
         }
       }
       return o
+    },
+    rowStyle: function (row) {
+      console.log(row)
     }
   },
   mounted () {
