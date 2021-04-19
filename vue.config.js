@@ -119,7 +119,7 @@ const vueConfig = {
   // babel-loader no-ignore node_modules/*
   transpileDependencies: [],
   publicPath: '/'
-  // publicPath: '/android_asset/www'
+  // publicPath: '/android_asset/www' // cordova path
   // publicPath: '/Program Files (x86)/SVERP/resources/app.arsa/dist'
 }
 

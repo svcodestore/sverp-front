@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2021-01-08 11:08:16
- * @LastEditTime: 2021-03-03 15:27:13
+ * @LastEditTime: 2021-04-19 07:47:01
  * @LastEditors: yanbuw1911
  * @Description: 出库管理
  * @FilePath: /sverp-front/src/views/HRD/MaterialManagement/storehouse/outbound.vue
@@ -28,7 +28,7 @@
       :destroyOnClose="true"
       :footer="null"
       @ok="outboundVisible = false"
-      @cancel="outboundVisible = false"
+      @cancel=";(outboundVisible = false), (detailGridCurrRow = null)"
     >
       <div class="outbound-detail-bar">
         <div class="bar" v-show="!isPrinting">
@@ -58,8 +58,21 @@
               <a-col :span="8">
                 制单人：<span>{{ gridCurrRow.hoo_creator }}</span>
               </a-col>
-              <a-col :span="8">
+              <a-col :span="7">
                 部门：<span>{{ gridCurrRow.cdw_name }}</span>
+              </a-col>
+              <a-col :span="1">
+                <a-button
+                  v-show="!isPrinting"
+                  type="danger"
+                  shape="circle"
+                  size="small"
+                  title="删除"
+                  :disabled="!detailGridCurrRow"
+                  @click="handleDelOutboundMaterial"
+                >
+                  <a-icon type="delete"></a-icon>
+                </a-button>
               </a-col>
             </a-row>
           </template>
@@ -82,7 +95,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getOutboundOrder, getOutboundMaterialList, approveOutbound } from '@/api/hrd'
+import { getOutboundOrder, getOutboundMaterialList, approveOutbound, delOutboundMaterial } from '@/api/hrd'
 
 export default {
   data () {
@@ -181,7 +194,7 @@ export default {
       detailGridEvts: {
         'current-change': this.handleDetailCurrChg
       },
-      detailGridCurrRowStock: void 0,
+      detailGridCurrRow: void 0,
       popconfirmDisabled: true
     }
   },
@@ -273,13 +286,26 @@ export default {
       if (Number(cellValue) === 0 || Number.isNaN(Number(cellValue))) {
         this.$message.error('无效的数量')
         return new Error('无效的数量')
-      } else if (Number(cellValue) > Number(this.detailGridCurrRowStock)) {
-        this.$message.error('数量不能超过库存' + this.detailGridCurrRowStock)
-        return new Error('数量不能超过库存' + this.detailGridCurrRowStock)
+      } else if (Number(cellValue) > Number(this.detailGridCurrRow.hmu_material_stock)) {
+        this.$message.error('数量不能超过库存' + this.detailGridCurrRow.hmu_material_stock)
+        return new Error('数量不能超过库存' + this.detailGridCurrRow.hmu_material_stock)
       }
     },
     handleDetailCurrChg ({ row }) {
-      this.detailGridCurrRowStock = row.hmu_material_stock
+      this.detailGridCurrRow = row
+    },
+    async handleDelOutboundMaterial () {
+      await delOutboundMaterial(this.detailGridCurrRow.id).then(res => {
+        if (res.result) {
+          this.detailGridCurrRow = null
+          this.$message.success('删除成功')
+          getOutboundMaterialList(this.gridCurrRow.id).then(
+            res => res.result && (this.detailGridOptions.data = res.data)
+          )
+        } else {
+          this.$message.error('删除失败')
+        }
+      })
     }
   },
   async mounted () {

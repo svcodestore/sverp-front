@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2021-01-07 14:20:06
- * @LastEditTime: 2021-03-03 13:47:18
+ * @LastEditTime: 2021-04-16 13:24:08
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: /sverp-front/src/api/hrd.js
@@ -17,6 +17,7 @@ const hrdApi = {
   getIndividualOutboundOrder: '/hrd/getIndividualOutboundOrder',
   undoOutbound: '/hrd/undoOutbound',
   getOutboundMaterialList: '/hrd/getOutboundMaterialList',
+  delOutboundMaterial: '/hrd/delOutboundMaterial',
   getMaterialLogListById: '/hrd/getMaterialLogListById',
   getMaterialLogListByUserid: '/hrd/getMaterialLogListByUserid',
   setMaterialStock: '/hrd/setMaterialStock',
@@ -70,6 +71,13 @@ export const getOutboundMaterialList = materialId =>
     url: hrdApi.getOutboundMaterialList,
     method: 'post',
     data: stringify({ materialId })
+  })
+
+export const delOutboundMaterial = id =>
+  request({
+    url: hrdApi.delOutboundMaterial,
+    method: 'post',
+    data: stringify({ id })
   })
 
 export const getMaterialLogListById = materialId =>
