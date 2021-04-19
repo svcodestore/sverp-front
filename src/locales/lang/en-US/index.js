@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:28
- * @LastEditTime: 2021-01-22 11:12:42
- * @LastEditors: yanbuw1911
+ * @LastEditTime: 2021-04-15 08:01:09
+ * @LastEditors: Mok.CH
  * @Description:
- * @FilePath: \client\src\locales\lang\en-US\index.js
+ * @FilePath: \sverp-front\src\locales\lang\en-US\index.js
  */
 import antdEnUS from 'ant-design-vue/es/locale-provider/en_US'
 import momentEU from 'moment/locale/eu'
@@ -58,7 +58,9 @@ const menuNodes = {
   'svgrid.toolbar.search': 'input a keyword to search',
   CHAT: 'Chat',
   CHAT_IDX: 'Home',
-  PROD_PROCEDURES: 'Procedures Management'
+  PROD_PROCEDURES: 'Procedures Management',
+  TPM_QADD: 'Quick Repairs',
+  TPM_FITTINGS: 'Fittings Management'
 }
 
 const svGrid = {
