@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-15 07:53:23
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-19 15:41:41
+ * @LastEditTime: 2021-04-20 09:35:05
  * @FilePath: \sverp-front\src\views\TPM\Fittings\index.vue
 -->
 <template>
@@ -93,6 +93,12 @@ export default {
               }
             },
             fixed: 'left'
+          },
+          {
+            field: 'fitting_consume_num',
+            title: '配件消耗量',
+            width: 140,
+            sortable: true
           }
         ]
       },
