@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-13 09:50:11
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-19 10:31:49
+ * @LastEditTime: 2021-04-20 09:41:05
  * @FilePath: \sverp-front\src\views\TPM\QADD\index.vue
 -->
 <template>
@@ -167,14 +167,13 @@ export default {
         reporter_name: null,
         mecheImg: []
       },
-      param: [
-        {
+      param: {
           arr: [],
           cause: null,
           row: null,
-          cate: null
-        }
-      ],
+          cate: null,
+          reporterConId: null
+      },
       selectRow: null,
       notifyPeople: [],
       showSearchModal: false,
@@ -262,10 +261,17 @@ export default {
         // 机械设备 维修通知
         this.param.cause = this.content.cause
         this.param.arr = this.content.noticeName
+        this.param.reporterConId = this.content.reporter_con_id
         this.submitOption(this.param)
+        this.$router.push({ path: '/tpm/myreports' })
       } else {
         // 其它部门 维修通知
+        this.content.noticeDepartment = ''
         this.submitContent()
+        this.$message.success('维修信息已发送')
+        this.content.macheName = ''
+        this.content.cause = ''
+        this.content.noticeName = ''
       }
     },
     choiceMacheine (row) {
@@ -353,6 +359,7 @@ export default {
         '跳线、烂线：梭床被针打花，针板有毛刺、针有问题，梭床损坏、针杆深浅度'
       ]
       // 修改与原代码顺序相反， 以保证更高级别的维护信息被记录
+      this.param.cate = ''
       if (debug.indexOf(this.param.cause) > -1) {
         this.param.cate = '调试'
       }
