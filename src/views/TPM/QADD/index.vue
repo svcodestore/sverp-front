@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-13 09:50:11
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-21 14:06:42
+ * @LastEditTime: 2021-04-21 14:37:21
  * @FilePath: \sverp-front\src\views\TPM\QADD\index.vue
 -->
 <template>
@@ -183,7 +183,8 @@ export default {
           cause: null,
           row: null,
           cate: null,
-          reporterConId: null
+          reporterConId: null,
+          reporterName: null
       },
       selectRow: null,
       notifyPeople: [],
@@ -273,6 +274,7 @@ export default {
         this.param.cause = this.content.cause
         this.param.arr = this.content.noticeName
         this.param.reporterConId = this.content.reporter_con_id
+        this.param.reporterName = this.content.reporter_name
         if (this.content.address) {
           this.param.address = this.content.address
         }
@@ -286,6 +288,8 @@ export default {
         this.content.mecheName = ''
         this.content.cause = ''
         this.content.noticeName = ''
+        this.content.noticeDepartment = ''
+        this.content.address = ''
       }
     },
     choiceMacheine (row) {
