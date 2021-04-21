@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-13 09:50:11
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-20 09:41:05
+ * @LastEditTime: 2021-04-21 14:06:42
  * @FilePath: \sverp-front\src\views\TPM\QADD\index.vue
 -->
 <template>
@@ -18,7 +18,7 @@
         >
           <a-row :gutter="8">
             <a-col :span="rowSpan">
-              <a-input v-model="content.macheName" width="80%" :placeholder="$t('要报修的是什么设备？')" />
+              <a-input v-model="content.mecheName" width="80%" :placeholder="$t('要报修的是什么设备？')" />
             </a-col>
             <a-col :span="2">
               <a-button type="primary" shape="circle" icon="search" @click="showSearch" />
@@ -53,7 +53,17 @@
             </a-col>
           </a-row>
         </a-form-item>
-
+        <a-form-item
+          label="部门"
+          :labelCol="{ lg: { span: 7 }, sm: { span: 7 } }"
+          :wrapperCol="{ lg: { span: 10 }, sm: { span: 17 } }"
+        >
+        <a-row :gutter="8">
+          <a-col :span="rowSpan">
+            <a-input :placeholder="$t('部门(选填)')" v-model="content.noticeDepartment" />
+          </a-col>
+        </a-row>
+        </a-form-item>
         <a-form-item
           :label="$t('地点')"
           :labelCol="{ lg: { span: 7 }, sm: { span: 7 } }"
@@ -62,7 +72,7 @@
         >
           <a-row>
             <a-col :span="rowSpan">
-              <a-input :placeholder="$t('设备地点(选填)')" />
+              <a-input :placeholder="$t('设备地点(选填)')" v-model="content.address" />
             </a-col>
           </a-row>
         </a-form-item>
@@ -161,11 +171,12 @@ export default {
         noticeName: [],
         noticeDepartment: null,
         cause: null,
-        macheName: null,
+        mecheName: null,
         macheNum: null,
         reporter_con_id: null,
         reporter_name: null,
-        mecheImg: []
+        mecheImg: [],
+        address: null
       },
       param: {
           arr: [],
@@ -262,20 +273,23 @@ export default {
         this.param.cause = this.content.cause
         this.param.arr = this.content.noticeName
         this.param.reporterConId = this.content.reporter_con_id
-        this.submitOption(this.param)
-        this.$router.push({ path: '/tpm/myreports' })
+        if (this.content.address) {
+          this.param.address = this.content.address
+        }
+        this.submitOption(this.param).then(() => {
+          this.$router.push({ path: '/tpm/myreports' })
+        })
       } else {
         // 其它部门 维修通知
-        this.content.noticeDepartment = ''
+        // this.content.noticeDepartment = ''
         this.submitContent()
-        this.$message.success('维修信息已发送')
-        this.content.macheName = ''
+        this.content.mecheName = ''
         this.content.cause = ''
         this.content.noticeName = ''
       }
     },
     choiceMacheine (row) {
-      this.content.macheName = row.mache_name
+      this.content.mecheName = row.mache_name
       this.content.macheNum = row.mache_num
       this.showSearchModal = false
       this.param.row = row
@@ -314,6 +328,9 @@ export default {
             // 原功能提交完成后直接 返回 第一界面
             // this.show = true
             // this.showDepartment = false
+            this.$message.success('维修信息已发送')
+          } else {
+            this.$message.error('信息发送失败')
           }
         })
         .catch(() => {})
