@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-15 07:53:23
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-20 09:35:05
+ * @LastEditTime: 2021-04-21 17:02:36
  * @FilePath: \sverp-front\src\views\TPM\Fittings\index.vue
 -->
 <template>
@@ -63,6 +63,32 @@ export default {
             width: 130,
             fixed: 'left',
             editRender: { name: 'input' }
+          },
+          {
+            field: 'fitting_price',
+            title: '配件单价',
+            width: 120,
+            fixed: 'left',
+            editRender: { name: 'input' }
+          },
+          {
+            field: 'is_unlimit',
+            title: '非实物配件',
+            width: 120,
+            fixed: 'left',
+            editRender: {
+              name: '$select',
+              options: [
+                {
+                  value: 0,
+                  label: '否'
+                },
+                {
+                  value: 1,
+                  label: '是'
+                }
+              ]
+            }
           },
           {
             field: 'fitting_msg_number',
