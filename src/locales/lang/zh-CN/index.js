@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:05
- * @LastEditTime: 2021-04-20 08:04:17
+ * @LastEditTime: 2021-04-21 15:01:15
  * @LastEditors: Mok.CH
  * @Description:
  * @FilePath: \sverp-front\src\locales\lang\zh-CN\index.js
@@ -60,7 +60,8 @@ const menuNodes = {
   PROD_PROCEDURES: '工站管理',
   TPM_QADD: '快速报修',
   TPM_FITTINGS: '配件管理',
-  TPM_MYREPORTS: '我的报修',
+  TPM_MYREPORTS: '我的报修(TPM)',
+  TPM_MYREPORTS_OTHER: '我的报修(其它)',
   TPM_MYORDERS: '我的工单'
 }
 
