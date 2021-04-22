@@ -339,18 +339,38 @@ export default {
         },
         {
           field: 'expendtime',
-          title: '耗时(分)',
-          width: 80,
+          title: '耗时',
+          width: 138,
+          sortable: true,
           slots: {
             default: ({ row }) => {
-              return row.expendtime.toFixed(2)
+              if (row.expendtime == 0) {
+                return '进行中'
+              }
+              const expendtime = parseInt(row.expendtime)
+              const min_duration = 1
+              const hour_duration = 60 * min_duration
+              const day_duration = 24 * hour_duration
+              const days = parseInt(expendtime / day_duration).toString()
+              const hours = parseInt((expendtime % day_duration)/hour_duration).toString()
+              const min = parseInt((expendtime % hour_duration)/min_duration).toString()
+              let retstr = ''
+              if (days > 0) {
+                retstr += days + '日' + hours + '小时' + min + '分钟'
+              } else if (hours > 0 ) {
+                retstr += hours + '小时' + min + '分钟'
+              } else if (min > 0) {
+                retstr += min + '分钟'
+              } else {
+                retstr = '不到一分钟'
+              }
+              return  retstr
             }
           }
         },
         {
           field: 'repairman',
           title: '维护员',
-          // editRender: { name: 'input' },
           width: 90
         },
         {
