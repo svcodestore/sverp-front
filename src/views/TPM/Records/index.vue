@@ -21,15 +21,14 @@
         <vxe-button style="margin:0;margin-right:10px" @click="getDate((err = 1))">故障统计</vxe-button>
         <vxe-button style="margin:0;margin-right:10px" @click="printRecord">导出CSV</vxe-button>
       </div>
-      <sv-grid ref="svGrid" v-bind="svGridOptions" v-on="svGridEvents">
+      <sv-grid ref="svGrid" v-bind="svGridOptions" v-on="svGridEvents" height="780">
         <template #show_date_time="{ row, column }">
           <span v-if="row[column.property].startsWith('1970-01')">无</span>
           <span v-else>{{ row[column.property] }}</span>
         </template>
         <template #show_op_btn="{ row }">
           <a-space size="small">
-            <!-- <a-button v-if="row.repairtime.startsWith('1970-01') && row.reachtime.startsWith('1970-01') != true" type="primary" size="small">完成</a-button> -->
-            <a-button size="small" @click="showDetail(row)" title="详情 添加维修进度">详细</a-button>
+            <a-button size="small" @click="showDetail(row)" title="详情 添加维修进度" type="primary">打开</a-button>
           </a-space>
         </template>
       </sv-grid>
@@ -113,35 +112,47 @@
               </a-step>
             </a-steps>
           </div>
-          <div style="margin-top:2rem;">
-            <div class="title">进度填写</div>
-            <vxe-input
-              v-model="currentRow.repaircontents"
-              class="fitting-public"
-              style="width:356px"
-              type="text"
-              placeholder="请输入维修原因"
-            />
-          </div>
-          <div style="margin-top:1rem;margin-bottom:1rem;">
-            <vxe-input
-              v-model="currentRow.repairmethod"
-              class="fitting-public"
-              style="width:356px"
-              type="text"
-              placeholder="请输入处理方法"
-            />
-          </div>
-          <div>
-            有无消耗配件：
-            <vxe-radio @change="fittingName()" name="isrow" content="有"></vxe-radio>
-            <vxe-radio @change="fittingArr = null" name="isrow" content="无"></vxe-radio>
-            <br />
-            <div v-for="(item, index) in fittingArr" style="display:block;margin:10px 0px;" :key="index">
-              <span>{{ item.fitting_name }} :</span>
-              <input type="number" v-model="fittingNumber[item.id]" style="border-color:rgb(210,210,210);margin:0px 10px;" />
+          <div v-show="repair_steps == 0">
+            <div style="margin-top: 2rem;">
+              <div class="title">确认到场</div>
+              <vxe-select v-model="arrivedData.noticeName" class="notice" placeholder="请选择通知人" clearable>
+                <vxe-option
+                  v-for="(item, index) in notice"
+                  :key="index"
+                  :value="item.notify_phone"
+                  :label="item.notify_name"
+                ></vxe-option>
+              </vxe-select>
+              <vxe-input type="text" v-model="arrivedData.phoneFour" placeholder="请输入到场人手机号后四位"></vxe-input>
+              <vxe-button style="margin-right:10px" @click="arrived()">维修人已到场</vxe-button>
+              <span v-show="checkMsg" style="color:red;">验证错误</span>
             </div>
-            <vxe-button @click="repairSubmit" style="background:#1890ff;color:white;margin-top:1rem;">维修完成</vxe-button>
+          </div>
+          <div v-show="repair_steps == 1">
+            <div style="margin-top:2rem;">
+              <div class="title">维修记录填写</div>
+              <vxe-input
+                v-model="currentRow.repaircontents"
+                class="fitting-public"
+                style="width:356px"
+                type="text"
+                placeholder="请输入维修原因"
+              />
+            </div>
+            <div style="margin-top:1rem;margin-bottom:1rem;">
+              <a-textarea v-model="currentRow.repairmethod" style="width:356px"></a-textarea>
+            </div>
+            <div>
+              有无消耗配件：
+              <vxe-radio @change="fittingName()" name="isrow" content="有"></vxe-radio>
+              <vxe-radio @change="fittingArr = null" name="isrow" content="无"></vxe-radio>
+              <br />
+              <div v-for="(item, index) in fittingArr" style="display:block;margin:10px 0px;" :key="index">
+                <span>{{ item.fitting_name }} :</span>
+                <input type="number" v-model="fittingNumber[item.id]" style="border-color:rgb(210,210,210);margin:0px 10px;" />
+              </div>
+              <vxe-button @click="repairSubmit" style="background:#1890ff;color:white;margin-top:1rem;">维修完成</vxe-button>
+            </div>
           </div>
         </div>
 
@@ -164,7 +175,7 @@
   </div>
 </template>
 <script>
-import { apiRepairList, apiSaveRepair, apiFitting, apiRepairComp, apiRepairDetail } from '@/api/records'
+import { apiRepairList, apiSaveRepair, apiFitting, apiRepairComp, apiRepairDetail, apiNotify, apiCheckCode } from '@/api/records'
 import XEUtils from 'xe-utils'
 import dayjs from 'dayjs'
 
@@ -176,6 +187,12 @@ export default {
       isMobile: false,
       fittingArr: {},
       fittingNumber: [],
+      notice: [],
+      checkMsg: false,
+      arrivedData: {
+        noticeName: null,
+        phoneFour: null
+      },
       directionType: {
         horizontal: 'horizontal',
         vertical: 'vertical'
@@ -222,7 +239,6 @@ export default {
         {
           field: 'mechenum',
           title: '设备编号',
-          // editRender: { name: 'input' },
           width: 90,
           fixed: 'left'
         },
@@ -231,35 +247,6 @@ export default {
           title: '设备名称',
           width: 110,
           fixed: 'left'
-          // editRender: {
-          //   name: '$select',
-          //   options: [
-          //     {
-          //       value: '压花机',
-          //       label: '压花机'
-          //     },
-          //     {
-          //       value: '摇臂机',
-          //       label: '摇臂机'
-          //     },
-          //     {
-          //       value: '压光机',
-          //       label: '压光机'
-          //     },
-          //     {
-          //       value: '捅皮机',
-          //       label: '捅皮机'
-          //     },
-          //     {
-          //       value: '分条机',
-          //       label: '分条机'
-          //     },
-          //     {
-          //       value: '削边机',
-          //       label: '削边机'
-          //     }
-          //   ]
-          // }
         },
         // {
         //   field: 'repairtime',
@@ -353,8 +340,12 @@ export default {
         {
           field: 'expendtime',
           title: '耗时(分)',
-          // editRender: { name: 'input' },
-          width: 80
+          width: 80,
+          slots: {
+            default: ({ row }) => {
+              return row.expendtime.toFixed(2)
+            }
+          }
         },
         {
           field: 'repairman',
@@ -425,6 +416,37 @@ export default {
         })
         .catch(() => {})
       this.svGridOptions.loading = false
+    },
+    async arrived () {
+      this.showPeople = false
+      this.checkMsg = false
+      const phone = this.arrivedData.noticeName
+      const phoneFour = this.arrivedData.phoneFour
+      const newPhone = phone.substring(7, 11)
+      const id = this.currentRow.id
+      this.loading = true
+      if (phoneFour !== newPhone) {
+        this.checkMsg = true
+      } else {
+        // clearInterval(timerSendMsg)
+        await apiCheckCode({ id, phone, phoneFour })
+          .then(result => {
+            if (result.code === 0) {
+              // this.isShowMainList = true
+              // this.refreshTable()
+              this.showDetail(this.currentRow)
+            }
+          })
+        this.loading = false
+      }
+    },
+    async noticePeople () {
+      await apiNotify()
+        .then(result => {
+          if (result.code === 0) {
+            this.notice = result.result
+          }
+        })
     },
     editMethod ({ row, column }) {
       this.$refs.svGrid.setActiveCell(row, column.property)
@@ -662,6 +684,7 @@ export default {
   },
   mounted () {
     this.refreshTable()
+    this.noticePeople()
   },
   created () {
     this.svGridOptions.columns = this.originColumns
