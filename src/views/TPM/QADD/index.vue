@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-13 09:50:11
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-21 14:37:21
+ * @LastEditTime: 2021-04-22 16:08:55
  * @FilePath: \sverp-front\src\views\TPM\QADD\index.vue
 -->
 <template>
@@ -58,11 +58,11 @@
           :labelCol="{ lg: { span: 7 }, sm: { span: 7 } }"
           :wrapperCol="{ lg: { span: 10 }, sm: { span: 17 } }"
         >
-        <a-row :gutter="8">
-          <a-col :span="rowSpan">
-            <a-input :placeholder="$t('部门(选填)')" v-model="content.noticeDepartment" />
-          </a-col>
-        </a-row>
+          <a-row :gutter="8">
+            <a-col :span="rowSpan">
+              <a-input :placeholder="$t('部门(选填)')" v-model="content.noticeDepartment" />
+            </a-col>
+          </a-row>
         </a-form-item>
         <a-form-item
           :label="$t('地点')"

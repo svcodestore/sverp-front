@@ -11,10 +11,10 @@
         {{ item.name }}
         <div>{{ item.count }}</div>
       </vxe-button>
-      <vxe-button @click="fitting">
+      <!-- <vxe-button @click="fitting">
         查看
         <div>{{ name }}</div>
-      </vxe-button>
+      </vxe-button> -->
     </div>
     <sv-grid ref="svGrid" v-bind="svGridOptions" v-on="svGridEvents" v-show="showTable"> </sv-grid>
   </div>
