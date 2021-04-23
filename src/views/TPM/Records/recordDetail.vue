@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-23 08:54:11
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-23 10:43:09
+ * @LastEditTime: 2021-04-23 10:55:36
  * @FilePath: \sverp-front\src\views\TPM\Records\recordDetail.vue
 -->
 <template>
@@ -59,7 +59,7 @@
             />
           </div>
           <div style="margin-top:1rem;margin-bottom:1rem;">
-            <a-textarea v-model="currentRow.repairmethod" style="width:356px"></a-textarea>
+            <a-textarea v-model="currentRow.repairmethod" style="width:356px" placeholder="请填写维修跟进、维修方法.."></a-textarea>
           </div>
           <div>
             有无消耗配件：

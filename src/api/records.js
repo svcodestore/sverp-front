@@ -1,7 +1,7 @@
 /*
  * @Author: yu chen
  * @Date: 2020-12-07 14:44:49
- * @LastEditTime: 2021-04-22 16:29:53
+ * @LastEditTime: 2021-04-23 14:34:18
  * @LastEditors: Mok.CH
  * @Description: In User Settings Edit
  * @FilePath: \sverp-front\src\api\records.js
@@ -22,7 +22,8 @@ const recordsApi = {
   apiRepairComp: '/record/apiRepairComp',
   apiRepairDetail: '/record/apiRepairDetail',
   apiGetRepairLogs: '/record/apiGetRepairLogs',
-  apiGetRecordFettingUsed: '/record/apiGetRecordFettingUsed'
+  apiGetRecordFettingUsed: '/record/apiGetRecordFettingUsed',
+  apiQuickReport: '/record/apiQuickReport'
 }
 export function apiRepairList (paramter = '') {
   return request({
@@ -128,5 +129,12 @@ export function apiGetRecordFettingUsed (recordId) {
     url: recordsApi.apiGetRecordFettingUsed,
     method: 'post',
     data: stringify({ recordId })
+  })
+}
+export function apiQuickReport (params) {
+  return request({
+    url: recordsApi.apiQuickReport,
+    method: 'post',
+    data: stringify(params)
   })
 }

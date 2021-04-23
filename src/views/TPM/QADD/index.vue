@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-13 09:50:11
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-22 16:08:55
+ * @LastEditTime: 2021-04-23 15:57:55
  * @FilePath: \sverp-front\src\views\TPM\QADD\index.vue
 -->
 <template>
@@ -18,7 +18,7 @@
         >
           <a-row :gutter="8">
             <a-col :span="rowSpan">
-              <a-input v-model="content.mecheName" width="80%" :placeholder="$t('要报修的是什么设备？')" />
+              <a-input v-model="content.macheName" width="80%" :placeholder="$t('要报修的是什么设备？')" />
             </a-col>
             <a-col :span="2">
               <a-button type="primary" shape="circle" icon="search" @click="showSearch" />
@@ -34,7 +34,7 @@
         >
           <a-row>
             <a-col :span="rowSpan">
-              <a-input v-model="content.macheNum" :placeholder="$t('如有设备编号，请填写')" />
+              <a-input v-model="content.macheNum" @change="toUpCase" :placeholder="$t('如有设备编号，请填写')" />
             </a-col>
           </a-row>
         </a-form-item>
@@ -83,7 +83,7 @@
           :wrapperCol="{ lg: { span: 10 }, sm: { span: 17 } }"
           required
         >
-          <vxe-select v-model="content.noticeName" class="notice" placeholder="请选择通知人" clearable multiple>
+          <vxe-select v-model="content.arr" class="notice" placeholder="请选择通知人" clearable multiple>
             <vxe-option
               v-for="(item, index) in notifyPeople"
               :key="index"
@@ -153,10 +153,10 @@
 </template>
 
 <script>
-import { apiNotify, apiMecheInfo, apiSendMsg } from '@/api/records'
+import { apiNotify, apiMecheInfo, apiSendMsg, apiQuickReport } from '@/api/records'
 import NotifyStaff from '../NotifyStaff/index'
 import XEUtils from 'xe-utils'
-// let timerSendMsg = null
+
 export default {
   components: {
     'notice-people': NotifyStaff
@@ -168,15 +168,17 @@ export default {
       defaultRepairType: '其它报障',
       repairType: '其它保障',
       content: {
+        arr: [],
         noticeName: [],
         noticeDepartment: null,
         cause: null,
-        mecheName: null,
+        macheName: null,
         macheNum: null,
-        reporter_con_id: null,
-        reporter_name: null,
+        reporterConId: null,
+        reporterName: null,
         mecheImg: [],
-        address: null
+        address: null,
+        cate: null
       },
       param: {
           arr: [],
@@ -262,38 +264,20 @@ export default {
     // handler
     handleSubmit (e) {
       e.preventDefault()
-      this.content.reporter_con_id = this.$store.state.user.info.con_id
-      this.content.reporter_name = this.$store.state.user.info.con_name
-      console.log(this.content)
-      if (this.content.noticeName.length === 0) {
+      this.content.reporterConId = this.$store.state.user.info.con_id
+      this.content.reporterName = this.$store.state.user.info.con_name
+
+      if (this.content.arr.length === 0) {
         this.$message.error('请选择要通知的维修人!')
         return
       }
-      if (this.param.row !== null) {
-        // 机械设备 维修通知
-        this.param.cause = this.content.cause
-        this.param.arr = this.content.noticeName
-        this.param.reporterConId = this.content.reporter_con_id
-        this.param.reporterName = this.content.reporter_name
-        if (this.content.address) {
-          this.param.address = this.content.address
-        }
-        this.submitOption(this.param).then(() => {
-          this.$router.push({ path: '/tpm/myreports' })
-        })
-      } else {
-        // 其它部门 维修通知
-        // this.content.noticeDepartment = ''
-        this.submitContent()
-        this.content.mecheName = ''
-        this.content.cause = ''
-        this.content.noticeName = ''
-        this.content.noticeDepartment = ''
-        this.content.address = ''
-      }
+
+      apiQuickReport(this.content).then(res => {
+        this.$router.push({ path: '/tpm/myreports' })
+      })
     },
     choiceMacheine (row) {
-      this.content.mecheName = row.mache_name
+      this.content.macheName = row.mache_name
       this.content.macheNum = row.mache_num
       this.showSearchModal = false
       this.param.row = row
@@ -400,27 +384,6 @@ export default {
             this.showDepartment = false
             this.showSearch = false
             this.delay = true
-            // var self = this
-            // const dateTime = Date.parse(new Date()) / 1000 + 900
-            // document.getElementById('timeOutId').style.display = 'inline'
-            // timerSendMsg = setInterval(function () {
-            //   const param = self.param
-            //   const nowTime = Date.parse(new Date()) / 1000
-            //   if (dateTime > nowTime) {
-            //     self.timeOutMsg = dateTime - nowTime
-            //   } else {
-            //     self.timeOutMsg = '对不起，您15分钟内未到达现场'
-            //     clearInterval(timerSendMsg)
-            //     apiSendMsg(param)
-            //       .then(result => {
-            //         console.log('已发出请求')
-            //         if (result.code === 0) {
-            //           console.log('第二条短信发送成功')
-            //         }
-            //       })
-            //       .catch(() => {})
-            //   }
-            // }, 1000)
           }
         })
         .catch(() => {})
@@ -440,6 +403,9 @@ export default {
         })
         .catch(() => {})
       this.loading = false
+    },
+    toUpCase (e) {
+      this.content.macheNum = e.target.value.toUpperCase()
     }
   },
   computed: {
