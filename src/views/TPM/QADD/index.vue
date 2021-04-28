@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-13 09:50:11
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-23 15:57:55
+ * @LastEditTime: 2021-04-24 08:02:14
  * @FilePath: \sverp-front\src\views\TPM\QADD\index.vue
 -->
 <template>
@@ -21,7 +21,12 @@
               <a-input v-model="content.macheName" width="80%" :placeholder="$t('要报修的是什么设备？')" />
             </a-col>
             <a-col :span="2">
-              <a-button type="primary" shape="circle" icon="search" @click="showSearch" />
+              <a-popover>
+                <template slot="content">
+                  <p>点击快速查找设备</p>
+                </template>
+                <a-button type="primary" shape="circle" icon="search" @click="showSearch" />
+              </a-popover>
             </a-col>
           </a-row>
         </a-form-item>
@@ -49,7 +54,12 @@
               <a-textarea rows="4" :placeholder="$t('请描述发生的故障...')" v-model="content.cause" />
             </a-col>
             <a-col :span="2">
-              <a-button type="primary" shape="circle" icon="unordered-list" @click="showCause" />
+              <a-popover>
+                <template slot="content">
+                  <p>点击快速选择常用故障</p>
+                </template>
+                <a-button type="primary" shape="circle" icon="unordered-list" @click="showCause" />
+              </a-popover>
             </a-col>
           </a-row>
         </a-form-item>
@@ -364,7 +374,7 @@ export default {
         '跳线、烂线：梭床被针打花，针板有毛刺、针有问题，梭床损坏、针杆深浅度'
       ]
       // 修改与原代码顺序相反， 以保证更高级别的维护信息被记录
-      this.param.cate = ''
+      this.param.cate = '维修'
       if (debug.indexOf(this.param.cause) > -1) {
         this.param.cate = '调试'
       }

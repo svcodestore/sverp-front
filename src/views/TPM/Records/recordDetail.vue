@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-23 08:54:11
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-23 10:55:36
+ * @LastEditTime: 2021-04-23 16:53:59
  * @FilePath: \sverp-front\src\views\TPM\Records\recordDetail.vue
 -->
 <template>
@@ -26,7 +26,7 @@
         <a-descriptions-item label="设备管理者">{{ currentRow.keeper }}</a-descriptions-item>
         <a-descriptions-item label="设备线号">{{ currentRow.line_num }}</a-descriptions-item>
         <a-descriptions-item label="设备工程号">{{ currentRow.produc_num }}</a-descriptions-item>
-        <a-descriptions-item label="设备当前状态">{{ macheStatusComput }}</a-descriptions-item>
+        <!-- <a-descriptions-item label="设备当前状态">{{ macheStatusComput }}</a-descriptions-item> -->
       </a-descriptions>
       <a-divider style="margin-bottom: 32px"/>
 
