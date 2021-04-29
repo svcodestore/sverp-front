@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2021-01-12 11:12:05
+ * @LastEditTime: 2021-04-29 09:35:54
  * @LastEditors: yanbuw1911
  * @Description:
- * @FilePath: \client\src\config\router.config.js
+ * @FilePath: /sverp-front/src/config/router.config.js
  */
 import { UserLayout, BasicLayout } from '@/layouts'
 import { i18nRender } from '@/locales'
@@ -53,9 +53,10 @@ export const dynamicRoutesGenerator = (list, tree, pid) => {
 
 export const sortRoutes = routes => {
   routes.sort((a, b) => a.seq - b.seq)
+
   routes.forEach(item => {
-    if (item.children && item.children > 2) {
-      sortRoutes(routes)
+    if (item.children && item.children.length > 1) {
+      sortRoutes(item.children)
     }
   })
 }
