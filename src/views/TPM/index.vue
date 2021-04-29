@@ -432,11 +432,6 @@ export default {
         .then(result => {
           if (result.code === 0) {
             if (status === '') {
-              // this.count[0].count = 0;
-              // this.count[1].count = 0;
-              // this.count[2].count = 0;
-              // this.count[3].count = 0;
-              // this.count[4].count = 0;
               this.count.forEach((v, i) => {
                 this.count[i].count = 0
               })
@@ -445,8 +440,8 @@ export default {
               })
             }
             this.svGridOptions.data = result.result.map(e => {
-              let row = XEUtils.clone(e, true)
-              let status = row.status
+              const row = XEUtils.clone(e, true)
+              const status = row.status
               switch (status) {
                 case 1:
                   row.status = '正常'
