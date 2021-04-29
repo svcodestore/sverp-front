@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:33
- * @LastEditTime: 2021-04-21 15:00:54
- * @LastEditors: Mok.CH
+ * @LastEditTime: 2021-04-29 08:51:08
+ * @LastEditors: yanbuw1911
  * @Description:
- * @FilePath: \sverp-front\src\locales\lang\zh-TW\index.js
+ * @FilePath: /sverp-front/src/locales/lang/zh-TW/index.js
  */
 import antd from 'ant-design-vue/es/locale-provider/zh_CN'
 import momentCN from 'moment/locale/zh-cn'
@@ -62,7 +62,10 @@ const menuNodes = {
   TPM_FITTINGS: '配件管理',
   TPM_MYREPORTS: '我的報修(TPM)',
   TPM_MYREPORTS_OTHER: '我的報修(其它)',
-  TPM_MYORDERS: '我的工單'
+  TPM_MYORDERS: '我的工單',
+  HRD_KPI: 'KPI（關鍵績效指標）',
+  HRD_KPI_SETTING: 'KPI 設定',
+  HRD_KPI_VIEW: 'KPI 總覽'
 }
 
 const svGrid = {

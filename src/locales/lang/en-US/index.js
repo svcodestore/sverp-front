@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:28
- * @LastEditTime: 2021-04-15 08:01:09
- * @LastEditors: Mok.CH
+ * @LastEditTime: 2021-04-29 08:48:39
+ * @LastEditors: yanbuw1911
  * @Description:
- * @FilePath: \sverp-front\src\locales\lang\en-US\index.js
+ * @FilePath: /sverp-front/src/locales/lang/en-US/index.js
  */
 import antdEnUS from 'ant-design-vue/es/locale-provider/en_US'
 import momentEU from 'moment/locale/eu'
@@ -60,7 +60,10 @@ const menuNodes = {
   CHAT_IDX: 'Home',
   PROD_PROCEDURES: 'Procedures Management',
   TPM_QADD: 'Quick Repairs',
-  TPM_FITTINGS: 'Fittings Management'
+  TPM_FITTINGS: 'Fittings Management',
+  HRD_KPI: 'KPI(Key Performance indicators)',
+  HRD_KPI_SETTING: 'KPI Setting',
+  HRD_KPI_VIEW: 'KPI View'
 }
 
 const svGrid = {
