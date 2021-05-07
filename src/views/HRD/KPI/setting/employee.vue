@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-04-29 10:56:03
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-05-07 09:23:45
+ * @LastEditTime: 2021-05-07 09:50:14
  * @Description: 员工信息
  * @FilePath: /sverp-front/src/views/HRD/KPI/setting/employee.vue
 -->
@@ -159,14 +159,16 @@ export default {
     async getData () {
       this.svgridOptions.loading = true
       await getKpiInfoWorkers().then(res => {
-        this.svgridOptions.desc = '上次更新于 ' + Object.keys(res)[0]
-        this.svgridOptions.data = Object.values(res)[0]
-        this.svgridOptions.columns = Object.keys(this.svgridOptions.data[0])
-          .filter(e => e !== 'id')
-          .map(e => ({
-            title: e,
-            field: e
-          }))
+        if (res.length) {
+          this.svgridOptions.desc = '上次更新于 ' + Object.keys(res)[0]
+          this.svgridOptions.data = Object.values(res)[0]
+          this.svgridOptions.columns = Object.keys(this.svgridOptions.data[0])
+            .filter(e => e !== 'id')
+            .map(e => ({
+              title: e,
+              field: e
+            }))
+        }
       })
       this.svgridOptions.loading = false
     }
