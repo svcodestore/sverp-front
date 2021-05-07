@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:28
- * @LastEditTime: 2021-04-29 08:48:39
+ * @LastEditTime: 2021-04-30 08:11:12
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: /sverp-front/src/locales/lang/en-US/index.js
@@ -67,6 +67,11 @@ const menuNodes = {
 }
 
 const svGrid = {
+  export: 'export',
+  import: 'import',
+  upload: 'upload',
+  download: 'download',
+  print: 'print',
   refresh: 'refresh',
   undo: 'undo',
   add: 'add',

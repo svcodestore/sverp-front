@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2021-01-07 14:20:06
- * @LastEditTime: 2021-05-06 14:18:28
+ * @LastEditTime: 2021-05-07 14:56:05
  * @LastEditors: Mok.CH
  * @Description:
  * @FilePath: \sverp-front\src\api\hrd.js
@@ -23,7 +23,9 @@ const hrdApi = {
   setMaterialStock: '/hrd/setMaterialStock',
   setOutboundMaterialOrder: '/hrd/setOutboundMaterialOrder',
   approveOutbound: '/hrd/approveOutbound',
-  materialLogSoftDel: '/hrd/materialLogSoftDel'
+  materialLogSoftDel: '/hrd/materialLogSoftDel',
+  updateKpiInfoWorkers: '/hrd/updateKpiInfoWorkers',
+  getKpiInfoWorkers: '/hrd/getKpiInfoWorkers'
 }
 
 export const getMaterialCategory = () =>
@@ -120,4 +122,17 @@ export const materialLogSoftDel = (id, materialId, oprtQty, usrid) =>
     url: hrdApi.materialLogSoftDel,
     method: 'post',
     data: stringify({ id, materialId, oprtQty, usrid })
+  })
+
+export const updateKpiInfoWorkers = kpiInfoWorkers =>
+  request({
+    url: hrdApi.updateKpiInfoWorkers,
+    method: 'post',
+    data: stringify(kpiInfoWorkers)
+  })
+
+export const getKpiInfoWorkers = () =>
+  request({
+    url: hrdApi.getKpiInfoWorkers,
+    method: 'post'
   })
