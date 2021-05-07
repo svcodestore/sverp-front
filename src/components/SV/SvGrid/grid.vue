@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-03-04 15:00:42
+ * @LastEditTime: 2021-04-29 14:34:33
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: /sverp-front/src/components/SV/SvGrid/grid.vue
@@ -220,7 +220,8 @@ export default {
       const evt = {
         'current-change': this._currentChange,
         'cell-dblclick': this._cellDblClick,
-        'edit-actived': this.editActivedEvt
+        'edit-actived': this.editActivedEvt,
+        'menu-click': this._menuClick
       }
 
       return evt
@@ -452,6 +453,9 @@ export default {
         currRow
       } = this
       xGrid.remove(currRow)
+    },
+    _menuClick ({ menu, type, row, rowIndex, column, columnIndex, $event }) {
+      this.$emit('menu-click', { menu, type, row, rowIndex, column, columnIndex, $event })
     },
     /**
      * @description: 表格当前行发生变化事件

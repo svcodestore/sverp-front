@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:05
- * @LastEditTime: 2021-04-29 08:45:32
+ * @LastEditTime: 2021-04-30 08:10:15
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: /sverp-front/src/locales/lang/zh-CN/index.js
@@ -69,6 +69,11 @@ const menuNodes = {
 }
 
 const svGrid = {
+  export: '导出',
+  import: '导入',
+  upload: '上传',
+  download: '下载',
+  print: '打印',
   refresh: '刷新',
   undo: '还原',
   add: '新增',
