@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-04-29 10:56:03
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-05-07 09:50:14
+ * @LastEditTime: 2021-05-07 10:38:18
  * @Description: 员工信息
  * @FilePath: /sverp-front/src/views/HRD/KPI/setting/employee.vue
 -->
@@ -11,6 +11,7 @@
     <sv-grid v-bind="svgridOptions" v-on="svgridEvts">
       <template #svgridToolbar>
         <a-upload
+          accept=".xls, .xlsx"
           name="file"
           @change="handleFileChange"
           :showUploadList="false"
@@ -118,23 +119,27 @@ export default {
         try {
           const reader = new FileReader()
           reader.onload = e => {
-            const data = e.target.result
-            const wb = XLSX.read(data, { type: 'binary' })
-            const arr = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
-            this.svgridOptions.columns = Object.keys(arr[0]).map(e => ({
-              title: e.trim(),
-              field: e.trim()
-            }))
-            this.svgridOptions.data = arr.map(item => {
-              const o = {}
-              Object.values(item).forEach((e, i) => {
-                o[this.svgridOptions.columns[i].field] = e
+            try {
+              const data = e.target.result
+              const wb = XLSX.read(data, { type: 'binary' })
+              const arr = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
+              this.svgridOptions.columns = Object.keys(arr[0]).map(e => ({
+                title: e.trim(),
+                field: e.trim()
+              }))
+              this.svgridOptions.data = arr.map(item => {
+                const o = {}
+                Object.values(item).forEach((e, i) => {
+                  o[this.svgridOptions.columns[i].field] = e
+                })
+                return o
               })
-              return o
-            })
-          }
-          reader.onloadend = () => {
-            resolve(this.svgridOptions.data)
+              reader.onloadend = () => {
+                resolve(this.svgridOptions.data)
+              }
+            } catch (error) {
+              reject(error)
+            }
           }
           reader.readAsBinaryString(file)
         } catch (error) {
@@ -143,23 +148,32 @@ export default {
       })
     },
     async handleUpload (file) {
-      this.svgridOptions.loading = true
-      await this.handleXlsx2Arr(file)
+      if (/\.xlsx?$/.test(file.type)) {
+        this.svgridOptions.loading = true
+        await this.handleXlsx2Arr(file)
+          .then(async data => {
+            await updateKpiInfoWorkers(data).then(({ result }) => {
+              if (result) {
+                this.$message.success('上传更新成功')
+                this.svgridOptions.desc = '上次更新于 ' + moment().format('YYYY-MM-DD HH:mm:ss')
+              } else {
+                this.$message.error('上传更新失败')
+              }
+            })
+          })
+          .catch(err => {
+            this.$message.error('数据读取失败，请检查格式是否正确')
+          })
 
-      await updateKpiInfoWorkers(this.svgridOptions.data).then(({ result }) => {
-        if (result) {
-          this.$message.success('上传更新成功')
-          this.svgridOptions.desc = '上次更新于 ' + moment().format('YYYY-MM-DD HH:mm:ss')
-        } else {
-          this.$message.error('上传更新失败')
-        }
-      })
-      this.svgridOptions.loading = false
+        this.svgridOptions.loading = false
+      } else {
+        this.$message.info('文件类型应为 xls,xlsx')
+      }
     },
     async getData () {
       this.svgridOptions.loading = true
       await getKpiInfoWorkers().then(res => {
-        if (res.length) {
+        if (res.length !== 0) {
           this.svgridOptions.desc = '上次更新于 ' + Object.keys(res)[0]
           this.svgridOptions.data = Object.values(res)[0]
           this.svgridOptions.columns = Object.keys(this.svgridOptions.data[0])
