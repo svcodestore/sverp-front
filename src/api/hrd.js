@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2021-01-07 14:20:06
- * @LastEditTime: 2021-04-16 13:24:08
- * @LastEditors: yanbuw1911
+ * @LastEditTime: 2021-05-06 14:18:28
+ * @LastEditors: Mok.CH
  * @Description:
- * @FilePath: /sverp-front/src/api/hrd.js
+ * @FilePath: \sverp-front\src\api\hrd.js
  */
 import request from '@/utils/request'
 import { stringify } from 'qs'
