@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-05-05 13:33:36
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-05-08 08:44:34
+ * @LastEditTime: 2021-05-08 15:27:39
  * @FilePath: \sverp-front\src\views\Dcs\Process.vue
 -->
 <template>
@@ -946,7 +946,7 @@
 
 <script>
 import dcsApi from '@/api/dcs'
-import { getUserAuthAllInfo } from '@/api/user'
+import { getUserAuthAllInfo, getUserAuthMenu, getUsersByGroupCode } from '@/api/user'
 export default {
   data () {
     return {
@@ -1018,8 +1018,10 @@ export default {
   created () {
     this.activeName = 'first'
     // 获取登录用户及其权限
+    console.log(this.$store.state.user)
     this.userData = this.$store.state.user.info
     getUserAuthAllInfo(this.userData.id).then(res => {
+      console.log(res)
       this.userData.role = res.data
     })
     // 初始化页面数据
@@ -1036,6 +1038,8 @@ export default {
       this.finishTableData = res.data
       this.numSixth = res.data.length
     })
+
+    // 获取所有相关用户
     console.log(this.userData)
   },
   methods: {
@@ -1206,7 +1210,7 @@ export default {
     },
     operaPassCheck (form) {
       const that = this
-      this.$axios.post('api/plan/passCheck', form).then(res => {
+      dcsApi.checkPass(form).then(res => {
         this.$message({
           message: res.data,
           type: 'success'
@@ -1241,7 +1245,7 @@ export default {
           type: 'warning'
         })
           .then(() => {
-            that.$axios.get('http://http://192.168.123.86:8099/api/plan/delPlan?id=' + row.id).then(res => {
+            dcsApi.delPlan(row.id).then(res => {
               if (res.data.msg === 'ok') {
                 that.$message.success(res.data.obj)
                 that.initData()
@@ -1274,27 +1278,26 @@ export default {
       this.updatePlanShow = false
     },
     updatePlanSubmit () {
-      const that = this
-      this.$axios.post('http://http://192.168.123.86:8099/api/plan/updatePlan', this.updatePlanForm).then(res => {
+      dcsApi.updatePlan(this.updatePlanForm).then(res => {
         if (res.data.msg === 'ok') {
           this.$message.success(res.data.obj)
         } else {
           this.$message.error(res.data.obj)
         }
-        if (that.tabIndex !== 0 && that.tabIndex !== 6) {
-          that.initDataDir(that.tabIndex)
+        if (this.tabIndex !== 0 && this.tabIndex !== 6) {
+          this.initDataDir(this.tabIndex)
         } else {
-          that.initData()
+          this.initData()
         }
-        that.initUserPlan(that.userData.user.id)
-        that.updatePlanForm = {
+        this.initUserPlan(this.userData.user.id)
+        this.updatePlanForm = {
           id: '',
           content: '',
           dirId: '',
           depPrincipal: '',
           planTime: ''
         }
-        that.updatePlanShow = false
+        this.updatePlanShow = false
       })
     },
     // 修改计划时间弹框的所需三个方法
@@ -1364,6 +1367,7 @@ export default {
             that.$message('无权限操作')
             return true
           }
+
           let count = 0
           for (let i = 0; i < role.length; i++) {
             const roleCode = role[i].roleCode
@@ -1418,7 +1422,7 @@ export default {
         return true
       }
       if (index === 2) {
-        this.$axios.post('api/plan/updatePlanAuth', form).then(res => {
+        dcsApi.updatePlanAuth(form).then(res => {
           this.$message({
             message: res.data,
             type: 'success'
@@ -1433,7 +1437,7 @@ export default {
           that.initUserPlan(that.userData.user.id)
         })
       } else if (index === 3) {
-        this.$axios.post('api/plan/updatePlanCheck', form).then(res => {
+        dcsApi.updatePlanCheck(form).then(res => {
           this.$message({
             message: res.data,
             type: 'success'
@@ -1521,7 +1525,7 @@ export default {
         })
         return true
       }
-      this.$axios.post('api/plan/addPlanCheck', form).then(res => {
+      dcsApi.addPlanCheck(form).then(res => {
         this.$message({
           message: res.data,
           type: 'success'
@@ -1539,7 +1543,14 @@ export default {
     // 添加计划弹框的所需三个方法
     addPlan () {
       const role = this.userData.role
-      console.log(role)
+      getUserAuthMenu(this.userData.id).then(res => {
+        console.log(res)
+      })
+
+      getUsersByGroupCode('DCS').then(res => {
+        console.log(res)
+      })
+      // 权限判断
       if (role.length > 0) {
         let count = 0
         for (let i = 0; i < role.length; i++) {
@@ -1562,7 +1573,6 @@ export default {
       this.planShow = false
     },
     submit () {
-      const that = this
       const form = {
         dirId: this.form.dirId,
         content: this.form.content.trim(),
@@ -1602,12 +1612,12 @@ export default {
 
       dcsApi.addPlan(form).then(res => {
         this.$message({
-          message: res.data,
-          type: 'success'
+          message: res.msg,
+          type: (res.code === 0) ? 'success' : 'error'
         })
-        that.planShow = false
-        that.initData()
-        that.initForm()
+        this.planShow = false
+        this.initData()
+        this.initForm()
       })
     },
     // 添加收集计划并设定认证计划时间弹框所需方法
@@ -1656,7 +1666,7 @@ export default {
         })
         return true
       }
-      this.$axios.post('api/plan/addPlanAuth', form).then(res => {
+      dcsApi.addPlanAuth(form).then(res => {
         this.$message({
           message: res.data,
           type: 'success'

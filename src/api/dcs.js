@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-05-06 14:14:27
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-05-07 16:17:40
+ * @LastEditTime: 2021-05-08 14:19:43
  * @FilePath: \sverp-front\src\api\dcs.js
  */
 import request from '@/utils/request'
@@ -14,7 +14,14 @@ const DcsApi = {
   getDir: '/dcs/getDir',
   getFinishedPlan: '/dcs/getFinishedPlan',
   verify: '/dcs/verify',
-  addPlan: '/dcs/addPlan'
+  addPlan: '/dcs/addPlan',
+  delPlan: '/dcs/delPlan',
+  updatePlan: '/dcs/updatePlan',
+  updatePlanAuth: '/dcs/updatePlanAuth',
+  updatePlanCheck: '/dcs/updatePlanCheck',
+  addPlanCheck: '/dcs/addPlanCheck',
+  checkPass: '/dcs/checkPass',
+  addPlanAuth: '/dcs/addPlanAuth'
 }
 
 export const getPlan = dirId => {
@@ -71,6 +78,62 @@ export const addPlan = data => {
   })
 }
 
+export const checkPass = data => {
+  return request({
+    url: DcsApi.checkPass,
+    method: 'post',
+    data: stringify(data)
+  })
+}
+
+export const delPlan = id => {
+  return request({
+    url: DcsApi.delPlan,
+    method: 'post',
+    data: stringify({ id })
+  })
+}
+
+export const updatePlan = data => {
+  return request({
+    url: DcsApi.updatePlan,
+    method: 'post',
+    data: stringify(data)
+  })
+}
+
+export const updatePlanAuth = data => {
+  return request({
+    url: DcsApi.updatePlanAuth,
+    method: 'post',
+    data: stringify(data)
+  })
+}
+
+export const updatePlanCheck = data => {
+  return request({
+    url: DcsApi.updatePlanCheck,
+    method: 'post',
+    data: stringify(data)
+  })
+}
+
+export const addPlanCheck = data => {
+  return request({
+    url: DcsApi.addPlanCheck,
+    method: 'post',
+    data: stringify(data)
+  })
+}
+
+export const addPlanAuth = data => {
+  return request({
+    url: DcsApi.addPlanAuth,
+    method: 'post',
+    data: stringify(data)
+  })
+}
+
 export default {
   getPlan,
   countPlan,
@@ -78,5 +141,11 @@ export default {
   getDir,
   getFinishedPlan,
   verify,
-  addPlan
+  checkPass,
+  delPlan,
+  addPlan,
+  updatePlanAuth,
+  updatePlanCheck,
+  addPlanCheck,
+  addPlanAuth
 }
