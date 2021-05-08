@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-05-05 13:33:36
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-05-07 14:43:02
+ * @LastEditTime: 2021-05-08 08:44:34
  * @FilePath: \sverp-front\src\views\Dcs\Process.vue
 -->
 <template>
@@ -945,8 +945,8 @@
 </template>
 
 <script>
-import { getPlan, getUserPlan, getDir, countPlan, getFinishedPlan, verify } from '@/api/dcs'
-import { getUserAuthInfo, getUserAuthAllInfo } from '@/api/user'
+import dcsApi from '@/api/dcs'
+import { getUserAuthAllInfo } from '@/api/user'
 export default {
   data () {
     return {
@@ -1028,17 +1028,27 @@ export default {
     this.initNum(2)
     this.initNum(3)
     this.initNum(4)
-    getDir().then(res => {
+    dcsApi.getDir().then(res => {
       this.directory = res.data
     })
 
-    getFinishedPlan().then(res => {
+    dcsApi.getFinishedPlan().then(res => {
       this.finishTableData = res.data
       this.numSixth = res.data.length
     })
     console.log(this.userData)
   },
   methods: {
+    hasRole (roleName) {
+      if (this.userData.role.length > 0) {
+        for (const role of this.userData.role) {
+          if (role.role === roleName) {
+            return true
+          }
+        }
+      }
+      return false
+    },
     filterPlanGather (value, row) {
       if (row.planGather !== null) {
         if (row.planGather.userId === value) {
@@ -1079,7 +1089,7 @@ export default {
           this.initData()
           break
         case '5':
-          getFinishedPlan().then(res => {
+          dcsApi.getFinishedPlan().then(res => {
             this.finishTableData = res.data
             this.numSixth = res.data.length
           })
@@ -1100,16 +1110,20 @@ export default {
       })
       .then(() => {
         const role = this.userData.role
+
         if (index === 1) {
           if (role.length <= 0) {
             this.$message('无权限操作')
             return true
           }
           let userCount = 0
-          if (this.userData.user.roleGroupId === 1) {
+          console.log(this.hasRole('susys'))
+          // 超管权限
+          if (this.hasRole('susys')) {
             userCount = 1
           }
-          if (row.gUserId === this.userData.user.id) {
+          // 计划发起人为当前用户
+          if (row.gUserId === this.userData.id) {
             userCount++
           }
           if (userCount <= 0) {
@@ -1137,19 +1151,24 @@ export default {
     },
     // 确认完成 请求后台方法
     sure (id, userId, index) {
-      verify(id, userId, index).then(res => {
+      dcsApi.verify(id, userId, index).then(res => {
+        if (res.code === 0) {
           this.$message.success('操作成功')
-          if (this.tabIndex !== 0 && this.tabIndex !== 6) {
-            this.initDataDir(this.tabIndex)
-            return true
-          } else if (this.tabIndex === 6) {
-            this.initUserPlan(this.userData.user.id)
-            return true
-          } else {
-            this.initData()
-            return true
-          }
-        })
+        } else {
+          this.$message.error('操作失败')
+        }
+
+        if (this.tabIndex !== 0 && this.tabIndex !== 6) {
+          this.initDataDir(this.tabIndex)
+          return true
+        } else if (this.tabIndex === 6) {
+          this.initUserPlan(this.userData.user.id)
+          return true
+        } else {
+          this.initData()
+          return true
+        }
+      })
     },
     // 稽核通过的方法
     pass (row) {
@@ -1447,6 +1466,7 @@ export default {
         return true
       }
       let count = 0
+      // 超管权限
       if (this.userData.user.roleGroupId === 1) {
         count = 1
       }
@@ -1518,16 +1538,13 @@ export default {
     },
     // 添加计划弹框的所需三个方法
     addPlan () {
-      console.log(this.$store.state.user)
-      getUserAuthInfo(this.$store.state.user.info.id).then(res => {
-        console.log(res)
-      })
-      const role = this.$store.state.user.roles
+      const role = this.userData.role
+      console.log(role)
       if (role.length > 0) {
         let count = 0
         for (let i = 0; i < role.length; i++) {
-          const roleCode = role[i].roleCode
-          if (roleCode === 'dir1' || roleCode === 'dir2' || roleCode === 'dir3' || roleCode === 'dir4') {
+          const roleCode = role[i].role
+          if (roleCode === 'susys' || roleCode === 'dir2' || roleCode === 'dir3' || roleCode === 'dir4') {
             count++
           }
         }
@@ -1549,7 +1566,7 @@ export default {
       const form = {
         dirId: this.form.dirId,
         content: this.form.content.trim(),
-        userId: this.userData.user.id,
+        userId: this.userData.id,
         time: this.form.gatherTime,
         depPrincipal: this.form.depPrincipal.trim()
       }
@@ -1583,7 +1600,7 @@ export default {
         return true
       }
 
-      this.$axios.post('api/plan/addPlan', form).then(res => {
+      dcsApi.addPlan(form).then(res => {
         this.$message({
           message: res.data,
           type: 'success'
@@ -1595,21 +1612,23 @@ export default {
     },
     // 添加收集计划并设定认证计划时间弹框所需方法
     settingPlan (row) {
-      if (row.planGather.actualTime === null) {
+      console.log(row)
+      if (row.actualTime === null) {
         this.$message({
           message: '请确认完成收集资料',
           type: 'warning'
         })
         return true
       }
-      if (this.userData.user.roleGroupId !== 1) {
-        if (row.planGather.userId !== this.userData.user.id) {
-          this.$message({
-            message: '无法操作'
-          })
-          return true
-        }
-      }
+      // 判断用户权限, 没有“上传”权限, 计划收集用户不等于当前用户
+      // if (this.userData.user.roleGroupId !== 1) {
+      //   if (row.gUserId !== this.userData.user.id) {
+      //     this.$message({
+      //       message: '无法操作'
+      //     })
+      //     return true
+      //   }
+      // }
 
       this.planGatherShow = true
       this.gatherForm.planId = row.id
@@ -1659,7 +1678,7 @@ export default {
 
     // 初始化数据
     initData () {
-      getPlan().then(res => {
+      dcsApi.getPlan().then(res => {
         this.tableData = res.data
         this.tableData.forEach(item => {
           item['dirName'] = item.directory.dirName
@@ -1670,12 +1689,12 @@ export default {
       })
     },
     initDataDir (index) {
-      getPlan(index).then(res => {
+      dcsApi.getPlan(index).then(res => {
         this.tabTableData = res.data
       })
     },
     initNum (index) {
-      countPlan(index).then(res => {
+      dcsApi.countPlan(index).then(res => {
         if (index === 1) {
           this.numSecond = res.num
         } else if (index === 2) {
@@ -1688,7 +1707,7 @@ export default {
       })
     },
     initUserPlan (userId) {
-      getUserPlan(userId).then(res => {
+      dcsApi.getUserPlan(userId).then(res => {
         this.todoTodayList = res.data
       })
     },

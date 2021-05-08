@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-05-06 14:14:27
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-05-07 14:14:11
+ * @LastEditTime: 2021-05-07 16:17:40
  * @FilePath: \sverp-front\src\api\dcs.js
  */
 import request from '@/utils/request'
@@ -13,7 +13,8 @@ const DcsApi = {
   getUserPlan: '/dcs/getUserPlan',
   getDir: '/dcs/getDir',
   getFinishedPlan: '/dcs/getFinishedPlan',
-  verify: '/dcs/verify'
+  verify: '/dcs/verify',
+  addPlan: '/dcs/addPlan'
 }
 
 export const getPlan = dirId => {
@@ -60,4 +61,22 @@ export const verify = (planId, userId, index) => {
     method: 'post',
     data: stringify({ planId, userId, index })
   })
+}
+
+export const addPlan = data => {
+  return request({
+    url: DcsApi.addPlan,
+    method: 'post',
+    data: stringify(data)
+  })
+}
+
+export default {
+  getPlan,
+  countPlan,
+  getUserPlan,
+  getDir,
+  getFinishedPlan,
+  verify,
+  addPlan
 }
