@@ -1,14 +1,14 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2021-01-13 16:35:36
- * @LastEditors: yanbuw1911
+ * @LastEditTime: 2021-05-10 09:45:48
+ * @LastEditors: Mok.CH
  * @Description:
- * @FilePath: \client\src\store\modules\user.js
+ * @FilePath: \sverp-front\src\store\modules\user.js
  */
 import storage from 'store'
 import { login } from '@/api/login'
-import { getUserInfo } from '@/api/user'
+import { getUserInfo, getUserAuthAllInfo } from '@/api/user'
 import { ACCESS_TOKEN, LOGIN_ID, LOGIN_USER, BLACK_API_LIST } from '@/store/mutation-types'
 // import { welcome } from '@/utils/util'
 
@@ -75,6 +75,11 @@ const user = {
               commit('SET_INFO', data.userinfo)
               commit('SET_AVATAR', 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png')
 
+              // 获取权限
+              getUserAuthAllInfo(data.userinfo.id).then(res => {
+                commit('SET_ROLES', res.data)
+              })
+
               resolve(data)
             } else {
               reject(response.result)
@@ -95,6 +100,7 @@ const user = {
         commit('SET_ROUTER_TREE', [])
         commit('SET_FAV_PAGES', [])
         commit('SET_AVATAR', '')
+        commit('SET_ROLES', [])
         storage.remove(ACCESS_TOKEN)
         storage.remove(LOGIN_ID)
         storage.remove(LOGIN_USER)

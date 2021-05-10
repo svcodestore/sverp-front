@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-05-05 13:33:36
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-05-08 08:44:34
+ * @LastEditTime: 2021-05-10 16:01:04
  * @FilePath: \sverp-front\src\views\Dcs\Process.vue
 -->
 <template>
@@ -102,7 +102,7 @@
                     <template slot-scope="scope">
                       <div v-if="scope.row.authUsers !== null">
                         <div v-for="(item, i) in scope.row.authUsers" :key="i">
-                          {{ item.username }}
+                          {{ item.con_name }}
                         </div>
                       </div>
                     </template>
@@ -126,7 +126,7 @@
                     <template slot-scope="scope">
                       <div v-if="scope.row.checkUsers !== null">
                         <div v-for="(item, i) in scope.row.checkUsers" :key="i">
-                          {{ item.username }}
+                          {{ item.con_name }}
                         </div>
                       </div>
                     </template>
@@ -214,7 +214,7 @@
                   <template slot-scope="scope">
                     <div v-if="scope.row.authUsers !== null">
                       <div v-for="(item, i) in scope.row.authUsers" :key="i">
-                        {{ item.username }}
+                        {{ item.con_name }}
                       </div>
                     </div>
                   </template>
@@ -238,7 +238,7 @@
                   <template slot-scope="scope">
                     <div v-if="scope.row.cUserId !== null">
                       <div v-for="(item, i) in scope.row.checkUsers" :key="i">
-                        {{ item.username }}
+                        {{ item.con_name }}
                       </div>
                     </div>
                   </template>
@@ -326,7 +326,7 @@
                   <template slot-scope="scope">
                     <div v-if="scope.row.planAuth !== null">
                       <div v-for="(item, i) in scope.row.authUsers" :key="i">
-                        {{ item.username }}
+                        {{ item.con_name }}
                       </div>
                     </div>
                   </template>
@@ -350,7 +350,7 @@
                   <template slot-scope="scope">
                     <div v-if="scope.row.checkUsers !== null">
                       <div v-for="(item, i) in scope.row.checkUsers" :key="i">
-                        {{ item.username }}
+                        {{ item.con_name }}
                       </div>
                     </div>
                   </template>
@@ -438,7 +438,7 @@
                   <template slot-scope="scope">
                     <div v-if="scope.row.authUsers !== null">
                       <div v-for="(item, i) in scope.row.authUsers" :key="i">
-                        {{ item.username }}
+                        {{ item.con_name }}
                       </div>
                     </div>
                   </template>
@@ -462,7 +462,7 @@
                   <template slot-scope="scope">
                     <div v-if="scope.row.checkUsers !== null">
                       <div v-for="(item, i) in scope.row.checkUsers" :key="i">
-                        {{ item.username }}
+                        {{ item.con_name }}
                       </div>
                     </div>
                   </template>
@@ -550,7 +550,7 @@
                   <template slot-scope="scope">
                     <div v-if="scope.row.authUsers !== null">
                       <div v-for="(item, i) in scope.row.authUsers" :key="i">
-                        {{ item.username }}
+                        {{ item.con_name }}
                       </div>
                     </div>
                   </template>
@@ -574,7 +574,7 @@
                   <template slot-scope="scope">
                     <div v-if="scope.row.checkUsers !== null">
                       <div v-for="(item, i) in scope.row.checkUsers" :key="i">
-                        {{ item.username }}
+                        {{ item.con_name }}
                       </div>
                     </div>
                   </template>
@@ -656,7 +656,7 @@
                   <template slot-scope="scope">
                     <div v-if="scope.row.authUsers !== null">
                       <div v-for="(item, i) in scope.row.authUsers" :key="i">
-                        {{ item.username }}
+                        {{ item.con_name }}
                       </div>
                     </div>
                   </template>
@@ -670,7 +670,7 @@
                   <template slot-scope="scope">
                     <div v-if="scope.row.checkUsers !== null">
                       <div v-for="(item, i) in scope.row.checkUsers" :key="i">
-                        {{ item.username }}
+                        {{ item.con_name }}
                       </div>
                     </div>
                   </template>
@@ -715,7 +715,7 @@
                   <template slot-scope="scope">
                     <div v-if="scope.row.authUsers !== null">
                       <div v-for="(item, i) in scope.row.authUsers" :key="i">
-                        {{ item.username }}
+                        {{ item.con_name }}
                       </div>
                     </div>
                   </template>
@@ -739,7 +739,7 @@
                   <template slot-scope="scope">
                     <div v-if="scope.row.checkUsers !== null">
                       <div v-for="(item, i) in scope.row.checkUsers" :key="i">
-                        {{ item.username }}
+                        {{ item.con_name }}
                       </div>
                     </div>
                   </template>
@@ -815,7 +815,7 @@
             </el-form-item>
             <el-form-item label="人员">
               <el-select v-model="formUpdate.checkUsers" multiple filterable placeholder="请选择">
-                <el-option v-for="item in userList" :key="item.id" :label="item.username" :value="item.id"></el-option>
+                <el-option v-for="item in userList" :key="item.id" :label="item.con_name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-form>
@@ -831,7 +831,7 @@
           <el-form ref="form" :model="formChoose">
             <el-form-item label="选择稽核人员">
               <el-select v-model="formChoose.checkUsers" multiple filterable placeholder="请选择">
-                <el-option v-for="item in userList" :key="item.id" :label="item.username" :value="item.id"></el-option>
+                <el-option v-for="item in userList" :key="item.id" :label="item.con_name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="选择日期时间">
@@ -857,7 +857,7 @@
           <el-form ref="form" :model="gatherForm" label-width="100px">
             <el-form-item label="选择审核人员">
               <el-select v-model="gatherForm.authUsers" multiple filterable placeholder="请选择">
-                <el-option v-for="item in userList" :key="item.id" :label="item.username" :value="item.id"></el-option>
+                <el-option v-for="item in userList" :key="item.id" :label="item.con_name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="计划资料送审时间">
@@ -946,7 +946,9 @@
 
 <script>
 import dcsApi from '@/api/dcs'
-import { getUserAuthAllInfo } from '@/api/user'
+import { getUserAuthAllInfo, getUsersByGroupCode } from '@/api/user'
+import { hasRole, isInGroup } from '@/utils/permissions'
+
 export default {
   data () {
     return {
@@ -992,7 +994,6 @@ export default {
         depPrincipal: ''
       },
       gatherForm: {
-        // content: '',
         planId: '',
         gatherTime: '',
         authUsers: []
@@ -1036,32 +1037,30 @@ export default {
       this.finishTableData = res.data
       this.numSixth = res.data.length
     })
-    console.log(this.userData)
+
+    // 获取模块所有相关用户
+    getUsersByGroupCode('DCS').then(res => {
+      this.userList = res.data
+      res.data.forEach((item) => {
+        this.filterData.push({
+          text: item.con_name,
+          value: item.id
+        })
+      })
+    })
   },
   methods: {
-    hasRole (roleName) {
-      if (this.userData.role.length > 0) {
-        for (const role of this.userData.role) {
-          if (role.role === roleName) {
-            return true
-          }
-        }
-      }
-      return false
-    },
     filterPlanGather (value, row) {
-      if (row.planGather !== null) {
-        if (row.planGather.userId === value) {
+        if (row.gUserId === value) {
           return true
         }
-      }
     },
     // 认证人过滤
     filterPlanAuth (value, row) {
-      if (row.planAuth !== null) {
-        if (row.planAuth.users.length !== 0) {
-          for (var i = 0; i < row.planAuth.users.length; i++) {
-            if (row.planAuth.users[i].id === value) {
+      if (row.authUsers !== null) {
+        if (row.authUsers.length !== 0) {
+          for (var i = 0; i < row.authUsers.length; i++) {
+            if (row.authUsers[i].id === value) {
               return true
             }
           }
@@ -1070,10 +1069,10 @@ export default {
     },
     // 稽查人过滤
     filterPlanCheck (value, row) {
-      if (row.planCheck !== null) {
-        if (row.planCheck.users.length !== 0) {
-          for (var i = 0; i < row.planCheck.users.length; i++) {
-            if (row.planCheck.users[i].id === value) {
+      if (row.checkUsers !== null) {
+        if (row.checkUsers.length !== 0) {
+          for (var i = 0; i < row.checkUsers.length; i++) {
+            if (row.checkUsers[i].id === value) {
               return true
             }
           }
@@ -1095,7 +1094,7 @@ export default {
           })
           break
         case '6':
-          this.initUserPlan(this.userData.user.id)
+          this.initUserPlan(this.userData.id)
           break
         default:
           this.initDataDir(this.tabIndex)
@@ -1107,46 +1106,23 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      })
-      .then(() => {
-        const role = this.userData.role
-
-        if (index === 1) {
-          if (role.length <= 0) {
-            this.$message('无权限操作')
-            return true
-          }
-          let userCount = 0
-          console.log(this.hasRole('susys'))
-          // 超管权限
-          if (this.hasRole('susys')) {
-            userCount = 1
-          }
-          // 计划发起人为当前用户
-          if (row.gUserId === this.userData.id) {
-            userCount++
-          }
-          if (userCount <= 0) {
-            this.$message('无权限操作')
-          } else {
-            this.sure(row.id, this.userData.id, index)
-          }
-        } else if (index === 2) {
-          let userCount = 0
-          if (this.userData.user.roleGroupId === 1) {
-            userCount = 1
-          }
-          for (let i = 0; i < row.planAuth.users.length; i++) {
-            if (row.planAuth.users[i].id === this.userData.user.id) {
-              userCount++
+      }).then(() => {
+        switch (index) {
+          case 1:
+            // 收集资料阶段, 可确认完成的人为： 计划发起人 或 系统管理员
+            if (row.gUserId === this.userData.id || hasRole('susys')) {
+              this.sure(row.id, this.userData.id, index)
             }
-          }
-          if (userCount > 0) {
-            this.sure(row.id, this.userData.user.id, index)
-          } else {
-            this.$message('无权限操作')
-          }
+            break
+          case 2:
+            // 审核阶段，可确认完成的人：  指定的核查人员 或 系统管理员
+            if ((row.aUserId.indexOf(this.userData.id.toString() + ',') > -1) || hasRole('susys')) {
+              this.sure(row.id, this.userData.id, index)
+            }
+            break
         }
+
+        this.$message('无权限操作')
       })
     },
     // 确认完成 请求后台方法
@@ -1162,7 +1138,7 @@ export default {
           this.initDataDir(this.tabIndex)
           return true
         } else if (this.tabIndex === 6) {
-          this.initUserPlan(this.userData.user.id)
+          this.initUserPlan(this.userData.id)
           return true
         } else {
           this.initData()
@@ -1175,38 +1151,16 @@ export default {
       const that = this
       const form = {
         planId: row.id,
-        userId: this.userData.user.id
+        userId: this.userData.id
       }
-
-      const role = that.userData.role
-      if (role.length <= 0) {
-        that.$message('无权限操作')
-        return true
-      }
-      let count = 0
-      if (this.userData.user.roleGroupId === 1) {
-        count = 1
-      }
-      for (let i = 0; i < role.length; i++) {
-        const roleCode = role[i].roleCode
-        if (
-          roleCode === 'checkDir1' ||
-          roleCode === 'checkDir2' ||
-          roleCode === 'checkDir3' ||
-          roleCode === 'checkDir4'
-        ) {
-          count++
-        }
-      }
-      if (count <= 0) {
-        that.$message('无权限操作')
-      } else {
+      if (hasRole('susys') || isInGroup(['dcs_checkDir1', 'dcs_checkDir2', 'dcs_checkDir3', 'dcs_checkDir4'])) {
         that.operaPassCheck(form)
       }
+      that.$message('无权限操作')
     },
     operaPassCheck (form) {
       const that = this
-      this.$axios.post('api/plan/passCheck', form).then(res => {
+      dcsApi.checkPass(form).then(res => {
         this.$message({
           message: res.data,
           type: 'success'
@@ -1224,44 +1178,34 @@ export default {
     },
     // 删除计划
     delPlan (row) {
-      const that = this
-      let userCount = 0
-      if (this.userData.user.roleGroupId === 1) {
-        userCount = 1
-      }
-      if (row.planGather.userId === that.userData.user.id) {
-        userCount++
-      }
-      if (userCount <= 0) {
-        that.$message('无权限操作')
-      } else {
+      if (hasRole('susys') || row.gUserId === this.userData.id) {
         this.$confirm('是否确认完成?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        })
-          .then(() => {
-            that.$axios.get('http://http://192.168.123.86:8099/api/plan/delPlan?id=' + row.id).then(res => {
-              if (res.data.msg === 'ok') {
-                that.$message.success(res.data.obj)
-                that.initData()
-                if (that.tabIndex !== 0 && that.tabIndex !== 6) {
-                  that.initDataDir(that.tabIndex)
-                  return true
-                }
-                that.initUserPlan(that.userData.user.id)
-              } else {
-                that.$message.error(res.data.obj)
+        }).then(() => {
+          dcsApi.delPlan(row.id).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.initData()
+              if (this.tabIndex !== 0 && this.tabIndex !== 6) {
+                this.initDataDir(this.tabIndex)
+                return
               }
-            })
+              this.initUserPlan(this.userData.id)
+            } else {
+              this.$message.error(res.msg)
+            }
           })
-          .catch(() => {
-            that.$message({
-              type: 'info',
-              message: '已取消'
-            })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
           })
+        })
+        return
       }
+      this.$message('无权限操作')
     },
     updatePlanCancel () {
       this.updatePlanForm = {
@@ -1274,124 +1218,79 @@ export default {
       this.updatePlanShow = false
     },
     updatePlanSubmit () {
-      const that = this
-      this.$axios.post('http://http://192.168.123.86:8099/api/plan/updatePlan', this.updatePlanForm).then(res => {
-        if (res.data.msg === 'ok') {
-          this.$message.success(res.data.obj)
+      dcsApi.updatePlan(this.updatePlanForm).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
         } else {
-          this.$message.error(res.data.obj)
+          this.$message.error(res.msg)
         }
-        if (that.tabIndex !== 0 && that.tabIndex !== 6) {
-          that.initDataDir(that.tabIndex)
+        if (this.tabIndex !== 0 && this.tabIndex !== 6) {
+          this.initDataDir(this.tabIndex)
         } else {
-          that.initData()
+          this.initData()
         }
-        that.initUserPlan(that.userData.user.id)
-        that.updatePlanForm = {
+        this.initUserPlan(this.userData.id)
+        this.updatePlanForm = {
           id: '',
           content: '',
           dirId: '',
           depPrincipal: '',
           planTime: ''
         }
-        that.updatePlanShow = false
+        this.updatePlanShow = false
       })
     },
     // 修改计划时间弹框的所需三个方法
     updatePlan (row, index) {
       const that = this
-      let count = 0
       this.formUpdate.planId = row.id
-      this.formUpdate.userId = this.userData.user.id
+      this.formUpdate.userId = this.userData.id
       this.formUpdate.operaId = index
       const planAuthUsers = []
       const planCheckUsers = []
-      if (row.planAuth !== null) {
-        for (const key in row.planAuth.users) {
-          planAuthUsers.push(row.planAuth.users[key].id)
+      if (row.authUsers !== null) {
+        for (const key in row.authUsers) {
+          planAuthUsers.push(row.authUsers[key].id)
         }
       }
-      if (row.planCheck !== null) {
-        for (const key in row.planCheck.users) {
-          planCheckUsers.push(row.planCheck.users[key].id)
+      if (row.checkUsers !== null) {
+        for (const key in row.checkUsers) {
+          planCheckUsers.push(row.checkUsers[key].id)
         }
       }
       if (index === 1) {
-        let userCount = 0
-        if (this.userData.user.roleGroupId === 1) {
-          userCount = 1
+        // 修改计划内容
+        if (hasRole('susys') || this.gUserId === this.userData.id) {
+          this.updatePlanForm.id = row.id
+          this.updatePlanForm.content = row.content
+          this.updatePlanForm.dirId = row.dirId
+          this.updatePlanForm.depPrincipal = row.depPrincipal
+          this.updatePlanForm.planTime = row.planTime
+          this.updatePlanShow = true
         }
-        if (row.planGather.userId === that.userData.user.id) {
-          userCount++
-        }
-        if (userCount <= 0) {
-          that.$message('无权限操作')
-        } else {
-          that.updatePlanForm.id = row.id
-          that.updatePlanForm.content = row.content
-          that.updatePlanForm.dirId = row.dirId
-          that.updatePlanForm.depPrincipal = row.depPrincipal
-          that.updatePlanForm.planTime = row.planGather.planTime
-
-          that.updatePlanShow = true
-        }
+        this.$message('无权限操作')
       } else if (index === 2) {
-        if (this.userData.user.roleGroupId !== 1) {
-          for (let i = 0; i < row.planAuth.users.length; i++) {
-            if (row.planAuth.users[i].id === this.userData.user.id) {
-              count++
-            }
-          }
-          if (count > 0) {
-            that.formUpdate.checkUsers = planAuthUsers
-            this.title = '修改计划审核认证时间'
-            this.timeUpdateShow = true
-          } else {
-            this.$message({
-              message: '无法操作'
-            })
-            return true
-          }
-        } else {
-          that.formUpdate.checkUsers = planAuthUsers
+        // 修改计划审核认证时间
+        if (hasRole('susys') || row.aUserId.indexOf(this.userData.id.toString() + ',')) {
+          this.formUpdate.checkUsers = planAuthUsers
           this.title = '修改计划审核认证时间'
           this.timeUpdateShow = true
+          return
         }
+        this.$message({
+          message: '无法操作'
+        })
       } else if (index === 3) {
-        if (this.userData.user.roleGroupId !== 1) {
-          const role = that.userData.role
-          if (role.length <= 0) {
-            that.$message('无权限操作')
-            return true
-          }
-          let count = 0
-          for (let i = 0; i < role.length; i++) {
-            const roleCode = role[i].roleCode
-            if (
-              roleCode === 'checkDir1' ||
-              roleCode === 'checkDir2' ||
-              roleCode === 'checkDir3' ||
-              roleCode === 'checkDir4'
-            ) {
-              count++
-            }
-          }
-
-          if (count > 0) {
-            that.formUpdate.checkUsers = planCheckUsers
-            this.title = '修改计划稽核时间'
-            this.timeUpdateShow = true
-          } else {
-            this.$message({
-              message: '无法操作'
-            })
-            return true
-          }
-        } else {
+        // 修改计划稽核
+        if (hasRole('susys') || isInGroup(['dcs_checkDir1', 'dcs_checkDir2', 'dcs_checkDir3', 'dcs_checkDir4'])) {
           that.formUpdate.checkUsers = planCheckUsers
           this.title = '修改计划稽核时间'
           this.timeUpdateShow = true
+          return
         }
+        this.$message({
+          message: '无法操作'
+        })
       }
     },
     submitUpdateChose () {
@@ -1418,7 +1317,7 @@ export default {
         return true
       }
       if (index === 2) {
-        this.$axios.post('api/plan/updatePlanAuth', form).then(res => {
+        dcsApi.updatePlanAuth(form).then(res => {
           this.$message({
             message: res.data,
             type: 'success'
@@ -1433,7 +1332,7 @@ export default {
           that.initUserPlan(that.userData.user.id)
         })
       } else if (index === 3) {
-        this.$axios.post('api/plan/updatePlanCheck', form).then(res => {
+        dcsApi.updatePlanCheck(form).then(res => {
           this.$message({
             message: res.data,
             type: 'success'
@@ -1457,43 +1356,21 @@ export default {
     // 添加稽核计划弹框的所需三个方法
     addAuthPlan (row) {
       this.formChoose.planId = row.id
-      this.formChoose.userId = this.userData.user.id
-      const that = this
+      this.formChoose.userId = this.userData.id
 
-      const role = that.userData.role
-      if (role.length <= 0) {
-        that.$message('无权限操作')
-        return true
+      if (row.authActualTime === null) {
+        this.$message({
+          message: '请确认完成审核认证',
+          type: 'warning'
+        })
+        return
       }
-      let count = 0
-      // 超管权限
-      if (this.userData.user.roleGroupId === 1) {
-        count = 1
-      }
-      for (let i = 0; i < role.length; i++) {
-        const roleCode = role[i].roleCode
-        if (
-          roleCode === 'checkDir1' ||
-          roleCode === 'checkDir2' ||
-          roleCode === 'checkDir3' ||
-          roleCode === 'checkDir4'
-        ) {
-          count++
-        }
-      }
-      if (count <= 0) {
-        that.$message('无权限操作')
-      } else {
-        this.title = '设定计划稽核时间'
-        if (row.planAuth.authActualTime === null) {
-          this.$message({
-            message: '请确认完成审核认证',
-            type: 'warning'
-          })
-          return true
-        }
+
+      if (hasRole('susys') || isInGroup(['dcs_checkDir1', 'dcs_checkDir2', 'dcs_checkDir3', 'dcs_checkDir4'])) {
         this.timeChoseShow = true
+        return
       }
+      this.$message('无权限操作')
     },
     cancelChose () {
       this.initForm()
@@ -1521,7 +1398,7 @@ export default {
         })
         return true
       }
-      this.$axios.post('api/plan/addPlanCheck', form).then(res => {
+      dcsApi.addPlanCheck(form).then(res => {
         this.$message({
           message: res.data,
           type: 'success'
@@ -1533,36 +1410,26 @@ export default {
           that.initDataDir(that.tabIndex)
           return true
         }
-        that.initUserPlan(that.userData.user.id)
+        that.initUserPlan(that.userData.id)
       })
     },
     // 添加计划弹框的所需三个方法
     addPlan () {
-      const role = this.userData.role
-      console.log(role)
-      if (role.length > 0) {
-        let count = 0
-        for (let i = 0; i < role.length; i++) {
-          const roleCode = role[i].role
-          if (roleCode === 'susys' || roleCode === 'dir2' || roleCode === 'dir3' || roleCode === 'dir4') {
-            count++
-          }
-        }
-        if (count <= 0) {
-          this.$message('无权限操作')
-        } else {
-          this.planShow = true
-          return true
-        }
+      getUserAuthAllInfo(this.userData.id).then( res => {
+        console.log(res)
+      })
+      // 权限判断
+      if (hasRole('susys') || isInGroup(['dcs_dir1', 'dcs_dir2', 'dcs_dir3', 'dcs_dir4'])) {
+        this.planShow = true
+        return
       }
-      this.$message('无权限操作')
+      this.$message('无权操作')
     },
     cancel () {
       this.initForm()
       this.planShow = false
     },
     submit () {
-      const that = this
       const form = {
         dirId: this.form.dirId,
         content: this.form.content.trim(),
@@ -1602,17 +1469,16 @@ export default {
 
       dcsApi.addPlan(form).then(res => {
         this.$message({
-          message: res.data,
-          type: 'success'
+          message: res.msg,
+          type: (res.code === 0) ? 'success' : 'error'
         })
-        that.planShow = false
-        that.initData()
-        that.initForm()
+        this.planShow = false
+        this.initData()
+        this.initForm()
       })
     },
     // 添加收集计划并设定认证计划时间弹框所需方法
     settingPlan (row) {
-      console.log(row)
       if (row.actualTime === null) {
         this.$message({
           message: '请确认完成收集资料',
@@ -1620,23 +1486,20 @@ export default {
         })
         return true
       }
-      // 判断用户权限, 没有“上传”权限, 计划收集用户不等于当前用户
-      // if (this.userData.user.roleGroupId !== 1) {
-      //   if (row.gUserId !== this.userData.user.id) {
-      //     this.$message({
-      //       message: '无法操作'
-      //     })
-      //     return true
-      //   }
-      // }
-
-      this.planGatherShow = true
-      this.gatherForm.planId = row.id
+      // 指定送审时间权限： 超管 或者 计划发起人
+      if (hasRole('susys') || row.gUserId === this.userData.id) {
+        this.planGatherShow = true
+        this.gatherForm.planId = row.id
+        return
+      }
+      this.$message({
+        message: '无法操作'
+      })
     },
     gatherSubmit () {
       const that = this
       const form = {
-        userId: this.userData.user.id,
+        userId: this.userData.id,
         time: this.gatherForm.gatherTime,
         authUsers: this.gatherForm.authUsers,
         planId: this.gatherForm.planId
@@ -1656,7 +1519,7 @@ export default {
         })
         return true
       }
-      this.$axios.post('api/plan/addPlanAuth', form).then(res => {
+      dcsApi.addPlanAuth(form).then(res => {
         this.$message({
           message: res.data,
           type: 'success'
@@ -1668,7 +1531,7 @@ export default {
           that.initDataDir(that.tabIndex)
           return true
         }
-        that.initUserPlan(that.userData.user.id)
+        that.initUserPlan(that.userData.id)
       })
     },
     gatherCancel () {
@@ -1734,7 +1597,6 @@ export default {
         depPrincipal: ''
       }
       this.gatherForm = {
-        // content: '',
         planId: '',
         gatherTime: '',
         authUsers: []
