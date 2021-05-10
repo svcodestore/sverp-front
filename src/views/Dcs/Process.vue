@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-05-05 13:33:36
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-05-10 16:01:04
+ * @LastEditTime: 2021-05-10 17:13:34
  * @FilePath: \sverp-front\src\views\Dcs\Process.vue
 -->
 <template>
@@ -1415,9 +1415,6 @@ export default {
     },
     // 添加计划弹框的所需三个方法
     addPlan () {
-      getUserAuthAllInfo(this.userData.id).then( res => {
-        console.log(res)
-      })
       // 权限判断
       if (hasRole('susys') || isInGroup(['dcs_dir1', 'dcs_dir2', 'dcs_dir3', 'dcs_dir4'])) {
         this.planShow = true
