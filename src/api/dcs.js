@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-05-06 14:14:27
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-05-08 14:19:43
+ * @LastEditTime: 2021-05-10 13:19:09
  * @FilePath: \sverp-front\src\api\dcs.js
  */
 import request from '@/utils/request'
@@ -144,6 +144,7 @@ export default {
   checkPass,
   delPlan,
   addPlan,
+  updatePlan,
   updatePlanAuth,
   updatePlanCheck,
   addPlanCheck,
