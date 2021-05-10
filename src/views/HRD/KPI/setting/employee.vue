@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-04-29 10:56:03
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-05-07 14:59:57
+ * @LastEditTime: 2021-05-10 17:10:36
  * @Description: 员工信息
  * @FilePath: \sverp-front\src\views\HRD\KPI\setting\employee.vue
 -->
@@ -161,8 +161,7 @@ export default {
               }
             })
           })
-          .catch(err => {
-            console.log(err)
+          .catch(() => {
             this.$message.error('数据读取失败，请检查格式是否正确')
           })
 
