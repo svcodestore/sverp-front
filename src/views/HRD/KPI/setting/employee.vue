@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-04-29 10:56:03
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-05-07 14:27:53
+ * @LastEditTime: 2021-05-11 09:13:16
  * @Description: 员工信息
  * @FilePath: /sverp-front/src/views/HRD/KPI/setting/employee.vue
 -->
@@ -127,15 +127,16 @@ export default {
                 title: e.trim(),
                 field: e.trim()
               }))
-              this.svgridOptions.data = arr.map(item => {
+              const tableData = arr.map(item => {
                 const o = {}
                 Object.values(item).forEach((e, i) => {
                   o[this.svgridOptions.columns[i].field] = e
                 })
                 return o
               })
+              this.svgridOptions.data = tableData
               reader.onloadend = () => {
-                resolve(this.svgridOptions.data)
+                resolve(tableData)
               }
             } catch (error) {
               reject(error)
@@ -152,14 +153,16 @@ export default {
         this.svgridOptions.loading = true
         await this.handleXlsx2Arr(file)
           .then(async data => {
-            await updateKpiInfoWorkers(data).then(({ result }) => {
-              if (result) {
-                this.$message.success('上传更新成功')
-                this.svgridOptions.desc = '上次更新于 ' + moment().format('YYYY-MM-DD HH:mm:ss')
-              } else {
-                this.$message.error('上传更新失败')
-              }
-            })
+            await updateKpiInfoWorkers(data)
+              .then(({ result }) => {
+                if (result) {
+                  this.$message.success('上传更新成功')
+                  this.svgridOptions.desc = '上次更新于 ' + moment().format('YYYY-MM-DD HH:mm:ss')
+                } else {
+                  this.$message.error('上传更新失败')
+                }
+              })
+              .catch(() => {})
           })
           .catch(() => {
             this.$message.error('数据读取失败，请检查格式是否正确')

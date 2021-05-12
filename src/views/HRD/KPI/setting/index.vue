@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-04-29 08:33:54
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-04-29 10:59:23
+ * @LastEditTime: 2021-05-12 11:08:44
  * @Description: Do not edit
  * @FilePath: /sverp-front/src/views/HRD/KPI/setting/index.vue
 -->
@@ -10,7 +10,9 @@
   <div>
     <a-tabs defaultActiveKey="1">
       <a-tab-pane key="1" tab="KPI 信息"></a-tab-pane>
-      <a-tab-pane key="2" tab="职务信息"></a-tab-pane>
+      <a-tab-pane key="2" tab="职务信息">
+        <position></position>
+      </a-tab-pane>
       <a-tab-pane key="3" tab="员工信息">
         <employee></employee>
       </a-tab-pane>
@@ -23,9 +25,11 @@
 
 <script>
 import employee from './employee'
+import position from './postion/'
 export default {
   components: {
-    employee
+    employee,
+    position
   }
 }
 </script>

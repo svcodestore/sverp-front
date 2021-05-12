@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2021-01-07 14:20:06
- * @LastEditTime: 2021-05-07 08:35:29
+ * @LastEditTime: 2021-05-12 16:53:41
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: /sverp-front/src/api/hrd.js
@@ -25,7 +25,15 @@ const hrdApi = {
   approveOutbound: '/hrd/approveOutbound',
   materialLogSoftDel: '/hrd/materialLogSoftDel',
   updateKpiInfoWorkers: '/hrd/updateKpiInfoWorkers',
-  getKpiInfoWorkers: '/hrd/getKpiInfoWorkers'
+  getKpiInfoWorkers: '/hrd/getKpiInfoWorkers',
+  getDepts: '/hrd/getDepts',
+  saveDeptsOpt: '/hrd/saveDeptsOpt',
+  getTitles: '/hrd/getTitles',
+  saveTitlesOpt: '/hrd/saveTitlesOpt',
+  getPositions: '/hrd/getPositions',
+  savePositionsOpt: '/hrd/savePositionsOpt',
+  getRanks: '/hrd/getRanks',
+  saveRanksOpt: '/hrd/saveRanksOpt'
 }
 
 export const getMaterialCategory = () =>
@@ -135,4 +143,56 @@ export const getKpiInfoWorkers = () =>
   request({
     url: hrdApi.getKpiInfoWorkers,
     method: 'post'
+  })
+
+export const getDepts = () =>
+  request({
+    url: hrdApi.getDepts,
+    method: 'post'
+  })
+
+export const saveDeptsOpt = opt =>
+  request({
+    url: hrdApi.saveDeptsOpt,
+    method: 'post',
+    data: stringify(opt)
+  })
+
+export const getTitles = () =>
+  request({
+    url: hrdApi.getTitles,
+    method: 'post'
+  })
+
+export const saveTitlesOpt = opt =>
+  request({
+    url: hrdApi.saveTitlesOpt,
+    method: 'post',
+    data: stringify(opt)
+  })
+
+export const getPositions = () =>
+  request({
+    url: hrdApi.getPositions,
+    method: 'post'
+  })
+
+export const savePositionsOpt = opt =>
+  request({
+    url: hrdApi.savePositionsOpt,
+    method: 'post',
+    data: stringify(opt)
+  })
+
+export const getRanks = () =>
+  request({
+    url: hrdApi.getRanks,
+    method: 'post'
+  })
+
+export const saveRanksOpt = opt =>
+  request({
+    url: hrdApi.saveRanksOpt,
+    method: 'post',
+    data: stringify(opt)
   })

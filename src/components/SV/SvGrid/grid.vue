@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-04-29 14:34:33
+ * @LastEditTime: 2021-05-12 15:05:47
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: /sverp-front/src/components/SV/SvGrid/grid.vue
@@ -300,6 +300,27 @@ export default {
      */
     setActiveCell (row, field) {
       this.$refs.xGrid.setActiveCell(row, field)
+    },
+    /**
+     * @description: 用于 tree-config，设置所有树节点的展开与否
+     * @param Boolean checked
+     */
+    setAllTreeExpand (checked) {
+      this.$refs.xGrid.setAllTreeExpand(checked)
+    },
+    /**
+     * @description: 用于 tree-config，手动清空树形节点的展开状态，数据会恢复成未展开的状态
+     * @param any row
+     */
+    clearTreeExpand (row) {
+      this.$refs.xGrid.clearTreeExpand(row)
+    },
+    /**
+     * @description: 用于 tree-config.lazy，手动清空懒加载树节点的状态，数据会恢复成未展开的状态，当再次展开时会重新加载
+     * @param any row
+     */
+    clearTreeExpandLoaded (row) {
+      this.$refs.xGrid.clearTreeExpandLoaded(row)
     },
     /**
      * @description: 获取格式化的修改数据，用于直接跟后台对接
