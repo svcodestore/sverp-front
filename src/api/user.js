@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-11-09 13:05:23
- * @LastEditTime: 2020-12-18 11:34:25
- * @LastEditors: yanbuw1911
+ * @LastEditTime: 2021-05-08 15:28:10
+ * @LastEditors: Mok.CH
  * @Description:
- * @FilePath: \client\src\api\user.js
+ * @FilePath: \sverp-front\src\api\user.js
  */
 import request from '@/utils/request'
 import { stringify } from 'qs'
@@ -18,7 +18,8 @@ const userApi = {
   getUsers: '/user/getUsers',
   getGroups: '/user/getGroups',
   saveUserRoleOpt: '/user/saveUserRoleOpt',
-  saveUserGroupOpt: '/user/saveUserGroupOpt'
+  saveUserGroupOpt: '/user/saveUserGroupOpt',
+  getUsersByGroupCode: '/user/getUsersByGroupCode'
 }
 
 export const getUserInfo = usrid => {
@@ -88,3 +89,11 @@ export const saveUserGroupOpt = opt =>
     method: 'post',
     data: stringify(opt)
   })
+
+  export const getUsersByGroupCode = code => {
+    return request({
+      url: userApi.getUsersByGroupCode,
+      method: 'post',
+      data: stringify({ code })
+    })
+  }

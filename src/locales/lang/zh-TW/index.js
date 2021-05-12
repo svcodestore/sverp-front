@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:33
- * @LastEditTime: 2021-04-30 08:12:26
- * @LastEditors: yanbuw1911
+ * @LastEditTime: 2021-05-07 14:56:57
+ * @LastEditors: Mok.CH
  * @Description:
- * @FilePath: /sverp-front/src/locales/lang/zh-TW/index.js
+ * @FilePath: \sverp-front\src\locales\lang\zh-TW\index.js
  */
 import antd from 'ant-design-vue/es/locale-provider/zh_CN'
 import momentCN from 'moment/locale/zh-cn'
@@ -34,8 +34,9 @@ const menuNodes = {
   BS_IDX: '業務部主頁',
   TPM_IDX: '設備列表',
   'R&D_IDX': '研發部主頁',
-  PD_IDX: '採購部主頁',
-  PMD_IDX: '物管部主頁',
+  PD_IDX: '採購部看板',
+  PMD_IDX: '倉庫入庫看板',
+  PMD_TW: '臺中五金回料看板',
   PROD_IDX: '生管部主頁',
   HRD_IDX: '人資部主頁',
   AD_IDX: '行政部主頁',

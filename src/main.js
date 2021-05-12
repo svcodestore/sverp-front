@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2020-12-24 07:40:15
- * @LastEditors: yanbuw1911
+ * @LastEditTime: 2021-05-05 13:41:30
+ * @LastEditors: Mok.CH
  * @Description:
- * @FilePath: \client\src\main.js
+ * @FilePath: \sverp-front\src\main.js
  */
 // with polyfills
 import 'core-js/stable'
@@ -25,6 +25,9 @@ import './permission' // permission control
 import './utils/filter' // global filter
 import './global.less'
 
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+
 import 'xe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
@@ -32,6 +35,7 @@ import 'vxe-table/lib/style.css'
 // import VXETableEditExtend from './components/VxeTableExtend/autocomplete'
 // VXETableEditExtend(VXETable)
 Vue.use(VXETable)
+Vue.use(ElementUI)
 // eslint-disable-next-line import/first
 import SvComponents from '@/components/SV'
 Vue.use(SvComponents)
