@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-05-05 13:33:36
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-05-14 11:03:48
+ * @LastEditTime: 2021-05-14 16:12:19
  * @FilePath: \sverp-front\src\views\Dcs\Process.vue
 -->
 <template>
@@ -638,7 +638,7 @@
                 <el-table-column prop="planTime" sortable label="计划完成时间"></el-table-column>
                 <el-table-column prop="actualTime" sortable label="实际完成时间"> </el-table-column>
                 <el-table-column
-                  prop="users.username"
+                  prop="gatherUsername"
                   label="收集资料组长"
                   :filters="filterData"
                   :filter-method="filterPlanGather"
