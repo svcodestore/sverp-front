@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-05-06 14:14:27
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-05-10 13:19:09
+ * @LastEditTime: 2021-05-14 08:47:32
  * @FilePath: \sverp-front\src\api\dcs.js
  */
 import request from '@/utils/request'
@@ -21,7 +21,14 @@ const DcsApi = {
   updatePlanCheck: '/dcs/updatePlanCheck',
   addPlanCheck: '/dcs/addPlanCheck',
   checkPass: '/dcs/checkPass',
-  addPlanAuth: '/dcs/addPlanAuth'
+  addPlanAuth: '/dcs/addPlanAuth',
+  getFiles: '/dcs/getFiles',
+  uploadFile: '/dcs/uploadFile',
+  downloadFile: '/dcs/downloadFile',
+  addRecord: '/dcs/addRecord',
+  updateVersion: '/dcs/updateVersion',
+  getFilesVersion: '/dcs/getFilesVersion',
+  recordPDFShow: '/dcs/recordPDFShow'
 }
 
 export const getPlan = dirId => {
@@ -134,6 +141,63 @@ export const addPlanAuth = data => {
   })
 }
 
+export const getFiles = data => {
+  return request({
+    url: DcsApi.getFiles,
+    method: 'post',
+    data: stringify(data)
+  })
+}
+
+export const uploadFile = data => {
+  return request({
+    url: DcsApi.uploadFile,
+    method: 'post',
+    data: data
+  })
+}
+
+export const downloadFile = data => {
+  return request({
+    url: DcsApi.downloadFile,
+    method: 'post',
+    data: stringify(data),
+    responseType: 'blob'
+  })
+}
+
+export const addRecord = data => {
+  return request({
+    url: DcsApi.addRecord,
+    method: 'post',
+    data: stringify(data)
+  })
+}
+
+export const updateVersion = data => {
+  return request({
+    url: DcsApi.updateVersion,
+    method: 'post',
+    data: data
+  })
+}
+
+export const getFilesVersion = data => {
+  return request({
+    url: DcsApi.getFilesVersion,
+    method: 'post',
+    data: stringify(data)
+  })
+}
+
+export const recordPDFShow = data => {
+  return request({
+    url: DcsApi.recordPDFShow,
+    method: 'post',
+    data: stringify(data)
+  })
+}
+
 export default {
   getPlan,
   countPlan,
@@ -148,5 +212,12 @@ export default {
   updatePlanAuth,
   updatePlanCheck,
   addPlanCheck,
-  addPlanAuth
+  addPlanAuth,
+  getFiles,
+  addRecord,
+  updateVersion,
+  downloadFile,
+  getFilesVersion,
+  uploadFile,
+  recordPDFShow
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-11-09 13:05:23
- * @LastEditTime: 2021-05-08 15:28:10
+ * @LastEditTime: 2021-05-11 15:03:22
  * @LastEditors: Mok.CH
  * @Description:
  * @FilePath: \sverp-front\src\api\user.js
@@ -19,7 +19,8 @@ const userApi = {
   getGroups: '/user/getGroups',
   saveUserRoleOpt: '/user/saveUserRoleOpt',
   saveUserGroupOpt: '/user/saveUserGroupOpt',
-  getUsersByGroupCode: '/user/getUsersByGroupCode'
+  getUsersByGroupCode: '/user/getUsersByGroupCode',
+  getDepartments: '/user/getDepartments'
 }
 
 export const getUserInfo = usrid => {
@@ -95,5 +96,13 @@ export const saveUserGroupOpt = opt =>
       url: userApi.getUsersByGroupCode,
       method: 'post',
       data: stringify({ code })
+    })
+  }
+
+  export const getDepartments = data => {
+    return request({
+      url: userApi.getDepartments,
+      method: 'post',
+      data: stringify(data)
     })
   }

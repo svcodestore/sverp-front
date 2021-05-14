@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-05-05 13:33:36
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-05-10 17:13:34
+ * @LastEditTime: 2021-05-14 11:03:48
  * @FilePath: \sverp-front\src\views\Dcs\Process.vue
 -->
 <template>
@@ -947,7 +947,7 @@
 <script>
 import dcsApi from '@/api/dcs'
 import { getUserAuthAllInfo, getUsersByGroupCode } from '@/api/user'
-import { hasRole, isInGroup } from '@/utils/permissions'
+import { hasRole } from '@/utils/permissions'
 
 export default {
   data () {
@@ -1153,7 +1153,7 @@ export default {
         planId: row.id,
         userId: this.userData.id
       }
-      if (hasRole('susys') || isInGroup(['dcs_checkDir1', 'dcs_checkDir2', 'dcs_checkDir3', 'dcs_checkDir4'])) {
+      if (hasRole('susys') || hasRole(['dcs_chk1', 'dcs_chk2', 'dcs_chk3', 'dcs_chk4'])) {
         that.operaPassCheck(form)
       }
       that.$message('无权限操作')
@@ -1282,7 +1282,7 @@ export default {
         })
       } else if (index === 3) {
         // 修改计划稽核
-        if (hasRole('susys') || isInGroup(['dcs_checkDir1', 'dcs_checkDir2', 'dcs_checkDir3', 'dcs_checkDir4'])) {
+        if (hasRole('susys') || hasRole(['dcs_chk1', 'dcs_chk2', 'dcs_chk3', 'dcs_chk4'])) {
           that.formUpdate.checkUsers = planCheckUsers
           this.title = '修改计划稽核时间'
           this.timeUpdateShow = true
@@ -1366,7 +1366,7 @@ export default {
         return
       }
 
-      if (hasRole('susys') || isInGroup(['dcs_checkDir1', 'dcs_checkDir2', 'dcs_checkDir3', 'dcs_checkDir4'])) {
+      if (hasRole('susys') || hasRole(['dcs_chk1', 'dcs_chk2', 'dcs_chk3', 'dcs_chk4'])) {
         this.timeChoseShow = true
         return
       }
@@ -1416,7 +1416,7 @@ export default {
     // 添加计划弹框的所需三个方法
     addPlan () {
       // 权限判断
-      if (hasRole('susys') || isInGroup(['dcs_dir1', 'dcs_dir2', 'dcs_dir3', 'dcs_dir4'])) {
+      if (hasRole('susys') || hasRole(['dcs_dir1', 'dcs_dir2', 'dcs_dir3', 'dcs_dir4'])) {
         this.planShow = true
         return
       }

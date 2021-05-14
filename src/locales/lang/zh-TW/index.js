@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:33
- * @LastEditTime: 2021-05-07 14:56:57
+ * @LastEditTime: 2021-05-11 08:50:35
  * @LastEditors: Mok.CH
  * @Description:
  * @FilePath: \sverp-front\src\locales\lang\zh-TW\index.js
@@ -66,7 +66,13 @@ const menuNodes = {
   TPM_MYORDERS: '我的工單',
   HRD_KPI: 'KPI（關鍵績效指標）',
   HRD_KPI_SETTING: 'KPI 設定',
-  HRD_KPI_VIEW: 'KPI 總覽'
+  HRD_KPI_VIEW: 'KPI 總覽',
+  DCS: '文控系統',
+  DCS_PROCESS: '認證計劃',
+  DCS_LIST1: '流程作業指導書',
+  DCS_LIST2: '工序標準作業票',
+  DCS_LIST3: '設備操作規範',
+  DCS_LIST4: '品管作業指導書'
 }
 
 const svGrid = {
