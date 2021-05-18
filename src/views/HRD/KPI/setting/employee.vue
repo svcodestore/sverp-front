@@ -2,29 +2,20 @@
  * @Author: yanbuw1911
  * @Date: 2021-04-29 10:56:03
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-05-12 17:11:22
+ * @LastEditTime: 2021-05-14 14:51:32
  * @Description: 员工信息
  * @FilePath: /sverp-front/src/views/HRD/KPI/setting/employee.vue
 -->
 <template>
-  <div @dragenter="handleDragenter" @dragleave="handleDragleave" @dragover="handleDragover" @drop="handleDrop">
+  <div>
     <sv-grid v-bind="svgridOptions" v-on="svgridEvts">
       <template #svgridToolbar>
-        <a-upload
-          accept=".xls, .xlsx"
-          name="file"
-          @change="handleFileChange"
-          :showUploadList="false"
-          :before-upload="() => false"
-          style="margin: 0 5px;"
-        >
-          <a-button shape="circle" :title="$t('upload')">
-            <a-icon type="upload" />
-          </a-button>
-        </a-upload>
         <a-button shape="circle" :title="$t('export')" :disabled="!svgridOptions.data.length" @click="handleExport">
           <a-icon type="export" />
         </a-button>
+      </template>
+      <template #joinDate="{row, column}">
+        {{ row[column.property] | fmtDate }}
       </template>
     </sv-grid>
   </div>
@@ -32,18 +23,53 @@
 
 <script>
 import XLSX from 'xlsx'
-import { updateKpiInfoWorkers, getKpiInfoWorkers } from '@/api/hrd'
 import moment from 'moment'
 
 export default {
+  filters: {
+    fmtDate (val) {
+      return moment(val).format('YYYY年MM日DD号')
+    }
+  },
   data () {
     return {
       svgridOptions: {
-        showHeader: false,
         title: '员工信息表格',
         data: [],
         loading: false,
-        columns: [],
+        columns: [
+          {
+            field: 'dept',
+            title: '部门'
+          },
+          {
+            field: 'grp',
+            title: '分组'
+          },
+          {
+            field: 'subGrp',
+            title: '二级分组'
+          },
+          {
+            field: 'position',
+            title: '职位'
+          },
+          {
+            field: 'staffNo',
+            title: '工号'
+          },
+          {
+            field: 'name',
+            title: '姓名'
+          },
+          {
+            field: 'joinDate',
+            title: '入职日期',
+            slots: {
+              default: 'joinDate'
+            }
+          }
+        ],
         menuConfig: {
           body: {
             options: [[{ code: 'export', name: 'export', disabled: true }]]
@@ -64,31 +90,10 @@ export default {
     }
   },
   methods: {
-    handleDragenter (e) {
-      e.stopPropagation()
-      e.preventDefault()
-    },
-    handleDragleave (e) {
-      e.stopPropagation()
-      e.preventDefault()
-    },
-    handleDragover (e) {
-      e.stopPropagation()
-      e.preventDefault()
-    },
-    handleDrop (e) {
-      e.stopPropagation()
-      e.preventDefault()
-      const fileData = e.dataTransfer.files
-      this.handleUpload(fileData[0])
-    },
     handleMenuClick ({ menu }) {
       switch (menu.code) {
         case 'export':
           this.handleExport()
-          break
-        case 'upload':
-          this.handleUpload()
           break
       }
     },
@@ -111,87 +116,21 @@ export default {
       workBook.Sheets['Sheet1'] = XLSX.utils.json_to_sheet(data)
       XLSX.writeFile(workBook, `KPI 员工信息${new Date().getTime()}.xlsx`, wopts)
     },
-    handleFileChange ({ file }) {
-      this.handleUpload(file)
-    },
-    handleXlsx2Arr (file) {
-      return new Promise((resolve, reject) => {
-        try {
-          const reader = new FileReader()
-          reader.onload = e => {
-            try {
-              const data = e.target.result
-              const wb = XLSX.read(data, { type: 'binary' })
-              const arr = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
-              this.svgridOptions.columns = Object.keys(arr[0]).map(e => ({
-                title: e.trim(),
-                field: e.trim()
-              }))
-              const tableData = arr.map(item => {
-                const o = {}
-                Object.values(item).forEach((e, i) => {
-                  o[this.svgridOptions.columns[i].field] = e
-                })
-                return o
-              })
-              this.svgridOptions.data = tableData
-              reader.onloadend = () => {
-                resolve(tableData)
-              }
-            } catch (error) {
-              reject(error)
-            }
-          }
-          reader.readAsBinaryString(file)
-        } catch (error) {
-          reject(error)
-        }
-      })
-    },
-    async handleUpload (file) {
-      if (/\.xlsx?$/.test(file.type)) {
-        this.svgridOptions.loading = true
-        await this.handleXlsx2Arr(file)
-          .then(async data => {
-            await updateKpiInfoWorkers(data)
-              .then(({ result }) => {
-                if (result) {
-                  this.$message.success('上传更新成功')
-                  this.svgridOptions.desc = '上次更新于 ' + moment().format('YYYY-MM-DD HH:mm:ss')
-                } else {
-                  this.$message.error('上传更新失败')
-                }
-              })
-              .catch(() => {})
-          })
-          .catch(() => {
-            this.$message.error('数据读取失败，请检查格式是否正确')
-          })
-
-        this.svgridOptions.loading = false
-      } else {
-        this.$message.info('文件类型应为 xls,xlsx')
-      }
-    },
     async getData () {
       this.svgridOptions.loading = true
-      await getKpiInfoWorkers().then(res => {
-        if (res.length !== 0) {
-          this.svgridOptions.desc = '上次更新于 ' + Object.keys(res)[0]
-          this.svgridOptions.data = Object.values(res)[0]
-          this.svgridOptions.columns = Object.keys(this.svgridOptions.data[0])
-            .filter(e => e !== 'id')
-            .map(e => ({
-              title: e,
-              field: e
-            }))
-        }
-      })
+      await this.$axios
+        .get('http://192.168.123.51:9600/webApi/test/dbfreader')
+        .then(res => {
+          this.svgridOptions.data = res.sort((a, b) => b.staffNo - a.staffNo)
+        })
+        .catch(() => {
+          this.svgridOptions.loading = false
+        })
       this.svgridOptions.loading = false
     }
   },
-  mounted () {
-    this.getData()
+  async mounted () {
+    await this.getData()
   }
 }
 </script>

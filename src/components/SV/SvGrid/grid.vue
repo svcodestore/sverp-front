@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-05-12 15:05:47
+ * @LastEditTime: 2021-05-13 13:37:44
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: /sverp-front/src/components/SV/SvGrid/grid.vue
@@ -10,7 +10,7 @@
   <vxe-grid ref="xGrid" v-bind="attrs" v-on="events">
     <template #toolbar>
       <slot name="toolbar">
-        <div style="display: flex; margin-bottom: 2px;">
+        <div class="toolbar-container">
           <a-button shape="circle" :title="$t('refresh')" :size="btnSize" v-if="refreshBtn" @click="_handleRefreshGrid">
             <a-icon type="reload" />
           </a-button>
@@ -158,7 +158,10 @@ export default {
       return Object.assign(o, {
         columns: wrappedColumns,
         data: treeConfig
-          ? toArrayTree(filteredData, { key: 'id', parentKey: 'pid', children: 'children' })
+          ? toArrayTree(
+              filteredData,
+              Object.assign({ key: 'id', parentKey: 'pid', children: 'children' }, treeConfig.options)
+            )
           : filteredData,
         ...defaultAttrs
       })

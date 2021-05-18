@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2021-01-07 14:20:06
- * @LastEditTime: 2021-05-12 17:11:09
+ * @LastEditTime: 2021-05-13 10:32:21
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: /sverp-front/src/api/hrd.js
@@ -33,7 +33,9 @@ const hrdApi = {
   getPositions: '/hrd/getPositions',
   savePositionsOpt: '/hrd/savePositionsOpt',
   getRanks: '/hrd/getRanks',
-  saveRanksOpt: '/hrd/saveRanksOpt'
+  saveRanksOpt: '/hrd/saveRanksOpt',
+  getKpiScopes: '/hrd/getKpiScopes',
+  saveKpiScopesOpt: '/hrd/saveKpiScopesOpt'
 }
 
 export const getMaterialCategory = () =>
@@ -193,6 +195,19 @@ export const getRanks = () =>
 export const saveRanksOpt = opt =>
   request({
     url: hrdApi.saveRanksOpt,
+    method: 'post',
+    data: stringify(opt)
+  })
+
+export const getKpiScopes = () =>
+  request({
+    url: hrdApi.getKpiScopes,
+    method: 'post'
+  })
+
+export const saveKpiScopesOpt = opt =>
+  request({
+    url: hrdApi.saveKpiScopesOpt,
     method: 'post',
     data: stringify(opt)
   })
