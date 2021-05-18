@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-13 09:50:11
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-05-04 14:32:09
+ * @LastEditTime: 2021-05-18 14:44:23
  * @FilePath: \sverp-front\src\views\TPM\QADD\index.vue
 -->
 <template>
@@ -116,8 +116,8 @@
         </template>
       </vxe-toolbar>
       <vxe-table :loading="loading" ref="xTree" :data="macheineList" keep-source auto-resize>
-        <vxe-table-column field="line_num" title="制造线" sortable width="50"></vxe-table-column>
-        <vxe-table-column field="produc_num" title="工程" sortable width="90"></vxe-table-column>
+        <vxe-table-column field="line_num" title="制造线" sortable width="50" v-if="!isMobile"></vxe-table-column>
+        <vxe-table-column field="produc_num" title="工程" sortable width="90" v-if="!isMobile"></vxe-table-column>
         <vxe-table-column field="mache_num" sortable title="设备编号" width="90"></vxe-table-column>
         <vxe-table-column
           field="mache_name"
@@ -150,9 +150,9 @@
     </a-modal>
 
     <a-modal v-model="showCauseModal" title="常见故障" :footer="null" :dialogStyle="dialogStyle">
-      <vxe-table rel="xTree" :data="commonCauses" keep-source auto-resize show-overflow="tooltip">
+      <vxe-table rel="xTree" :data="commonCauses" keep-source auto-resize show-overflow="false">
         <vxe-table-column field="value" title="常见故障"></vxe-table-column>
-        <vxe-table-column field="name" title="快捷选择" type="html" width="55">
+        <vxe-table-column field="name" title="快捷选择" type="html" width="60">
           <template v-slot="{ row }">
             <a-button @click="selectCause(row)" type="primary" size="small">选择</a-button>
           </template>
@@ -166,8 +166,10 @@
 import { apiNotify, apiMecheInfo, apiSendMsg, apiQuickReport } from '@/api/records'
 import NotifyStaff from '../NotifyStaff/index'
 import XEUtils from 'xe-utils'
+import { deviceMixin } from '@/store/device-mixin'
 
 export default {
+  mixins: [deviceMixin],
   components: {
     'notice-people': NotifyStaff
   },
