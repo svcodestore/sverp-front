@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-05-14 15:30:15
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-05-14 16:24:42
+ * @LastEditTime: 2021-05-20 09:22:18
  * @Description: 评分规则
  * @FilePath: /sverp-front/src/views/HRD/KPI/setting/scoreRule/index.vue
 -->
@@ -44,7 +44,7 @@
             @keyup.enter="handleInputConfirm"
           />
           <a-tag v-else style="background: #fff; borderStyle: dashed;" @click="showInput">
-            <a-icon type="plus" /> New Tag
+            <a-icon type="plus" /> 添加规则
           </a-tag>
         </div>
       </template>
@@ -90,6 +90,7 @@ export default {
       inputVisible: false,
       inputValue: '',
       gridOptions: {
+        height: 850,
         loading: false,
         border: 'inner',
         desc: '评分规则表格',
