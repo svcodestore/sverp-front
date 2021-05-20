@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-30 14:08:15
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-30 14:30:51
+ * @LastEditTime: 2021-05-18 10:40:04
  * @FilePath: \sverp-front\src\views\PD\viewboard.vue
 -->
 <template>
@@ -52,6 +52,7 @@
       <div class="search-row">
         <span> 计划交期:<a-range-picker v-model="searchParam.pro_time" /> </span>
         <span> 请购单号:<a-input style="width:200px;" v-model="searchParam.Ask_Nos" /> </span>
+        <span> 物料名称：<a-input style="width:200px;" v-model="searchParam.sp_catName" /> </span>
       </div>
 
       <div class="search-row">
@@ -142,7 +143,8 @@ export default {
         Bt_No: null,
         Ask_Nos: null,
         pro_time: null,
-        sg_time: null
+        sg_time: null,
+        sp_catName: null
       },
       svgOptions: {
         keepSource: true,
