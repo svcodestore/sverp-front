@@ -82,7 +82,8 @@ export default {
         loginBtn: false,
         smsSendBtn: false
       },
-      msg: []
+      msg: [],
+      redirect: null
     }
   },
   methods: {
@@ -117,6 +118,12 @@ export default {
       })
     },
     async loginSuccess (data) {
+      // 带token跳转回原请求页面
+      if (this.redirect !== null) {
+        const refUrl = new URL(this.redirect)
+        refUrl.searchParams.append('token', data.token)
+        window.location.href = refUrl.toString()
+      }
       if (data.userMenus) {
         await this.GenerateRoutes(data.userinfo.id)
           .then(routes => {
@@ -156,6 +163,10 @@ export default {
   },
   created () {
     document.title = `${this.$t('login')} - ${this.$t('SV')}`
+    // 如果有请求登录来源，记录来源
+    if (this.$route.query.hasOwnProperty('redirect')) {
+      this.redirect = this.$route.query.redirect
+    }
   }
 }
 </script>
