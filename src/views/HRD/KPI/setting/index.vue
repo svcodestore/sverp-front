@@ -23,6 +23,9 @@
       </a-tab-pane>
       <a-tab-pane key="5" tab="项目达成采集"></a-tab-pane>
       <a-tab-pane key="6" tab="个人分数采集"></a-tab-pane>
+      <a-tab-pane key="7" tab="JSTW 核薪考勤代扣">
+        <commute></commute>
+      </a-tab-pane>
     </a-tabs>
   </div>
 </template>
@@ -32,12 +35,14 @@ import kpi from './kpi/'
 import employee from './employee'
 import position from './postion/'
 import scoreRule from './scoreRule/'
+import commute from './JSTW_Commute'
 export default {
   components: {
     kpi,
     employee,
     position,
-    scoreRule
+    scoreRule,
+    commute
   }
 }
 </script>

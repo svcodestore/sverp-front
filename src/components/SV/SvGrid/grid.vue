@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-05-13 13:37:44
+ * @LastEditTime: 2021-05-18 15:25:41
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: /sverp-front/src/components/SV/SvGrid/grid.vue
@@ -179,6 +179,9 @@ export default {
             key =>
               toString(item[key])
                 .toLowerCase()
+                .indexOf(filterStr) > -1 ||
+              toString(item[key])
+                .toUpperCase()
                 .indexOf(filterStr) > -1
           )
       )
@@ -224,7 +227,8 @@ export default {
         'current-change': this._currentChange,
         'cell-dblclick': this._cellDblClick,
         'edit-actived': this.editActivedEvt,
-        'menu-click': this._menuClick
+        'menu-click': this._menuClick,
+        'filter-change': this._filterChange
       }
 
       return evt
@@ -256,6 +260,29 @@ export default {
     }
   },
   methods: {
+    /**
+     * @description: 动态列筛选条件
+     */
+    dynamicColumnFilters (fieldOrColumn, filters) {
+      const xGrid = this.$refs.xGrid
+      const column = typeof fieldOrColumn === 'string' ? xGrid.getColumnByField(fieldOrColumn) : fieldOrColumn
+      // 修改筛选列表，并默认设置为选中状态
+      xGrid.setFilter(column, filters)
+      // 修改条件之后，需要手动调用 updateData 处理表格数据
+      xGrid.updateData()
+    },
+    /**
+     * @description: 手动处理数据（对于手动更改了排序、筛选...等条件后需要重新处理数据时可能会用到）
+     */
+    updateData () {
+      this.$refs.xGrid.updateData()
+    },
+    /**
+     * @description: 用于 filters，修改筛选列表（在筛选条件更新之后可以调用 updateData 函数处理表格数据）
+     */
+    setFilter (fieldOrColumn, options) {
+      this.$refs.xGrid.setFilter(fieldOrColumn, options)
+    },
     /**
      * @description: 显示动态列设置下拉框
      */
@@ -324,6 +351,9 @@ export default {
      */
     clearTreeExpandLoaded (row) {
       this.$refs.xGrid.clearTreeExpandLoaded(row)
+    },
+    _filterChange ({ column, property, values, datas, filterList, $event }) {
+      this.$emit('filter-change', { column, property, values, datas, filterList, $event })
     },
     /**
      * @description: 获取格式化的修改数据，用于直接跟后台对接

@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-05-08 10:14:58
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-05-08 13:23:03
+ * @LastEditTime: 2021-05-20 09:26:49
  * @Description: KPI 报表
  * @FilePath: /sverp-front/src/views/HRD/KPI/view/report.vue
 -->
@@ -36,7 +36,7 @@
         <table class="header-table">
           <tr>
             <td colspan="8">
-              <b>一、部门KPI指标参考</b>
+              <b>-</b>
             </td>
           </tr>
           <tr>
@@ -45,26 +45,26 @@
           </tr>
           <tr>
             <td colspan="8">
-              <b>二、MIS科KPI考核</b>
+              <b>-</b>
             </td>
           </tr>
           <tr>
             <td>组别</td>
-            <td>MIS科</td>
+            <td>-</td>
             <td>姓名</td>
-            <td>杨文博</td>
+            <td>-</td>
             <td>职级</td>
-            <td>JY20</td>
+            <td>-</td>
             <td>职称</td>
-            <td>助理专员</td>
+            <td>-</td>
           </tr>
           <tr>
             <td>职务</td>
-            <td>程式开发</td>
+            <td>-</td>
             <td>工号</td>
-            <td>9190</td>
+            <td>-</td>
             <td colspan="2">入职日期</td>
-            <td colspan="2">2020年10月15日</td>
+            <td colspan="2">-年-月-日</td>
           </tr>
           <tr>
             <td colspan="4">团队KPI考评</td>
