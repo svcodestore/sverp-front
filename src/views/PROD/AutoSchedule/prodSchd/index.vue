@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-03-04 14:07:18
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-04-13 11:04:31
+ * @LastEditTime: 2021-05-20 13:16:58
  * @Description: Do not edit
  * @FilePath: /sverp-front/src/views/PROD/AutoSchedule/prodSchd/index.vue
 -->
@@ -198,8 +198,8 @@ export default {
             if (res.data.length) {
               const data = res.data.map(el => {
                 el.phases = el.phases.map(phs => {
-                  phs.ppi_phs_start = phs.ppi_phs_start.substr(5, 11)
-                  phs.ppi_phs_complete = phs.ppi_phs_complete.substr(5, 11)
+                  phs.ppi_phs_start = phs.ppi_phs_start?.substr(5, 11)
+                  phs.ppi_phs_complete = phs.ppi_phs_complete?.substr(5, 11)
                   return phs
                 })
                 return el
