@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:05
- * @LastEditTime: 2021-05-11 08:49:18
+ * @LastEditTime: 2021-05-25 14:38:01
  * @LastEditors: Mok.CH
  * @Description:
  * @FilePath: \sverp-front\src\locales\lang\zh-CN\index.js
@@ -31,7 +31,7 @@ const menuNodes = {
   AD: '行政部',
   MIS_IDX: 'MIS主页',
   FIN_IDX: '财务部主页',
-  BS_IDX: '业务部主页',
+  BS_IDX: '订单出库跟踪',
   TPM_IDX: '设备列表',
   'R&D_IDX': '研发部主页',
   PD_IDX: '采购看板',
