@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-23 08:54:11
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-23 16:53:59
+ * @LastEditTime: 2021-05-21 09:50:43
  * @FilePath: \sverp-front\src\views\TPM\Records\recordDetail.vue
 -->
 <template>
@@ -62,7 +62,7 @@
             <a-textarea v-model="currentRow.repairmethod" style="width:356px" placeholder="请填写维修跟进、维修方法.."></a-textarea>
           </div>
           <div>
-            有无消耗配件：
+            有无消耗配件/人工费用：
             <vxe-radio @change="fittingName()" name="isrow" content="有"></vxe-radio>
             <vxe-radio @change="fittingArr = null" name="isrow" content="无"></vxe-radio>
             <br />
