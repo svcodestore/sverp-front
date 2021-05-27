@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:27:12
- * @LastEditTime: 2021-05-27 09:52:14
+ * @LastEditTime: 2021-05-27 11:10:31
  * @LastEditors: yanbuw1911
  * @Description: 参考 vxe-grid
  * @FilePath: /sverp-front/src/components/SV/SvGrid/props.js
@@ -137,14 +137,14 @@ const svGridProps = {
     default: () => true
   },
   rowDraggable: {
-    type: Boolean,
+    type: Object,
     default: () => ({
       enable: false,
       mode: 'row'
     })
   },
   colDraggable: {
-    type: Boolean,
+    type: Object,
     default: () => ({ enable: true })
   },
   addItem: { type: [Object, Function], default: () => ({}) },
