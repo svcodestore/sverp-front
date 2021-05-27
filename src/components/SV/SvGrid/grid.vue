@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-05-26 17:21:20
+ * @LastEditTime: 2021-05-27 09:32:50
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: /sverp-front/src/components/SV/SvGrid/grid.vue
@@ -226,8 +226,14 @@ export default {
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
           this.columns[idx].filters = col.editRender.options
         }
+
+        // 默认开启进入编辑模式，自动选中内容
+        if (col.editRender && col.editRender.autoselect === void 0) {
+          col.editRender.autoselect = true
+        }
       })
-      this.rowDraggable &&
+      this.rowDraggable.enable &&
+        this.rowDraggable.mode === 'cell' &&
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.columns.unshift({
           width: 40,
@@ -600,6 +606,7 @@ export default {
           $table.$el.querySelector('.body--wrapper>.vxe-table--header .vxe-header--row'),
           {
             handle: '.vxe-header--column:not(.col--fixed)',
+            animation: 150,
             onEnd: ({ item, newIndex, oldIndex }) => {
               const { fullColumn, tableColumn } = $table.getTableColumn()
               const targetThElem = item
@@ -629,8 +636,21 @@ export default {
     rowDrop () {
       this.$nextTick(() => {
         const xTable = this.$refs.xGrid
+        let clsname
+        switch (this.rowDraggable.mode) {
+          case 'row':
+            clsname = '.vxe-body--row'
+            break
+          case 'cell':
+            clsname = '.svgrid-drag-icon'
+            break
+          default:
+            clsname = '.vxe-body--row'
+            break
+        }
         this.rowDropSortable = Sortable.create(xTable.$el.querySelector('.body--wrapper>.vxe-table--body tbody'), {
-          handle: '.svgrid-drag-icon',
+          handle: clsname,
+          animation: 150,
           onEnd: ({ newIndex, oldIndex }) => {
             const currRow = this.gridData.splice(oldIndex, 1)[0]
             this.data.splice(newIndex, 0, currRow)
@@ -641,8 +661,21 @@ export default {
     treeDrop () {
       this.$nextTick(() => {
         const xTable = this.$refs.xGrid
+        let clsname
+        switch (this.rowDraggable.mode) {
+          case 'row':
+            clsname = '.vxe-body--row'
+            break
+          case 'cell':
+            clsname = '.svgrid-drag-icon'
+            break
+          default:
+            clsname = '.vxe-body--row'
+            break
+        }
         this.treeDropSortable = Sortable.create(xTable.$el.querySelector('.body--wrapper>.vxe-table--body tbody'), {
-          handle: '.svgrid-drag-icon',
+          handle: clsname,
+          animation: 150,
           onEnd: ({ item, oldIndex }) => {
             const options = { children: 'children' }
             const targetTrElem = item
@@ -682,17 +715,17 @@ export default {
     }
   },
   created () {
-    this.colDraggable && this.columnDrop()
-    this.rowDraggable && (this.treeConfig ? this.treeDrop() : this.rowDrop())
+    this.colDraggable.enable && this.columnDrop()
+    this.rowDraggable.enable && (this.treeConfig ? this.treeDrop() : this.rowDrop())
   },
   beforeDestroy () {
-    if (this.colDraggable && this.colDropSortable) {
+    if (this.colDraggable.enable && this.colDropSortable) {
       this.colDropSortable.destroy()
     }
-    if (this.rowDraggable && this.rowDropSortable) {
+    if (this.rowDraggable.enable && this.rowDropSortable) {
       this.rowDropSortable.destroy()
     }
-    if (this.rowDraggable && this.treeDropSortable) {
+    if (this.rowDraggable.enable && this.treeDropSortable) {
       this.treeDropSortable.destroy()
     }
   },

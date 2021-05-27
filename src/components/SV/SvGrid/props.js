@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:27:12
- * @LastEditTime: 2021-05-26 17:19:06
+ * @LastEditTime: 2021-05-27 09:52:14
  * @LastEditors: yanbuw1911
  * @Description: 参考 vxe-grid
  * @FilePath: /sverp-front/src/components/SV/SvGrid/props.js
@@ -35,7 +35,17 @@ const gridProps = {
     type: Object,
     default: () => ({ isArrow: true, isDel: true, isEnter: true, isTab: true, isEdit: true })
   },
-  editConfig: { type: Object, default: () => ({ trigger: 'dblclick', mode: 'cell', showStatus: true }) },
+  editConfig: {
+    type: Object,
+    default: () => ({
+      trigger: 'dblclick',
+      mode: 'cell',
+      showStatus: true,
+      showUpdateStatus: true,
+      showInsertStatus: true,
+      showAsterisk: true
+    })
+  },
   maxHeight: [Number, String],
   size: String,
   loading: Boolean,
@@ -128,11 +138,14 @@ const svGridProps = {
   },
   rowDraggable: {
     type: Boolean,
-    default: () => false
+    default: () => ({
+      enable: false,
+      mode: 'row'
+    })
   },
   colDraggable: {
     type: Boolean,
-    default: () => false
+    default: () => ({ enable: true })
   },
   addItem: { type: [Object, Function], default: () => ({}) },
   operatorFields: { type: Object, default: () => ({}) },

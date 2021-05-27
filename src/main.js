@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-10-27 17:02:14
- * @LastEditTime: 2021-05-05 13:41:30
- * @LastEditors: Mok.CH
+ * @LastEditTime: 2021-05-27 09:03:10
+ * @LastEditors: yanbuw1911
  * @Description:
- * @FilePath: \sverp-front\src\main.js
+ * @FilePath: /sverp-front/src/main.js
  */
 // with polyfills
 import 'core-js/stable'
@@ -34,6 +34,13 @@ import 'vxe-table/lib/style.css'
 // 自定义 vxetable 渲染器
 // import VXETableEditExtend from './components/VxeTableExtend/autocomplete'
 // VXETableEditExtend(VXETable)
+
+VXETable.interceptor.add('event.clearActived', ({ $event }) => {
+  // 比如点击了某个组件的弹出层面板之后，此时被激活单元格不应该被自动关闭，通过返回 false 可以阻止默认的行为。
+  if ($event.target.className.indexOf('ant-select-dropdown-menu-item') > -1) {
+    return false
+  }
+})
 Vue.use(VXETable)
 Vue.use(ElementUI)
 // eslint-disable-next-line import/first
