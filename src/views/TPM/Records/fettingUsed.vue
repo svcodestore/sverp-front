@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-22 15:58:09
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-23 11:15:29
+ * @LastEditTime: 2021-06-02 09:59:00
  * @FilePath: \sverp-front\src\views\TPM\Records\fettingUsed.vue
 -->
 <template>
@@ -32,8 +32,28 @@ export default {
         data: [],
         columns: [
           { field: 'fitting_name', title: '配件名' },
-          { field: 'count', title: '使用量' },
-          { field: 'price', title: '单价' },
+          {
+            field: 'count',
+            title: '使用量',
+            slots: {
+              default: ({ row }) => {
+                if (row.fitting_id === 13) {
+                  return ''
+                }
+              }
+            }
+          },
+          {
+            field: 'price',
+            title: '单价',
+            slots: {
+              default: ({ row }) => {
+                if (row.fitting_id === 13) {
+                  return ''
+                }
+              }
+            }
+          },
           {
             field: '',
             title: '总价',
@@ -60,7 +80,9 @@ export default {
       let sumCount = 0
       if (this.tableOptions.data.length > 0) {
         for (const item of this.tableOptions.data) {
-          sumCount += item.count
+          if (item.fitting_id !== 13) {
+            sumCount += item.count
+          }
           sumPrice += (item.price * item.count)
         }
       }
