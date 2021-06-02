@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:27:12
- * @LastEditTime: 2021-03-04 15:50:59
+ * @LastEditTime: 2021-05-27 11:10:31
  * @LastEditors: yanbuw1911
  * @Description: 参考 vxe-grid
  * @FilePath: /sverp-front/src/components/SV/SvGrid/props.js
@@ -35,7 +35,17 @@ const gridProps = {
     type: Object,
     default: () => ({ isArrow: true, isDel: true, isEnter: true, isTab: true, isEdit: true })
   },
-  editConfig: { type: Object, default: () => ({ trigger: 'dblclick', mode: 'cell', showStatus: true }) },
+  editConfig: {
+    type: Object,
+    default: () => ({
+      trigger: 'dblclick',
+      mode: 'cell',
+      showStatus: true,
+      showUpdateStatus: true,
+      showInsertStatus: true,
+      showAsterisk: true
+    })
+  },
   maxHeight: [Number, String],
   size: String,
   loading: Boolean,
@@ -56,8 +66,8 @@ const gridProps = {
   mergeCells: Array,
   mergeFooterItems: Array,
   showFooterOverflow: [Boolean, String],
-  columnKey: Boolean,
-  rowKey: Boolean,
+  columnKey: { type: Boolean, default: () => true },
+  rowKey: { type: Boolean, default: () => true },
   columnConfig: Object,
   seqConfig: Object,
   sortConfig: Object,
@@ -125,6 +135,17 @@ const svGridProps = {
   isAllowDel: {
     type: Boolean,
     default: () => true
+  },
+  rowDraggable: {
+    type: Object,
+    default: () => ({
+      enable: false,
+      mode: 'row'
+    })
+  },
+  colDraggable: {
+    type: Object,
+    default: () => ({ enable: true })
   },
   addItem: { type: [Object, Function], default: () => ({}) },
   operatorFields: { type: Object, default: () => ({}) },

@@ -37,6 +37,7 @@
     "print-js": "^1.5.0",
     "qrcodejs2": "^0.0.2",
     "qs": "^6.9.4",
+    "sortablejs": "^1.13.0",
     "spark-md5": "^3.0.1",
     "store": "^2.0.12",
     "three": "^0.124.0",
@@ -50,9 +51,9 @@
     "vue-router": "^3.1.2",
     "vue-svg-component-runtime": "^1.0.1",
     "vuex": "^3.1.1",
-    "vxe-table": "^3.1.8",
+    "vxe-table": "^3.3.4",
     "wangeditor": "^3.1.1",
-    "xe-utils": "^3.1.8",
+    "xe-utils": "^3.2.1",
     "xlsx": "^0.16.8"
   },
   "devDependencies": {

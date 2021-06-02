@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-05-18 15:25:41
+ * @LastEditTime: 2021-05-27 09:32:50
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: /sverp-front/src/components/SV/SvGrid/grid.vue
@@ -118,8 +118,10 @@
 
 <script>
 /* eslint-disable no-unused-expressions */
-import { toString, clone, toArrayTree } from 'xe-utils'
+import { toString, clone, toArrayTree, findTree } from 'xe-utils'
 import { gridProps, svGridProps } from './props'
+
+import Sortable from 'sortablejs'
 
 export default {
   props: {
@@ -128,6 +130,7 @@ export default {
   },
   data () {
     return {
+      showRowDropHelpTip: false,
       isMaxSize: false,
       currRow: null,
       popconfirmDisabled: true,
@@ -146,7 +149,7 @@ export default {
   computed: {
     // 表格属性
     attrs () {
-      const { filteredData, wrappedColumns, defaultAttrs, treeConfig } = this
+      const { gridData, wrappedColumns, defaultAttrs } = this
 
       const o = {}
       Object.keys(gridProps).forEach(prop => {
@@ -157,14 +160,19 @@ export default {
 
       return Object.assign(o, {
         columns: wrappedColumns,
-        data: treeConfig
-          ? toArrayTree(
-              filteredData,
-              Object.assign({ key: 'id', parentKey: 'pid', children: 'children' }, treeConfig.options)
-            )
-          : filteredData,
+        data: gridData,
         ...defaultAttrs
       })
+    },
+    gridData () {
+      const { filteredData, treeConfig } = this
+
+      return treeConfig
+        ? toArrayTree(
+            filteredData,
+            Object.assign({ key: 'id', parentKey: 'pid', children: 'children' }, treeConfig.options)
+          )
+        : filteredData
     },
     // 过滤后的数据
     filteredData () {
@@ -218,7 +226,33 @@ export default {
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
           this.columns[idx].filters = col.editRender.options
         }
+
+        // 默认开启进入编辑模式，自动选中内容
+        if (col.editRender && col.editRender.autoselect === void 0) {
+          col.editRender.autoselect = true
+        }
       })
+      this.rowDraggable.enable &&
+        this.rowDraggable.mode === 'cell' &&
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.columns.unshift({
+          width: 40,
+          slots: {
+            default: () => {
+              return [<a-icon type="drag" class="svgrid-drag-icon" />]
+            },
+            header: () => {
+              return [
+                <a-tooltip placement="top">
+                  <template slot="title">
+                    <span>按住图标来拖动排序</span>
+                  </template>
+                  <a-icon type="question-circle" />
+                </a-tooltip>
+              ]
+            }
+          }
+        })
 
       return this.columns
     },
@@ -564,6 +598,135 @@ export default {
             icon: <a-icon type="frown" style="color: #108ee9" />
           })
         })
+    },
+    columnDrop () {
+      this.$nextTick(() => {
+        const $table = this.$refs.xGrid
+        this.colDropSortable = Sortable.create(
+          $table.$el.querySelector('.body--wrapper>.vxe-table--header .vxe-header--row'),
+          {
+            handle: '.vxe-header--column:not(.col--fixed)',
+            animation: 150,
+            onEnd: ({ item, newIndex, oldIndex }) => {
+              const { fullColumn, tableColumn } = $table.getTableColumn()
+              const targetThElem = item
+              const wrapperElem = targetThElem.parentNode
+              const newColumn = fullColumn[newIndex]
+              if (newColumn.fixed) {
+                // 错误的移动
+                if (newIndex > oldIndex) {
+                  wrapperElem.insertBefore(targetThElem, wrapperElem.children[oldIndex])
+                } else {
+                  wrapperElem.insertBefore(wrapperElem.children[oldIndex], targetThElem)
+                }
+                return this.$message('固定列不允许拖动！')
+              }
+              // 转换真实索引
+              const oldColumnIndex = $table.getColumnIndex(tableColumn[oldIndex])
+              const newColumnIndex = $table.getColumnIndex(tableColumn[newIndex])
+              // 移动到目标列
+              const currRow = fullColumn.splice(oldColumnIndex, 1)[0]
+              fullColumn.splice(newColumnIndex, 0, currRow)
+              $table.loadColumn(fullColumn)
+            }
+          }
+        )
+      })
+    },
+    rowDrop () {
+      this.$nextTick(() => {
+        const xTable = this.$refs.xGrid
+        let clsname
+        switch (this.rowDraggable.mode) {
+          case 'row':
+            clsname = '.vxe-body--row'
+            break
+          case 'cell':
+            clsname = '.svgrid-drag-icon'
+            break
+          default:
+            clsname = '.vxe-body--row'
+            break
+        }
+        this.rowDropSortable = Sortable.create(xTable.$el.querySelector('.body--wrapper>.vxe-table--body tbody'), {
+          handle: clsname,
+          animation: 150,
+          onEnd: ({ newIndex, oldIndex }) => {
+            const currRow = this.gridData.splice(oldIndex, 1)[0]
+            this.data.splice(newIndex, 0, currRow)
+          }
+        })
+      })
+    },
+    treeDrop () {
+      this.$nextTick(() => {
+        const xTable = this.$refs.xGrid
+        let clsname
+        switch (this.rowDraggable.mode) {
+          case 'row':
+            clsname = '.vxe-body--row'
+            break
+          case 'cell':
+            clsname = '.svgrid-drag-icon'
+            break
+          default:
+            clsname = '.vxe-body--row'
+            break
+        }
+        this.treeDropSortable = Sortable.create(xTable.$el.querySelector('.body--wrapper>.vxe-table--body tbody'), {
+          handle: clsname,
+          animation: 150,
+          onEnd: ({ item, oldIndex }) => {
+            const options = { children: 'children' }
+            const targetTrElem = item
+            const wrapperElem = targetTrElem.parentNode
+            const prevTrElem = targetTrElem.previousElementSibling
+            const tableTreeData = this.gridData
+            const selfRow = xTable.getRowNode(targetTrElem).item
+            const selfNode = findTree(tableTreeData, row => row === selfRow, options)
+            if (prevTrElem) {
+              // 移动到节点
+              const prevRow = xTable.getRowNode(prevTrElem).item
+              const prevNode = findTree(tableTreeData, row => row === prevRow, options)
+              if (findTree(selfRow[options.children], row => prevRow === row, options)) {
+                // 错误的移动
+                const oldTrElem = wrapperElem.children[oldIndex]
+                wrapperElem.insertBefore(targetTrElem, oldTrElem)
+                return this.$message('不允许自己给自己拖动！')
+              }
+              const currRow = selfNode.items.splice(selfNode.index, 1)[0]
+              if (xTable.isTreeExpandByRow(prevRow)) {
+                // 移动到当前的子节点
+                prevRow[options.children].splice(0, 0, currRow)
+              } else {
+                // 移动到相邻节点
+                prevNode.items.splice(prevNode.index + (selfNode.index < prevNode.index ? 0 : 1), 0, currRow)
+              }
+            } else {
+              // 移动到第一行
+              const currRow = selfNode.items.splice(selfNode.index, 1)[0]
+              tableTreeData.unshift(currRow)
+            }
+            // 如果变动了树层级，需要刷新数据
+            this.gridData = [...tableTreeData]
+          }
+        })
+      })
+    }
+  },
+  created () {
+    this.colDraggable.enable && this.columnDrop()
+    this.rowDraggable.enable && (this.treeConfig ? this.treeDrop() : this.rowDrop())
+  },
+  beforeDestroy () {
+    if (this.colDraggable.enable && this.colDropSortable) {
+      this.colDropSortable.destroy()
+    }
+    if (this.rowDraggable.enable && this.rowDropSortable) {
+      this.rowDropSortable.destroy()
+    }
+    if (this.rowDraggable.enable && this.treeDropSortable) {
+      this.treeDropSortable.destroy()
     }
   },
   updated () {
