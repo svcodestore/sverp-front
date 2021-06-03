@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-15 07:53:23
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-04-21 17:02:36
+ * @LastEditTime: 2021-06-03 09:16:06
  * @FilePath: \sverp-front\src\views\TPM\Fittings\index.vue
 -->
 <template>
@@ -73,7 +73,7 @@ export default {
           },
           {
             field: 'is_unlimit',
-            title: '非实物配件',
+            title: '不减库存',
             width: 120,
             fixed: 'left',
             editRender: {
