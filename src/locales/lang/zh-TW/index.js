@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 09:56:33
- * @LastEditTime: 2021-05-25 14:38:33
+ * @LastEditTime: 2021-06-02 10:39:37
  * @LastEditors: Mok.CH
  * @Description:
  * @FilePath: \sverp-front\src\locales\lang\zh-TW\index.js
@@ -72,7 +72,9 @@ const menuNodes = {
   DCS_LIST1: '流程作業指導書',
   DCS_LIST2: '工序標準作業票',
   DCS_LIST3: '設備操作規範',
-  DCS_LIST4: '品管作業指導書'
+  DCS_LIST4: '品管作業指導書',
+  HRD_ZTIME: '考勤機',
+  HRD_ZKTIME_USERS: '考勤人員'
 }
 
 const svGrid = {
