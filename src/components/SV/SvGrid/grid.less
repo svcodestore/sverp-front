@@ -2,6 +2,11 @@
   margin-bottom: 15px;
 }
 
+.toolbar-container-invisible {
+  border: 2px solid #12300011;
+  cursor: pointer;
+}
+
 .toolbar-container {
   display: flex;
   margin-bottom: 2px;
@@ -53,8 +58,10 @@
 }
 
 .visible-columns {
+  overflow: auto;
   display: flex;
-  width: 110px;
+  min-width: 110px;
+  max-height: 25rem;
   flex-direction: column-reverse;
   position: absolute;
   right: 0;

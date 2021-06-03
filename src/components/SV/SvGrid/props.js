@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:27:12
- * @LastEditTime: 2021-05-27 11:10:31
+ * @LastEditTime: 2021-06-03 10:05:29
  * @LastEditors: yanbuw1911
  * @Description: 参考 vxe-grid
  * @FilePath: /sverp-front/src/components/SV/SvGrid/props.js
@@ -162,6 +162,10 @@ const svGridProps = {
   editActivedEvt: {
     type: Function,
     default: () => () => {}
+  },
+  toolDropdown: {
+    type: Boolean,
+    default: () => false
   }
 }
 
