@@ -2,9 +2,9 @@
  * @Author: yanbuw1911
  * @Date: 2021-06-03 11:06:47
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-06-03 14:37:42
+ * @LastEditTime: 2021-06-10 09:54:28
  * @Description: 考勤代扣
- * @FilePath: /sverp-front/src/views/HRD/KPI/setting/JSTW_Commute/commute.vue
+ * @FilePath: \sverp-front\src\views\HRD\KPI\setting\JSTW_Commute\commute.vue
 -->
 <template>
   <div>
@@ -56,7 +56,6 @@ export default {
         showHeaderOverflow: false,
         toolDropdown: true,
         loading: false,
-        printConfig: {},
         data: [],
         columnConfig: {
           width: 90
@@ -73,7 +72,7 @@ export default {
                     width: 60
                   },
                   {
-                    field: 'dismissDeduction',
+                    field: 'jcd_staff_no',
                     title: '員工編號'
                   },
                   {

@@ -1,10 +1,10 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-06-03 11:20:57
+ * @LastEditTime: 2021-06-10 10:47:36
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
- * @FilePath: /sverp-front/src/components/SV/SvGrid/grid.vue
+ * @FilePath: \sverp-front\src\components\SV\SvGrid\grid.vue
 -->
 <template>
   <vxe-grid ref="xGrid" v-bind="attrs" v-on="events">
@@ -158,7 +158,7 @@ export default {
       currRow: null,
       popconfirmDisabled: true,
       saveBtnLoading: false,
-      originData: null,
+      originData: [],
       isManyColumn: false,
       filterStr: ''
     }
