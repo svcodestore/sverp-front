@@ -1,16 +1,16 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-05-27 09:32:50
+ * @LastEditTime: 2021-06-10 10:47:36
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
- * @FilePath: /sverp-front/src/components/SV/SvGrid/grid.vue
+ * @FilePath: \sverp-front\src\components\SV\SvGrid\grid.vue
 -->
 <template>
   <vxe-grid ref="xGrid" v-bind="attrs" v-on="events">
     <template #toolbar>
       <slot name="toolbar">
-        <div class="toolbar-container">
+        <div class="toolbar-container" @contextmenu="toolbarInvisible" v-if="showToolbar">
           <a-button shape="circle" :title="$t('refresh')" :size="btnSize" v-if="refreshBtn" @click="_handleRefreshGrid">
             <a-icon type="reload" />
           </a-button>
@@ -106,8 +106,27 @@
                 </div>
               </template>
             </vxe-pulldown>
+            <a-dropdown :trigger="['click']" v-if="toolDropdown">
+              <a-button shape="circle" title="更多" style="margin-left: 2px;">
+                <a-icon type="more" />
+              </a-button>
+              <a-menu slot="overlay">
+                <a-menu-item
+                  key="print"
+                  @click="openPrint(printConfig)"
+                ><a-icon type="printer" /> 打印内容
+                </a-menu-item>
+                <a-sub-menu key="export">
+                  <template #title><a-icon type="export" /> 导出数据 </template>
+                  <a-menu-item key="excel" @click="exportAsXlsx"><a-icon type="file-excel" /> EXCEL</a-menu-item>
+                  <!-- <a-menu-item key="pdf" @click="exportAsPdf"><a-icon type="file-pdf" /> PDF</a-menu-item> -->
+                  <a-menu-item key="more" @click="openExport"><a-icon type="ellipsis" /> 更多格式</a-menu-item>
+                </a-sub-menu>
+              </a-menu>
+            </a-dropdown>
           </div>
         </div>
+        <div class="toolbar-container-invisible" @click="showToolbar = true" v-else></div>
       </slot>
     </template>
     <template v-for="slotname in colSlot" #[slotname]="{ row, column }">
@@ -121,6 +140,9 @@
 import { toString, clone, toArrayTree, findTree } from 'xe-utils'
 import { gridProps, svGridProps } from './props'
 
+import moment from 'moment'
+// import { jsPDF } from 'jspdf'
+import XLSX from 'xlsx'
 import Sortable from 'sortablejs'
 
 export default {
@@ -130,12 +152,13 @@ export default {
   },
   data () {
     return {
+      showToolbar: true,
       showRowDropHelpTip: false,
       isMaxSize: false,
       currRow: null,
       popconfirmDisabled: true,
       saveBtnLoading: false,
-      originData: null,
+      originData: [],
       isManyColumn: false,
       filterStr: ''
     }
@@ -181,8 +204,8 @@ export default {
       if (!filterStr) return data
 
       return data.filter(item =>
-        columns
-          .map(col => col.field)
+        this.getColumnsField(columns)
+          .flat(Infinity)
           .some(
             key =>
               toString(item[key])
@@ -220,18 +243,7 @@ export default {
     },
     // 包装父组件传过来的列属性配置
     wrappedColumns () {
-      this.columns?.forEach((col, idx) => {
-        // 如果有单选下拉框则添加下拉选项到列过滤器
-        if (col.editRender?.name === '$select' && !col.editRender?.props?.multiple) {
-          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          this.columns[idx].filters = col.editRender.options
-        }
-
-        // 默认开启进入编辑模式，自动选中内容
-        if (col.editRender && col.editRender.autoselect === void 0) {
-          col.editRender.autoselect = true
-        }
-      })
+      this.setWrapColumn(this.columns)
       this.rowDraggable.enable &&
         this.rowDraggable.mode === 'cell' &&
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
@@ -271,8 +283,28 @@ export default {
     colSlot () {
       const slots = []
 
-      this.columns?.forEach(col => {
-        if (col.slots) {
+      this.setColumnSlot(this.columns, slots)
+
+      return slots
+    },
+    /* 是否为可编辑表格 */
+    isEditable () {
+      return this.isEneableEdit(this.wrappedColumns)
+    },
+    isShowSearch () {
+      return this.searchBar && this.data.length > 7
+    }
+  },
+  methods: {
+    toolbarInvisible (e) {
+      e.preventDefault()
+      this.showToolbar = false
+    },
+    setColumnSlot (columns, slots) {
+      columns?.forEach(col => {
+        if (col.children) {
+          this.setColumnSlot(col.children, slots)
+        } else if (col.slots) {
           const { header, footer, content, filter, edit } = col.slots
           col.slots.default && slots.push(col.slots.default)
           header && slots.push(header)
@@ -282,18 +314,39 @@ export default {
           edit && slots.push(edit)
         }
       })
+    },
+    setWrapColumn (columns) {
+      columns?.forEach((col, idx) => {
+        // 如果有单选下拉框则添加下拉选项到列过滤器
+        if (col.children) {
+          this.setWrapColumn(col.children)
+        } else {
+          if (col.editRender?.name === '$select' && !col.editRender?.props?.multiple) {
+            // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+            this.columns[idx].filters = col.editRender.options
+          }
 
-      return slots
+          // 默认开启进入编辑模式，自动选中内容
+          if (col.editRender && col.editRender.autoselect === void 0) {
+            col.editRender.autoselect = true
+          }
+        }
+      })
     },
-    /* 是否为可编辑表格 */
-    isEditable () {
-      return this.wrappedColumns && this.wrappedColumns.findIndex(col => !!col.editRender) > -1
+    isEneableEdit (columns) {
+      let flag = false
+
+      flag ||=
+        columns &&
+        columns.findIndex(col => {
+          return !!col.editRender || (col.children && this.isEneableEdit(col.children))
+        }) > -1
+
+      return flag
     },
-    isShowSearch () {
-      return this.searchBar && this.data.length > 7
-    }
-  },
-  methods: {
+    getColumnsField (columns) {
+      return columns.map(col => (col.children ? this.getColumnsField(col.children) : col.field))
+    },
     /**
      * @description: 动态列筛选条件
      */
@@ -304,6 +357,50 @@ export default {
       xGrid.setFilter(column, filters)
       // 修改条件之后，需要手动调用 updateData 处理表格数据
       xGrid.updateData()
+    },
+    print (options) {
+      return this.$refs.xGrid.print(options)
+    },
+    openPrint (options) {
+      return this.$refs.xGrid.openPrint(options)
+    },
+    beforePrintMethod () {
+      return this.$refs.xGrid.beforePrintMethod()
+    },
+    exportData (options) {
+      return this.$refs.xGrid.exportData(options)
+    },
+    openExport (options) {
+      return this.$refs.xGrid.openExport(options)
+    },
+    exportAsXlsx () {
+      const wopts = {
+        bookType: 'xlsx',
+        bookSST: false,
+        type: 'binary'
+      }
+      const workBook = {
+        SheetNames: ['Sheet1'],
+        Sheets: {},
+        Props: {}
+      }
+      const data = this.data.map(e => {
+        const o = Object.assign({}, e)
+        delete o.id
+        return o
+      })
+      workBook.Sheets['Sheet1'] = XLSX.utils.json_to_sheet(data)
+      XLSX.writeFile(workBook, `${moment().format('YYYY-MM-DD HH:mm:SSS')}.xlsx`, wopts)
+    },
+    exportAsPdf () {
+      /* eslint new-cap: ["error", { "newIsCap": false }] */
+      // const doc = new jsPDF()
+      // const simkai = require('@/assets/simkai.ttf')
+      // doc.addFileToVFS('simkai.ttf', simkai)
+      // doc.addFont('simkai.ttf', 'simkai', 'normal')
+      // doc.setFont('simkai')
+      // doc.text('你好，世界！', 10, 10)
+      // doc.save('a4.pdf')
     },
     /**
      * @description: 手动处理数据（对于手动更改了排序、筛选...等条件后需要重新处理数据时可能会用到）

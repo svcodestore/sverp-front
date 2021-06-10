@@ -1,7 +1,7 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2021-01-07 14:20:06
- * @LastEditTime: 2021-05-18 15:08:08
+ * @LastEditTime: 2021-05-31 14:01:20
  * @LastEditors: yanbuw1911
  * @Description:
  * @FilePath: /sverp-front/src/api/hrd.js
@@ -36,7 +36,8 @@ const hrdApi = {
   saveRanksOpt: '/hrd/saveRanksOpt',
   getKpiScopes: '/hrd/getKpiScopes',
   saveKpiScopesOpt: '/hrd/saveKpiScopesOpt',
-  getStaffs: '/hrd/getStaffs'
+  getStaffs: '/hrd/getStaffs',
+  getKpis: '/hrd/getKpis'
 }
 
 export const getMaterialCategory = () =>
@@ -218,4 +219,10 @@ export const getStaffs = loc =>
     url: hrdApi.getStaffs,
     method: 'post',
     data: stringify({ loc })
+  })
+
+export const getKpis = () =>
+  request({
+    url: hrdApi.getKpis,
+    method: 'post'
   })

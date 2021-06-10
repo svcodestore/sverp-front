@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-04-29 08:33:54
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-05-14 15:32:15
+ * @LastEditTime: 2021-06-02 09:48:32
  * @Description: Do not edit
  * @FilePath: /sverp-front/src/views/HRD/KPI/setting/index.vue
 -->
@@ -35,7 +35,7 @@ import kpi from './kpi/'
 import employee from './employee'
 import position from './postion/'
 import scoreRule from './scoreRule/'
-import commute from './JSTW_Commute'
+import commute from './JSTW_Commute/'
 export default {
   components: {
     kpi,

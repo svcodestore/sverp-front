@@ -2,9 +2,9 @@
  * @Author: yanbuw1911
  * @Date: 2021-03-04 14:07:18
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-05-20 13:16:58
+ * @LastEditTime: 2021-06-07 13:36:17
  * @Description: Do not edit
- * @FilePath: /sverp-front/src/views/PROD/AutoSchedule/prodSchd/index.vue
+ * @FilePath: \sverp-front\src\views\PROD\AutoSchedule\prodSchd\index.vue
 -->
 <template>
   <div>
@@ -171,14 +171,16 @@ export default {
             const url = URL.createObjectURL(blob)
             window.open(url)
           })
-          .catch(() => {})
+          .catch(() => {
+            this.genReportLoading = false
+          })
         this.genReportLoading = false
       } else {
         printjs({
           printable: 'dataShowStyle2',
           type: 'html',
-          header: `<center><h2>${this.prodDate.format('YYYY-MM')} 排程计划报表</h2></center>`,
-          style: '#dataShowStyle2 table { margin: 25px 0; border-top: 1px solid rgba(0, 0, 0, 0.377); }'
+          header: `<center><h1>${this.prodDate.format('YYYY-MM')} 排程计划报表</h1></center>`,
+          style: '#dataShowStyle2 table { margin: 4rem 0; border-top: 1px solid rgba(0, 0, 0, 0.377); }'
         })
       }
     },
@@ -227,6 +229,7 @@ export default {
             description: err.response.data.message,
             icon: <a-icon type="frown" style="color: #108ee9" />
           })
+          this.autoSchdLoading = false
         })
 
       this.autoSchdLoading = false
