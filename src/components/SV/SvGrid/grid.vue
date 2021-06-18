@@ -1,10 +1,10 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-06-10 10:47:36
+ * @LastEditTime: 2021-06-18 10:03:28
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
- * @FilePath: \sverp-front\src\components\SV\SvGrid\grid.vue
+ * @FilePath: /sverp-front/src/components/SV/SvGrid/grid.vue
 -->
 <template>
   <vxe-grid ref="xGrid" v-bind="attrs" v-on="events">
@@ -389,7 +389,8 @@ export default {
         delete o.id
         return o
       })
-      workBook.Sheets['Sheet1'] = XLSX.utils.json_to_sheet(data)
+
+      workBook.Sheets['Sheet1'] = XLSX.utils.json_to_sheet(data, { skipHeader: true })
       XLSX.writeFile(workBook, `${moment().format('YYYY-MM-DD HH:mm:SSS')}.xlsx`, wopts)
     },
     exportAsPdf () {
