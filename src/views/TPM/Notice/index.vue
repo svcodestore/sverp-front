@@ -6,13 +6,13 @@
 -->
 <template>
   <div>
-    <vxe-toolbar v-show="showSearch">
+    <vxe-toolbar v-show="false">
       <template v-slot:buttons>
         <vxe-input v-model="filterName" type="search" placeholder="全表搜索"></vxe-input>
         <vxe-button @click="other">其它部门</vxe-button>
       </template>
     </vxe-toolbar>
-    <vxe-table v-show="show" :loading="loading" ref="xTree" height="500" :data="list">
+    <vxe-table v-show="false" :loading="loading" ref="xTree" height="500" :data="list">
       <vxe-table-column field="id" width="100" title="ID" sortable></vxe-table-column>
       <vxe-table-column field="line_num" width="100" title="制造线" sortable> </vxe-table-column>
       <vxe-table-column field="produc_num" width="100" title="工程" sortable> </vxe-table-column>

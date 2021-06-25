@@ -32,7 +32,7 @@ const menuNodes = {
   MIS_IDX: '電腦部主頁',
   FIN_IDX: '財務部主頁',
   BS_IDX: '訂單出庫跟蹤',
-  TPM_IDX: '設備列表',
+  TPM_IDX: 'TPM設備资产管理',
   'R&D_IDX': '研發部主頁',
   PD_IDX: '採購部看板',
   PMD_IDX: '倉庫入庫看板',
