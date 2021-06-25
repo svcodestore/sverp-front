@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-06-18 10:03:28
+ * @LastEditTime: 2021-06-25 16:25:13
  * @LastEditors: yanbuw1911
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: /sverp-front/src/components/SV/SvGrid/grid.vue
@@ -111,10 +111,8 @@
                 <a-icon type="more" />
               </a-button>
               <a-menu slot="overlay">
-                <a-menu-item
-                  key="print"
-                  @click="openPrint(printConfig)"
-                ><a-icon type="printer" /> 打印内容
+                <a-menu-item key="print" @click="openPrint(printConfig)">
+                  <a-icon type="printer" /> 打印内容
                 </a-menu-item>
                 <a-sub-menu key="export">
                   <template #title><a-icon type="export" /> 导出数据 </template>
@@ -122,6 +120,7 @@
                   <!-- <a-menu-item key="pdf" @click="exportAsPdf"><a-icon type="file-pdf" /> PDF</a-menu-item> -->
                   <a-menu-item key="more" @click="openExport"><a-icon type="ellipsis" /> 更多格式</a-menu-item>
                 </a-sub-menu>
+                <slot name="rightmenu"></slot>
               </a-menu>
             </a-dropdown>
           </div>
@@ -230,7 +229,7 @@ export default {
       return defaultAttrs
     },
     mergedEditConfig () {
-      return Object.assign({ trigger: 'dblclick', mode: 'cell', showStatus: true }, this.editConfig)
+      return Object.assign({ trigger: 'dblclick', mode: 'cell' }, this.editConfig)
     },
     mergedMouseConfig () {
       return Object.assign({ selected: true }, this.mouseConfig)
@@ -384,7 +383,7 @@ export default {
         Sheets: {},
         Props: {}
       }
-      const data = this.data.map(e => {
+      const data = this.$refs.xGrid.getTableData().visibleData.map(e => {
         const o = Object.assign({}, e)
         delete o.id
         return o

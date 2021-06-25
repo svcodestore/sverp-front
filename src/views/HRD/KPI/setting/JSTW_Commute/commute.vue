@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-06-03 11:06:47
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-06-18 11:33:12
+ * @LastEditTime: 2021-06-25 17:00:02
  * @Description: 考勤代扣
  * @FilePath: /sverp-front/src/views/HRD/KPI/setting/JSTW_Commute/commute.vue
 -->
@@ -16,17 +16,27 @@
         :loading="loading"
         @change="handleChange"
       >
-        <a-select-option v-for="version in versions" :key="version" :value="version">
-          {{ version }}
-        </a-select-option>
         <a-select-option value="now">
           当前（新建）
         </a-select-option>
+        <a-select-option v-for="version in versions" :key="version.jcd_created_at" :value="version.jcd_created_at">
+          {{ version.jcd_created_at }}
+        </a-select-option>
       </a-select>
-      <a-button type="primary" ghost v-if="isShowSync" title="如数据异常，点击按钮来更新数据。">同步数据</a-button>
+      <a-button
+        type="primary"
+        ghost
+        v-if="isShowSync"
+        title="如数据异常，点击按钮来更新数据。"
+        @click="syncData"
+        :loading="syncLoading"
+        :disabled="loading"
+      >
+        同步数据
+      </a-button>
     </a-space>
     <a-divider v-if="isShowGrid" orientation="left">修改完成后，点击保存按钮提交给后台保存当前版本。</a-divider>
-    <sv-grid v-bind="gridOptions" v-on="gridEvts" ref="grid" v-if="isShowGrid">
+    <sv-grid v-bind="gridOptions" ref="grid" v-on="gridEvents" v-if="isShowGrid">
       <template #joinDate="{row, column}">
         {{ row[column.property] | datefmt }}
       </template>
@@ -98,8 +108,14 @@
 </template>
 
 <script>
-import { getInsuranceDeduction, saveDetailedDeductionOpt } from '@/api/jstw'
+import {
+  getDeductionVerions,
+  getDetailedDeductionByVersion,
+  getInsuranceDeduction,
+  saveDetailedDeductionOpt
+} from '@/api/jstw'
 
+import XLSX from 'xlsx'
 import moment from 'moment'
 
 export default {
@@ -112,6 +128,7 @@ export default {
     return {
       datetime: void 0,
       loading: false,
+      syncLoading: false,
       isShowGrid: false,
       isShowSync: false,
       versions: [],
@@ -123,17 +140,20 @@ export default {
         showHeaderOverflow: false,
         toolDropdown: true,
         loading: false,
+        refreshBtn: false,
+        handleInsert: this.handleInsert,
         handleSaveOpt: saveDetailedDeductionOpt,
         data: [],
+        editConfig: {},
         columnConfig: {
-          width: 90
+          width: 100
         },
         columns: [
           {
-            title: 'JSTW 核薪考勤代扣款月明細',
+            title: moment().format('YYYY年M月') + ' JSTW 核薪考勤代扣款月明細',
             children: [
               {
-                title: '應出勤天數：',
+                title: '應出勤天數：' + moment().daysInMonth(),
                 children: [
                   {
                     type: 'seq',
@@ -141,11 +161,17 @@ export default {
                   },
                   {
                     field: 'jcd_staff_no',
-                    title: '員工編號'
+                    title: '員工編號',
+                    editRender: {
+                      name: 'input'
+                    }
                   },
                   {
                     field: 'jcd_staff_name',
-                    title: '姓名'
+                    title: '姓名',
+                    editRender: {
+                      name: 'input'
+                    }
                   },
                   {
                     field: 'jcd_join_date',
@@ -159,7 +185,8 @@ export default {
                         type: 'date',
                         placeholder: '请选择日期'
                       }
-                    }
+                    },
+                    width: 160
                   }
                 ]
               },
@@ -301,54 +328,134 @@ export default {
                     title: '請假扣款明細(所得扣項)',
                     children: [
                       {
-                        field: 'jcd_leave_time',
-                        title: '事假時數',
-                        editRender: {
-                          name: 'input',
-                          attrs: {
-                            type: 'number'
+                        title: '扣全薪',
+                        children: [
+                          {
+                            field: 'jcd_leave_time',
+                            title: '事假',
+                            editRender: {
+                              name: 'input',
+                              attrs: {
+                                type: 'number'
+                              }
+                            }
+                          },
+                          {
+                            field: 'jcd_struggle_epidemic_time',
+                            title: '防疫假',
+                            editRender: {
+                              name: 'input',
+                              attrs: {
+                                type: 'number'
+                              }
+                            }
                           }
-                        }
+                        ]
                       },
                       {
-                        field: 'jcd_sick_time',
-                        title: '病假時數',
-                        editRender: {
-                          name: 'input',
-                          attrs: {
-                            type: 'number'
+                        title: '扣半薪',
+                        children: [
+                          {
+                            field: 'jcd_sick_time',
+                            title: '病假',
+                            editRender: {
+                              name: 'input',
+                              attrs: {
+                                type: 'number'
+                              }
+                            }
+                          },
+                          {
+                            field: 'jcd_physiology_sick_time',
+                            title: '生理假',
+                            editRender: {
+                              name: 'input',
+                              attrs: {
+                                type: 'number'
+                              }
+                            }
                           }
-                        }
+                        ]
                       },
                       {
-                        field: 'jcd_rest_time',
-                        title: '特休',
-                        editRender: {
-                          name: 'input',
-                          attrs: {
-                            type: 'number'
+                        title: '無薪假',
+                        children: [
+                          {
+                            field: 'jcd_unpaid_leave_time',
+                            title: '無薪假',
+                            editRender: {
+                              name: 'input',
+                              attrs: {
+                                type: 'number'
+                              }
+                            }
                           }
-                        }
+                        ]
                       },
                       {
-                        field: 'jcd_paid_leave',
                         title: '有薪假',
-                        editRender: {
-                          name: 'input',
-                          attrs: {
-                            type: 'number'
+                        children: [
+                          {
+                            field: 'jcd_rest_time',
+                            title: '特休',
+                            editRender: {
+                              name: 'input',
+                              attrs: {
+                                type: 'number'
+                              }
+                            }
+                          },
+                          {
+                            field: 'jcd_exchange_rest_time',
+                            title: '調休',
+                            editRender: {
+                              name: 'input',
+                              attrs: {
+                                type: 'number'
+                              }
+                            }
+                          },
+                          {
+                            field: 'jcd_funeral_leave_time',
+                            title: '喪假',
+                            editRender: {
+                              name: 'input',
+                              attrs: {
+                                type: 'number'
+                              }
+                            }
+                          },
+                          {
+                            field: 'jcd_lactation_leave_time',
+                            title: '產假',
+                            editRender: {
+                              name: 'input',
+                              attrs: {
+                                type: 'number'
+                              }
+                            }
+                          },
+                          {
+                            field: 'jcd_public_leave_time',
+                            title: '公假',
+                            editRender: {
+                              name: 'input',
+                              attrs: {
+                                type: 'number'
+                              }
+                            }
+                          },
+                          {
+                            field: 'jcd_marriage_leave_time',
+                            title: '婚假',
+                            editRender: {
+                              name: 'input',
+                              attrs: {
+                                type: 'number'
+                              }
+                            }
                           }
-                        }
-                      },
-                      {
-                        field: 'jcd_unpaid_leave',
-                        title: '無薪假時數',
-                        editRender: {
-                          name: 'input',
-                          attrs: {
-                            type: 'number'
-                          }
-                        }
+                        ]
                       }
                     ]
                   }
@@ -395,7 +502,8 @@ export default {
                 },
                 slots: {
                   edit: 'jcd_estimated_labor_insurance'
-                }
+                },
+                width: 160
               },
               {
                 field: 'jcd_labor_insurance',
@@ -413,7 +521,8 @@ export default {
                 editRender: {},
                 slots: {
                   edit: 'jcd_estimated_health_insurance'
-                }
+                },
+                width: 160
               },
               {
                 field: 'jcd_family_health_insurance',
@@ -446,7 +555,8 @@ export default {
                 },
                 slots: {
                   edit: 'jcd_estimated_dismiss_obtain'
-                }
+                },
+                width: 160
               },
               {
                 field: 'jcd_dismiss_obtain',
@@ -489,8 +599,8 @@ export default {
           }
         ]
       },
-      gridEvts: {
-        refresh: this.getData
+      gridEvents: {
+        refresh: this.handleRefresh
       }
     }
   },
@@ -499,20 +609,35 @@ export default {
       return option.componentOptions.children[0].text.toUpperCase().indexOf(input.toUpperCase()) >= 0
     },
     async handleChange (v) {
+      this.loading = true
       if (!this.isShowGrid) {
         this.isShowGrid = true
       }
-      if (v === 'now') {
-        this.isShowSync = true
+      if (v !== 'now') {
+        this.gridOptions.loading = true
+        await getDetailedDeductionByVersion(v).then(({ result, data }) => {
+          if (result) {
+            this.$refs.grid.$refs.xGrid.reloadData([]).then(() => {
+              this.$refs.grid.$refs.xGrid.insertAt(data, -1)
+            })
+          }
+        })
+        this.gridOptions.loading = false
+      } else {
+        this.gridOptions.data = []
       }
+      this.loading = false
+      this.isShowSync = true
     },
-    async getData () {
+    async syncData () {
+      this.syncLoading = true
       this.gridOptions.loading = true
-      const invisiblePersons = ['JS0212', 'JS0016', 'JS0127', 'JS0153']
+      // const invisiblePersons = ['JS0212', 'JS0016', 'JS0127', 'JS0153']
+      const invisiblePersons = []
       await this.$axios
         .post('http://192.168.123.51:9600/webApi/test/dbfreader', this.$qs.stringify({ loc: 'JS' }))
         .then(res => {
-          this.gridOptions.data = res
+          const data = res
             .sort((a, b) => a.staffNo.substr(2) - b.staffNo.substr(2))
             .filter(e => !invisiblePersons.includes(e.staffNo))
             .map(e => {
@@ -520,26 +645,49 @@ export default {
               o.jcd_staff_no = e.staffNo
               o.jcd_staff_name = e.name
               o.jcd_position_rank = e.positionRankCode
+              o.jcd_join_date = e.joinDate
+              o.jcd_employ_status = e.salaryComputeType.slice(0, 1)
               return o
             })
+
+          this.$refs.grid.$refs.xGrid.reloadData([]).then(() => {
+            this.$refs.grid.$refs.xGrid.insertAt(data, -1)
+          })
         })
         .catch(() => {
           this.gridOptions.loading = false
+          this.syncLoading = false
         })
       this.gridOptions.loading = false
+      this.syncLoading = false
     },
     handleAutoComp (v) {
       const deduction = this.deductions.find(e => e.jci_section === v.split(' - ')[0])
       if (deduction) {
-        this.$refs.grid.currRow.jcd_estimated_labor_insurance = `${deduction.jci_section} - ${deduction.jci_employee_bear_labor_insurance}`
-        this.$refs.grid.currRow.jcd_estimated_health_insurance = `${deduction.jci_section} - ${deduction.jci_employee_bear_health_insurance}`
-        this.$refs.grid.currRow.jcd_estimated_dismiss_obtain = `${deduction.jci_section} - ${deduction.jci_employer_bear_pension}`
+        this.$refs.grid.currRow.jcd_estimated_labor_insurance = `${deduction.jci_employee_bear_labor_insurance}`
+        this.$refs.grid.currRow.jcd_estimated_health_insurance = `${deduction.jci_employee_bear_health_insurance}`
+        this.$refs.grid.currRow.jcd_estimated_dismiss_obtain = `${deduction.jci_employer_bear_pension}`
       }
+    },
+    async handleRefresh () {
+      await getDeductionVerions().then(({ result, data }) => {
+        if (result) {
+          this.versions = data
+          this.datetime = this.versions[this.versions.length - 1].jcd_created_at
+        }
+      })
+    },
+    handleInsert (insertItem) {
+      delete insertItem.jcd_created_at
+      return insertItem
     }
   },
   async mounted () {
     await getInsuranceDeduction().then(({ result, data }) => {
       result && (this.deductions = data)
+    })
+    await getDeductionVerions().then(({ result, data }) => {
+      result && (this.versions = data)
     })
   }
 }
