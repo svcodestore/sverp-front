@@ -2,9 +2,9 @@
  * @Author: yanbuw1911
  * @Date: 2021-06-03 11:06:47
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-06-10 09:54:28
+ * @LastEditTime: 2021-06-18 11:33:12
  * @Description: 考勤代扣
- * @FilePath: \sverp-front\src\views\HRD\KPI\setting\JSTW_Commute\commute.vue
+ * @FilePath: /sverp-front/src/views/HRD/KPI/setting/JSTW_Commute/commute.vue
 -->
 <template>
   <div>
@@ -12,7 +12,7 @@
       <a-select
         v-model="datetime"
         style="width: 160px"
-        placeholder="选择时间查询"
+        placeholder="历史版本查询"
         :loading="loading"
         @change="handleChange"
       >
@@ -30,12 +30,78 @@
       <template #joinDate="{row, column}">
         {{ row[column.property] | datefmt }}
       </template>
+      <template #jcd_estimated_labor_insurance="{row, column}">
+        <a-auto-complete
+          style="width: 100%;"
+          :defaultOpen="true"
+          :dropdown-style="{ width: '100%' }"
+          v-model="row[column.property]"
+          :filterOption="filterOption"
+          @change="handleAutoComp"
+        >
+          <template #dataSource>
+            <a-select-option
+              v-for="(deduction, idx) in deductions"
+              :key="idx"
+              :title="deduction.jci_employee_bear_labor_insurance"
+              :value="`${deduction.jci_section} - ${deduction.jci_employee_bear_labor_insurance}`"
+            >
+              {{ `${deduction.jci_section} - ${deduction.jci_employee_bear_labor_insurance}` }}
+            </a-select-option>
+          </template>
+        </a-auto-complete>
+      </template>
+      <template #jcd_estimated_health_insurance="{row, column}">
+        <a-auto-complete
+          style="width: 100%;"
+          :defaultOpen="true"
+          :dropdown-style="{ width: '100%' }"
+          v-model="row[column.property]"
+          :filterOption="filterOption"
+          @change="handleAutoComp"
+        >
+          <template #dataSource>
+            <a-select-option
+              v-for="(deduction, idx) in deductions"
+              :key="idx"
+              :title="deduction.jci_employee_bear_health_insurance"
+              :value="`${deduction.jci_section} - ${deduction.jci_employee_bear_health_insurance}`"
+            >
+              {{ `${deduction.jci_section} - ${deduction.jci_employee_bear_health_insurance}` }}
+            </a-select-option>
+          </template>
+        </a-auto-complete>
+      </template>
+      <template #jcd_estimated_dismiss_obtain="{row, column}">
+        <a-auto-complete
+          style="width: 100%;"
+          :defaultOpen="true"
+          :dropdown-style="{ width: '100%' }"
+          v-model="row[column.property]"
+          :filterOption="filterOption"
+          @change="handleAutoComp"
+        >
+          <template #dataSource>
+            <a-select-option
+              v-for="(deduction, idx) in deductions"
+              :key="idx"
+              :title="deduction.jci_employer_bear_pension"
+              :value="`${deduction.jci_section} - ${deduction.jci_employer_bear_pension}`"
+            >
+              {{ `${deduction.jci_section} - ${deduction.jci_employer_bear_pension}` }}
+            </a-select-option>
+          </template>
+        </a-auto-complete>
+      </template>
     </sv-grid>
   </div>
 </template>
 
 <script>
+import { getInsuranceDeduction, saveDetailedDeductionOpt } from '@/api/jstw'
+
 import moment from 'moment'
+
 export default {
   filters: {
     datefmt (val) {
@@ -49,6 +115,7 @@ export default {
       isShowGrid: false,
       isShowSync: false,
       versions: [],
+      deductions: [],
       gridOptions: {
         align: 'center',
         height: 600,
@@ -56,6 +123,7 @@ export default {
         showHeaderOverflow: false,
         toolDropdown: true,
         loading: false,
+        handleSaveOpt: saveDetailedDeductionOpt,
         data: [],
         columnConfig: {
           width: 90
@@ -93,8 +161,7 @@ export default {
                       }
                     }
                   }
-                ],
-                fixed: 'left'
+                ]
               },
               {
                 title: '',
@@ -325,6 +392,9 @@ export default {
                   attrs: {
                     type: 'number'
                   }
+                },
+                slots: {
+                  edit: 'jcd_estimated_labor_insurance'
                 }
               },
               {
@@ -340,11 +410,9 @@ export default {
               {
                 field: 'jcd_estimated_health_insurance',
                 title: '預估自付健保費',
-                editRender: {
-                  name: 'input',
-                  attrs: {
-                    type: 'number'
-                  }
+                editRender: {},
+                slots: {
+                  edit: 'jcd_estimated_health_insurance'
                 }
               },
               {
@@ -375,6 +443,9 @@ export default {
                   attrs: {
                     type: 'number'
                   }
+                },
+                slots: {
+                  edit: 'jcd_estimated_dismiss_obtain'
                 }
               },
               {
@@ -412,8 +483,7 @@ export default {
                 title: '備註',
                 editRender: {
                   name: 'input'
-                },
-                fixed: 'right'
+                }
               }
             ]
           }
@@ -425,6 +495,9 @@ export default {
     }
   },
   methods: {
+    filterOption (input, option) {
+      return option.componentOptions.children[0].text.toUpperCase().indexOf(input.toUpperCase()) >= 0
+    },
     async handleChange (v) {
       if (!this.isShowGrid) {
         this.isShowGrid = true
@@ -442,12 +515,32 @@ export default {
           this.gridOptions.data = res
             .sort((a, b) => a.staffNo.substr(2) - b.staffNo.substr(2))
             .filter(e => !invisiblePersons.includes(e.staffNo))
+            .map(e => {
+              const o = {}
+              o.jcd_staff_no = e.staffNo
+              o.jcd_staff_name = e.name
+              o.jcd_position_rank = e.positionRankCode
+              return o
+            })
         })
         .catch(() => {
           this.gridOptions.loading = false
         })
       this.gridOptions.loading = false
+    },
+    handleAutoComp (v) {
+      const deduction = this.deductions.find(e => e.jci_section === v.split(' - ')[0])
+      if (deduction) {
+        this.$refs.grid.currRow.jcd_estimated_labor_insurance = `${deduction.jci_section} - ${deduction.jci_employee_bear_labor_insurance}`
+        this.$refs.grid.currRow.jcd_estimated_health_insurance = `${deduction.jci_section} - ${deduction.jci_employee_bear_health_insurance}`
+        this.$refs.grid.currRow.jcd_estimated_dismiss_obtain = `${deduction.jci_section} - ${deduction.jci_employer_bear_pension}`
+      }
     }
+  },
+  async mounted () {
+    await getInsuranceDeduction().then(({ result, data }) => {
+      result && (this.deductions = data)
+    })
   }
 }
 </script>

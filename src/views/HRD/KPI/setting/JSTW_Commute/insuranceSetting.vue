@@ -2,9 +2,9 @@
  * @Author: yanbuw1911
  * @Date: 2021-06-03 11:09:07
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-06-10 11:00:01
+ * @LastEditTime: 2021-06-18 10:08:49
  * @Description: 劳保设置
- * @FilePath: \sverp-front\src\views\HRD\KPI\setting\JSTW_Commute\insuranceSetting.vue
+ * @FilePath: /sverp-front/src/views/HRD/KPI/setting/JSTW_Commute/insuranceSetting.vue
 -->
 <template>
   <div>
@@ -231,6 +231,9 @@ export default {
         })
       this.gridOptions.loading = false
     }
+  },
+  mounted () {
+    this.getData()
   }
 }
 </script>
