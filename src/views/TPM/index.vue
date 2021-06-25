@@ -15,6 +15,17 @@
         查看
         <div>{{ name }}</div>
       </vxe-button> -->
+
+      <div style="margin:1rem 0;">
+        <vxe-input placeholder="资产类别" size="small" v-model="searchFilter.assets_sort"></vxe-input>
+        <vxe-input
+          placeholder="设备级别"
+          size="small"
+          v-model="searchFilter.mache_level"
+          style="margin-left:10px;"
+        ></vxe-input>
+        <vxe-button size="small" @click="filterData">查找</vxe-button>
+      </div>
     </div>
     <sv-grid ref="svGrid" v-bind="svGridOptions" v-on="svGridEvents" v-show="showTable">
       <template #statusSolt="{ row }">
@@ -47,7 +58,13 @@ export default {
       fittingCount: 0,
       name: '配件',
       category: true,
+      searchFilter: {
+        assets_sort: null,
+        mache_level: null
+      },
       count: [
+        { value: '', name: '所有', color: 'color:RGB(0,191,8)', count: 0 },
+
         {
           value: 1,
           name: '正常',
@@ -82,6 +99,7 @@ export default {
       showTable: true,
       svGridOptions: {
         loading: false,
+        toolDropdown: true,
         data: [],
         params: {
           originData: []
@@ -96,111 +114,90 @@ export default {
         },
         handleSaveOpt: apiSaveMecheInfo,
         columns: [
+          { width: 55, title: '序号', type: 'seq', sortable: true, fixed: 'left' },
+          { field: 'mache_num', title: '资产编号', editRender: { name: 'input' }, width: 95, fixed: 'left' },
+          { field: 'mache_name', title: '设备名称', width: 100, editRender: { name: 'input' }, fixed: 'left' },
+          { field: 'model', title: '型号(品牌)', width: 95, editRender: { name: 'input' } },
+          { field: 'provider', title: '供应商', width: 95, editRender: { name: 'input' } },
+          { field: 'price', title: '金额', width: 80, editRender: { name: 'input' } },
+
           {
-            field: 'id',
-            title: 'ID',
-            width: 60,
-            sortable: true,
-            fixed: 'left'
-          },
-          {
-            field: 'line_num',
-            title: '线号',
-            width: 90,
-            sortable: true,
-            fixed: 'left',
-            editRender: {
-              name: 'input'
-            }
-          },
-          {
-            field: 'produc_num',
-            title: '工程号',
-            width: 110,
-            editRender: {
-              name: 'input'
-            },
-            sortable: true,
-            fixed: 'left'
-          },
-          {
-            field: 'mache_num',
-            title: '设备编号',
-            editRender: {
-              name: 'input'
-            },
-            width: 110,
-            fixed: 'left'
-          },
-          {
-            field: 'mache_name',
-            title: '设备名称',
-            width: 100,
-            fixed: 'left',
-            editRender: {
-              name: 'input'
-            }
+            field: 'keep_department',
+            title: '保管单位',
+            editRender: { name: 'input' },
+            width: 110
           },
           {
             field: 'keeper',
             title: '管理者',
-            editRender: {
-              name: 'input'
-            },
-            width: 110,
-            sortable: true,
-            fixed: 'left'
+            editRender: { name: 'input' },
+            width: 110
           },
           {
-            field: 'create_time',
-            title: '添加时间',
-            editRender: {
-              name: 'input'
-            },
-            width: 110,
-            sortable: true,
-            fixed: 'left'
+            field: 'maintainer',
+            title: '认养人',
+            editRender: { name: 'input' },
+            width: 110
           },
           {
-            field: 'inspection_cycle',
-            title: '保养周期(天)',
-            width: 130,
-            editRender: {
-              name: 'input'
-            }
+            field: 'put_in_date',
+            title: '进厂日期',
+            editRender: { name: 'input' },
+            width: 110,
+            sortable: true
           },
+          {
+            field: 'quality_level',
+            title: '成色',
+            editRender: { name: 'input' },
+            width: 110,
+            sortable: true
+          },
+          {
+            field: 'assets_sort',
+            title: '资产类别',
+            editRender: { name: 'input' },
+            width: 110,
+            sortable: true
+          },
+          {
+            field: 'mache_level',
+            title: '设备级别',
+            editRender: { name: 'input' },
+            width: 110,
+            sortable: true
+          },
+          {
+            field: 'safety_level',
+            title: '安全级别',
+            editRender: { name: 'input' },
+            width: 110,
+            sortable: true
+          },
+          {
+            field: 'mache_category',
+            title: '设备种类',
+            editRender: { name: 'input' },
+            width: 110,
+            sortable: true
+          },
+
+          { field: 'inspection_cycle', title: '保养周期(天)', width: 130, editRender: { name: 'input' } },
           {
             field: 'status',
             title: '状态',
             editRender: {
               name: '$select',
               options: [
-                {
-                  value: 1,
-                  label: '正常'
-                },
-                {
-                  value: 2,
-                  label: '维修'
-                },
-                {
-                  value: 3,
-                  label: '保养'
-                },
-                {
-                  value: 4,
-                  label: '调试'
-                },
-                {
-                  value: 5,
-                  label: '停用'
-                }
+                { value: 1, label: '正常' },
+                { value: 2, label: '维修' },
+                { value: 3, label: '保养' },
+                { value: 4, label: '调试' },
+                { value: 5, label: '停用' }
               ]
             },
             width: 100,
-            slots: {
-              default: 'statusSolt'
-            }
+            slots: { default: 'statusSolt' }
           }
         ]
       },
@@ -304,6 +301,7 @@ export default {
         this.svGridEvents.refresh = this.refreshTable
         this.svGridOptions = {
           loading: false,
+          toolDropdown: true,
           data: [],
           params: {
             originData: []
@@ -436,7 +434,8 @@ export default {
                 this.count[i].count = 0
               })
               result.result.forEach((value, index) => {
-                this.count[value.status - 1].count += 1
+                this.count[0].count += 1
+                this.count[value.status].count += 1
               })
             }
             this.svGridOptions.data = result.result.map(e => {
@@ -486,6 +485,31 @@ export default {
         })
         .catch(() => {})
       this.svGridOptions.loading = false
+    },
+    filterData () {
+      const data = this.svGridOptions.params.originData.map(e => XEUtils.clone(e))
+      let result = []
+      let hasCondition = false
+
+      for (const [key, value] of Object.entries(this.searchFilter)) {
+        if (value) {
+          hasCondition = true
+          result = data.filter(d => {
+            const itemValue = d[key]
+
+            if (itemValue && itemValue.toLowerCase().indexOf(value.toLowerCase()) > -1) {
+              return true
+            }
+            return false
+          })
+        }
+      }
+
+      if (hasCondition) {
+        this.svGridOptions.data = result
+      } else {
+        this.svGridOptions.data = this.svGridOptions.params.originData.map(e => XEUtils.clone(e))
+      }
     }
   },
   mounted () {
