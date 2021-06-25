@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-06-03 11:06:47
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-06-25 17:00:02
+ * @LastEditTime: 2021-06-25 17:02:08
  * @Description: 考勤代扣
  * @FilePath: /sverp-front/src/views/HRD/KPI/setting/JSTW_Commute/commute.vue
 -->
@@ -115,7 +115,6 @@ import {
   saveDetailedDeductionOpt
 } from '@/api/jstw'
 
-import XLSX from 'xlsx'
 import moment from 'moment'
 
 export default {
