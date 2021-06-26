@@ -14,7 +14,7 @@
       <a-button @click="getUsers" type="primary" :loading="loading">获取</a-button>
     </div>
     <div id="show-users">
-      <vxe-table border show-header-overflow show-overflow highlight-hover-row :loading="loading" :data="users">
+      <vxe-table :loading="loading" :data="users" border show-header-overflow highlight-hover-row>
         <vxe-table-column type="seq" title="序号" width="60"></vxe-table-column>
         <vxe-table-column field="enRollNum" title="考勤号" width="120" sortable></vxe-table-column>
         <vxe-table-column field="userName" title="名字"></vxe-table-column>
@@ -27,7 +27,8 @@
         <vxe-table-column title="操作">
           <template #default="{ row }">
             <div class="control-btns">
-              <a-button @click="changeUserState(row)" size="small">停用</a-button>
+              <a-button @click="changeUserState(row, false)" size="small" v-if="row.enable == true">停用</a-button>
+              <a-button @click="changeUserState(row, true)" size="small" v-else>启用</a-button>
               <a-button @click="deleteUserAllData(row)" type="danger" size="small">删除用户</a-button>
             </div>
           </template>
@@ -90,18 +91,20 @@ export default {
         this.loading = false
       })
     },
-    changeUserState (row) {
-      if (confirm('确定禁用 ' + row.userName + ' ？')) {
+    changeUserState (row, state) {
+      const edmes = state ? '启用' : '禁用'
+      if (confirm('确定 ' + edmes + row.userName + ' ？')) {
         // 未测
         this.loading = true
         const awaitJobs = []
         for (const device of this.choicedDevice) {
           const reqData = Object.assign({}, device)
           reqData.enRollNum = row.enRollNum
+          reqData.state = state
           awaitJobs.push(axios.post(ZKAPI.enableUser, reqData))
         }
         Promise.all(awaitJobs).then(() => {
-          this.loading = false
+          this.getUsers()
         })
       }
     },
@@ -116,7 +119,7 @@ export default {
           awaitJobs.push(axios.post(ZKAPI.deleteUser, reqData))
         }
         Promise.all(awaitJobs).then(() => {
-          this.loading = false
+          this.getUsers()
         })
       }
     },
