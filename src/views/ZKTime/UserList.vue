@@ -14,14 +14,7 @@
       <a-button @click="getUsers" type="primary" :loading="loading">获取</a-button>
     </div>
     <div id="show-users">
-      <vxe-table
-        border
-        show-header-overflow
-        show-overflow
-        highlight-hover-row
-        :loading="loading"
-        :data="users"
-      >
+      <vxe-table border show-header-overflow show-overflow highlight-hover-row :loading="loading" :data="users">
         <vxe-table-column type="seq" title="序号" width="60"></vxe-table-column>
         <vxe-table-column field="enRollNum" title="考勤号" width="120" sortable></vxe-table-column>
         <vxe-table-column field="userName" title="名字"></vxe-table-column>
@@ -47,9 +40,9 @@
 import axios from 'axios'
 const baseURL = process.env.VUE_APP_ZKTIME_API_BASE_URL
 const ZKAPI = {
-  getAllUserInfo: (new URL('/users', baseURL)).href,
-  deleteUser: (new URL('/delete_user', baseURL)).href,
-  enableUser: (new URL('/enable_user', baseURL)).href
+  getAllUserInfo: new URL('/users', baseURL).href,
+  deleteUser: new URL('/delete_user', baseURL).href,
+  enableUser: new URL('/enable_user', baseURL).href
 }
 
 export default {
@@ -90,7 +83,7 @@ export default {
       for (const item of this.choicedDevice) {
         awaitJobs.push(axios.post(ZKAPI.getAllUserInfo, item))
       }
-      Promise.all(awaitJobs).then((values) => {
+      Promise.all(awaitJobs).then(values => {
         values.forEach(res => {
           this.mergeUserData(res.data)
         })
@@ -100,31 +93,31 @@ export default {
     changeUserState (row) {
       if (confirm('确定禁用 ' + row.userName + ' ？')) {
         // 未测
-        // this.loading = true
-        // const awaitJobs = []
-        // for (const device of this.choicedDevice) {
-        //   const reqData = Object.assign({}, device)
-        //   reqData.enRollNum = row.enRollNum
-        //   awaitJobs.push(axios.post(ZKAPI.enableUser, reqData))
-        // }
-        // Promise.all(awaitJobs).then(() => {
-        //   this.loading = false
-        // })
+        this.loading = true
+        const awaitJobs = []
+        for (const device of this.choicedDevice) {
+          const reqData = Object.assign({}, device)
+          reqData.enRollNum = row.enRollNum
+          awaitJobs.push(axios.post(ZKAPI.enableUser, reqData))
+        }
+        Promise.all(awaitJobs).then(() => {
+          this.loading = false
+        })
       }
     },
     deleteUserAllData (row) {
       if (confirm('确定删除 ' + row.userName + ' 信息、指纹、面容识别？')) {
         // 未测
-        // this.loading = true
-        // const awaitJobs = []
-        // for (const device of this.choicedDevice) {
-        //   const reqData = Object.assign({}, device)
-        //   reqData.enRollNum = row.enRollNum
-        //   awaitJobs.push(axios.post(ZKAPI.deleteUser, reqData))
-        // }
-        // Promise.all(awaitJobs).then(() => {
-        //   this.loading = false
-        // })
+        this.loading = true
+        const awaitJobs = []
+        for (const device of this.choicedDevice) {
+          const reqData = Object.assign({}, device)
+          reqData.enRollNum = row.enRollNum
+          awaitJobs.push(axios.post(ZKAPI.deleteUser, reqData))
+        }
+        Promise.all(awaitJobs).then(() => {
+          this.loading = false
+        })
       }
     },
     checkAll (e) {
@@ -139,8 +132,8 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-#show-users{
-  margin-top:1rem;
+#show-users {
+  margin-top: 1rem;
 }
 
 .control-btns {
