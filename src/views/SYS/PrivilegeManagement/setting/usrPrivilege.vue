@@ -227,7 +227,20 @@ export default {
             this.$message.info('暂无数据')
           }
           await getUserAuthMenu(id)
-            .then(res => res.result && (this.authMenu = res.data))
+            .then(res => {
+              // 普通用户权限后台传回，非连续性的数组， json decode 成了object
+              // 需要对放回数据进行进一步加工，防止js代码出错卡住搜索id的画面
+              if (typeof res.data === typeof {}) {
+                const arr = []
+                for (const item of Object.entries(res.data)) {
+                  arr.push(item[1])
+                }
+                this.authMenu = arr
+              } else {
+                this.authMenu = res.data
+              }
+              return res.result
+            })
             .catch(() => {})
         })
         .catch(() => {})
@@ -317,12 +330,12 @@ export default {
             this.isGroupEdit = false
             this.$notification.success({
               message: this.$t('saveSucc'),
-              icon: <a-icon type="smile" style="color: #108ee9" />
+              icon: <a-icon type='smile' style='color: #108ee9' />
             })
           } else {
             this.$notification.error({
               message: this.$t('saveFail'),
-              icon: <a-icon type="frown" style="color: #108ee9" />
+              icon: <a-icon type='frown' style='color: #108ee9' />
             })
           }
         })
@@ -346,12 +359,12 @@ export default {
             this.isGroupEdit = false
             this.$notification.success({
               message: this.$t('saveSucc'),
-              icon: <a-icon type="smile" style="color: #108ee9" />
+              icon: <a-icon type='smile' style='color: #108ee9' />
             })
           } else {
             this.$notification.error({
               message: this.$t('saveFail'),
-              icon: <a-icon type="frown" style="color: #108ee9" />
+              icon: <a-icon type='frown' style='color: #108ee9' />
             })
           }
         })
