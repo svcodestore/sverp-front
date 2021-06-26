@@ -1,8 +1,8 @@
 <!--
  * @Date: 2021-05-05 14:27:24
- * @LastEditors: Mok.CH
- * @LastEditTime: 2021-05-14 11:08:08
- * @FilePath: \sverp-front\src\views\Dcs\DocList.vue
+ * @LastEditors: yanbuw1911
+ * @LastEditTime: 2021-06-21 08:18:52
+ * @FilePath: /sverp-front/src/views/Dcs/DocList.vue
 -->
 <template>
   <div class="container">
@@ -130,16 +130,32 @@
 
     <div v-show="showPdfViewer">
       <div>
-        <el-button @click="showMain=true;showPdfViewer=false">返回文档列表</el-button>
+        <el-button
+          @click="
+            showMain = true
+            showPdfViewer = false
+          "
+        >返回文档列表</el-button
+        >
       </div>
       <show-pdf :pdfUrl="pdfUrl"></show-pdf>
     </div>
 
     <div v-show="showHistory">
       <div>
-        <el-button @click="showMain=true;showHistory=false">返回文档列表</el-button>
+        <el-button
+          @click="
+            showMain = true
+            showHistory = false
+          "
+        >返回文档列表</el-button
+        >
       </div>
-      <show-doc-history :originalFileId="originalFileId" @showDoc="docShow" @downloadDoc="docDownload"></show-doc-history>
+      <show-doc-history
+        :originalFileId="originalFileId"
+        @showDoc="docShow"
+        @downloadDoc="docDownload"
+      ></show-doc-history>
     </div>
   </div>
 </template>
@@ -151,7 +167,7 @@ import showPdf from './showPdf'
 import docHistory from './docHistory'
 import storage from 'store'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
-import pdf from 'vue-pdf'
+// import pdf from 'vue-pdf'
 import { hasRole } from '@/utils/permissions'
 export default {
   name: '',
@@ -297,13 +313,12 @@ export default {
       })
     },
     getFileUrl (fileId) {
-      const baseUrl = process.env.VUE_APP_API_BASE_URL
-      const url = baseUrl + '/dcs/downloadFile?fileId=' + fileId + '&userId=' + this.userData.id
-
-      return pdf.createLoadingTask({
-        url: url,
-        httpHeaders: this.headers
-      })
+      // const baseUrl = process.env.VUE_APP_API_BASE_URL
+      // const url = baseUrl + '/dcs/downloadFile?fileId=' + fileId + '&userId=' + this.userData.id
+      // return pdf.createLoadingTask({
+      //   url: url,
+      //   httpHeaders: this.headers
+      // })
     },
     // 数据库中2.上传 3.下载 4.查看 5.更新
     docShow (row) {
@@ -335,25 +350,24 @@ export default {
         this.dialogVisible = true
         this.form.fileId = row.filesId
       } else {
-        dcsApi.downloadFile({ fileId: row.filesId, userId: this.userData.id })
-          .then(res => {
-            this.form.name = ''
-            const fileName = row.filesName
-            const blob = new Blob([res], {
-              type: 'application/octet-stream'
-            })
-            if (window.navigator.msSaveOrOpenBlob) {
-              navigator.msSaveBlob(blob, fileName)
-            } else {
-              const elink = document.createElement('a')
-              elink.download = fileName
-              elink.style.display = 'none'
-              elink.href = URL.createObjectURL(blob)
-              document.body.appendChild(elink)
-              elink.click()
-              document.body.removeChild(elink)
-            }
+        dcsApi.downloadFile({ fileId: row.filesId, userId: this.userData.id }).then(res => {
+          this.form.name = ''
+          const fileName = row.filesName
+          const blob = new Blob([res], {
+            type: 'application/octet-stream'
           })
+          if (window.navigator.msSaveOrOpenBlob) {
+            navigator.msSaveBlob(blob, fileName)
+          } else {
+            const elink = document.createElement('a')
+            elink.download = fileName
+            elink.style.display = 'none'
+            elink.href = URL.createObjectURL(blob)
+            document.body.appendChild(elink)
+            elink.click()
+            document.body.removeChild(elink)
+          }
+        })
       }
     },
     docUpdate (row) {

@@ -1,8 +1,8 @@
 <!--
  * @Date: 2021-05-11 16:24:02
- * @LastEditors: Mok.CH
- * @LastEditTime: 2021-05-13 15:28:09
- * @FilePath: \sverp-front\src\views\Dcs\showPdf.vue
+ * @LastEditors: yanbuw1911
+ * @LastEditTime: 2021-06-21 08:18:26
+ * @FilePath: /sverp-front/src/views/Dcs/showPdf.vue
 -->
 <template>
   <div class="pdf">
@@ -20,7 +20,7 @@
       <div>页面加载成功: {{ curPageNum }}</div>
     </div>
     <div style="width: 800px; margin: 0 auto">
-      <pdf
+      <!-- <pdf
         ref="pdf"
         :src="pdfUrl"
         :page="pageNum"
@@ -32,13 +32,13 @@
         @error="pdfError($event)"
         @link-clicked="page = $event"
       >
-      </pdf>
+      </pdf> -->
     </div>
   </div>
 </template>
 
 <script>
-import pdf from 'vue-pdf'
+// import pdf from 'vue-pdf'
 // import storage from 'store'
 // import { ACCESS_TOKEN } from '@/store/mutation-types'
 export default {
@@ -54,7 +54,7 @@ export default {
     }
   },
   components: {
-    pdf
+    // pdf
   },
   data () {
     return {
