@@ -65,7 +65,7 @@ export default {
           },
           {
             field: 'notify_people',
-            title: '是否通知',
+            title: '配件库存通知',
             editRender: {
               name: '$select',
               options: [

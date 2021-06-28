@@ -40,6 +40,7 @@ export default {
                 if (row.fitting_id === 13) {
                   return ''
                 }
+                return row.count
               }
             }
           },
@@ -51,6 +52,7 @@ export default {
                 if (row.fitting_id === 13) {
                   return ''
                 }
+                return row.price
               }
             }
           },
@@ -83,7 +85,7 @@ export default {
           if (item.fitting_id !== 13) {
             sumCount += item.count
           }
-          sumPrice += (item.price * item.count)
+          sumPrice += item.price * item.count
         }
       }
       return [['总数', sumCount, '/', sumPrice]]

@@ -21,6 +21,16 @@ const RouteView = {
  * @param parentId 父ID
  */
 export const dynamicRoutesGenerator = (list, tree, pid) => {
+  // list在用户普通用户的时候，会有出现为object的现象，
+  // 可能为后台程序输出数组非连续下标， 需判断list类型做转换
+  if (typeof list === typeof {}) {
+    const listarr = []
+    for (const item of Object.entries(list)) {
+      listarr.push(item[1])
+    }
+    list = listarr
+  }
+
   list.forEach(item => {
     // 判断是否为父级菜单
     if (item.pid === pid) {
