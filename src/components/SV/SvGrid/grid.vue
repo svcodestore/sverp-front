@@ -250,15 +250,15 @@ export default {
           width: 40,
           slots: {
             default: () => {
-              return [<a-icon type="drag" class="svgrid-drag-icon" />]
+              return [<a-icon type='drag' class='svgrid-drag-icon' />]
             },
             header: () => {
               return [
-                <a-tooltip placement="top">
-                  <template slot="title">
+                <a-tooltip placement='top'>
+                  <template slot='title'>
                     <span>按住图标来拖动排序</span>
                   </template>
-                  <a-icon type="question-circle" />
+                  <a-icon type='question-circle' />
                 </a-tooltip>
               ]
             }
@@ -383,11 +383,25 @@ export default {
         Sheets: {},
         Props: {}
       }
+
+      const header = {}
+      this.$refs.xGrid.getColumns().map(e => {
+        const o = Object.assign({}, e)
+        const name = o.property
+        const value = o.title
+        header[name] = value
+      })
+
       const data = this.$refs.xGrid.getTableData().visibleData.map(e => {
         const o = Object.assign({}, e)
-        delete o.id
+        for (const item of Object.entries(o)) {
+          if (!(item[0] in header)) {
+            delete o[item[0]]
+          }
+        }
         return o
       })
+      data.unshift(header)
 
       workBook.Sheets['Sheet1'] = XLSX.utils.json_to_sheet(data, { skipHeader: true })
       XLSX.writeFile(workBook, `${moment().format('YYYY-MM-DD HH:mm:SSS')}.xlsx`, wopts)
@@ -681,10 +695,10 @@ export default {
             this.currRow = null
             this._handleRefreshGrid()
             o.message = this.$t('saveSucc')
-            o.icon = <a-icon type="smile" style="color: #108ee9" />
+            o.icon = <a-icon type='smile' style='color: #108ee9' />
           } else {
             o.message = this.$t('saveFail')
-            o.icon = <a-icon type="frown" style="color: #108ee9" />
+            o.icon = <a-icon type='frown' style='color: #108ee9' />
           }
           this.$notification.open(o)
         })
@@ -692,7 +706,7 @@ export default {
           this.$notification.error({
             message: error.response.status,
             description: error.response.data.message,
-            icon: <a-icon type="frown" style="color: #108ee9" />
+            icon: <a-icon type='frown' style='color: #108ee9' />
           })
         })
     },
