@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-05-05 14:27:24
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-06-21 08:18:52
+ * @LastEditTime: 2021-06-28 08:24:09
  * @FilePath: /sverp-front/src/views/Dcs/DocList.vue
 -->
 <template>
@@ -167,7 +167,7 @@ import showPdf from './showPdf'
 import docHistory from './docHistory'
 import storage from 'store'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
-// import pdf from 'vue-pdf'
+import pdf from 'vue-pdf'
 import { hasRole } from '@/utils/permissions'
 export default {
   name: '',
@@ -313,12 +313,13 @@ export default {
       })
     },
     getFileUrl (fileId) {
-      // const baseUrl = process.env.VUE_APP_API_BASE_URL
-      // const url = baseUrl + '/dcs/downloadFile?fileId=' + fileId + '&userId=' + this.userData.id
-      // return pdf.createLoadingTask({
-      //   url: url,
-      //   httpHeaders: this.headers
-      // })
+      const baseUrl = process.env.VUE_APP_API_BASE_URL
+      const url = baseUrl + '/dcs/downloadFile?fileId=' + fileId + '&userId=' + this.userData.id
+
+      return pdf.createLoadingTask({
+        url: url,
+        httpHeaders: this.headers
+      })
     },
     // 数据库中2.上传 3.下载 4.查看 5.更新
     docShow (row) {
