@@ -6,10 +6,7 @@
 -->
 <template>
   <div>
-    <a-page-header
-      title="维修详情"
-      @back="showMain"
-    />
+    <a-page-header title="维修详情" @back="showMain" />
     <a-card :bordered="false">
       <a-descriptions title="维修进度详情">
         <a-descriptions-item label="ID">{{ currentRow.id }}</a-descriptions-item>
@@ -19,7 +16,7 @@
         <a-descriptions-item label="报修内容">{{ currentRow.repaircontents }}</a-descriptions-item>
         <a-descriptions-item label="报修性质">{{ currentRow.repairAttr }}</a-descriptions-item>
       </a-descriptions>
-      <a-divider style="margin-bottom: 32px"/>
+      <a-divider style="margin-bottom: 32px" />
       <a-descriptions title="设备信息">
         <a-descriptions-item label="设备名称">{{ currentRow.mache_name }}</a-descriptions-item>
         <a-descriptions-item label="设备编号">{{ currentRow.mechenum }}</a-descriptions-item>
@@ -28,7 +25,7 @@
         <a-descriptions-item label="设备工程号">{{ currentRow.produc_num }}</a-descriptions-item>
         <!-- <a-descriptions-item label="设备当前状态">{{ macheStatusComput }}</a-descriptions-item> -->
       </a-descriptions>
-      <a-divider style="margin-bottom: 32px"/>
+      <a-divider style="margin-bottom: 32px" />
 
       <div>
         <div v-show="repair_steps == 0">
@@ -59,7 +56,19 @@
             />
           </div>
           <div style="margin-top:1rem;margin-bottom:1rem;">
-            <a-textarea v-model="currentRow.repairmethod" style="width:356px" placeholder="请填写维修跟进、维修方法.."></a-textarea>
+            <a-textarea
+              v-model="currentRow.repairmethod"
+              style="width:356px"
+              placeholder="请填写维修跟进、维修方法.."
+            ></a-textarea>
+          </div>
+          <div>
+            维护类别：
+            <a-select v-model="currentRow.repairAttr" style="width:120px;" default="">
+              <a-select-option key="1" value="维修">维修</a-select-option>
+              <a-select-option key="2" value="保养">保养</a-select-option>
+              <a-select-option key="3" value="调试">调试</a-select-option>
+            </a-select>
           </div>
           <div>
             有无消耗配件/人工费用：
@@ -68,19 +77,28 @@
             <br />
             <div v-for="(item, index) in fittingArr" style="display:block;margin:10px 0px;" :key="index">
               <span>{{ item.fitting_name }} :</span>
-              <input type="number" v-model="fittingNumber[item.id]" style="border-color:rgb(210,210,210);margin:0px 10px;" />
+              <input
+                type="number"
+                v-model="fittingNumber[item.id]"
+                style="border-color:rgb(210,210,210);margin:0px 10px;"
+              />
             </div>
-            <vxe-button @click="repairSubmit" style="background:#1890ff;color:white;margin-top:1rem;">维修完成</vxe-button>
+            <vxe-button @click="repairSubmit" style="background:#1890ff;color:white;margin-top:1rem;">
+              维修完成
+            </vxe-button>
           </div>
         </div>
-        <a-divider style="margin-bottom: 32px"/>
+        <a-divider style="margin-bottom: 32px" />
         <div class="title">维修进度</div>
         <div>
           <a-steps :current="repair_steps" direction="horizontal" progressDot>
             <a-step :title="$t('待处理')">
               <span style="font-size: 14px" slot="title">{{ $t('待处理') }}</span>
               <template slot="description">
-                <div style="fontSize: 12px; color: rgba(0, 0, 0, 0.45); position: relative; left: 42px;text-align: left;" slot="description" >
+                <div
+                  style="fontSize: 12px; color: rgba(0, 0, 0, 0.45); position: relative; left: 42px;text-align: left;"
+                  slot="description"
+                >
                   <div>{{ currentRow.alarmtime }}</div>
                 </div>
               </template>
@@ -88,21 +106,27 @@
             <a-step :title="$t('处理中')">
               <span style="font-size: 14px" slot="title">{{ $t('处理中') }}</span>
               <template slot="description">
-                <div style="fontSize: 12px; color: rgba(0, 0, 0, 0.45); position: relative; left: 42px;text-align: left;" slot="description" >
+                <div
+                  style="fontSize: 12px; color: rgba(0, 0, 0, 0.45); position: relative; left: 42px;text-align: left;"
+                  slot="description"
+                >
                   <div>{{ currentRow.reachtime }}</div>
                 </div>
               </template>
             </a-step>
-            <a-step :title="$t('完成处理')" >
+            <a-step :title="$t('完成处理')">
               <span style="font-size: 14px" slot="title">{{ $t('完成处理') }}</span>
               <template slot="description">
-                <div style="fontSize: 12px; color: rgba(0, 0, 0, 0.45); position: relative; left: 42px;text-align: left;" slot="description" >
+                <div
+                  style="fontSize: 12px; color: rgba(0, 0, 0, 0.45); position: relative; left: 42px;text-align: left;"
+                  slot="description"
+                >
                   <div>{{ currentRow.repairtime }}</div>
                 </div>
               </template>
             </a-step>
           </a-steps>
-          <a-divider style="margin-bottom: 32px"/>
+          <a-divider style="margin-bottom: 32px" />
           <div style="margin-top:2rem;">
             <div class="title">配件消耗</div>
             <div>
@@ -110,7 +134,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </a-card>
   </div>
@@ -184,24 +207,22 @@ export default {
         this.checkMsg = true
       } else {
         // clearInterval(timerSendMsg)
-        await apiCheckCode({ id, phone, phoneFour })
-          .then(result => {
-            if (result.code === 0) {
-              // this.isShowMainList = true
-              // this.refreshTable()
-              this.showDetail(this.currentRow)
-            }
-          })
+        await apiCheckCode({ id, phone, phoneFour }).then(result => {
+          if (result.code === 0) {
+            // this.isShowMainList = true
+            // this.refreshTable()
+            this.showDetail(this.currentRow)
+          }
+        })
         this.loading = false
       }
     },
     async noticePeople () {
-      await apiNotify()
-        .then(result => {
-          if (result.code === 0) {
-            this.notice = result.result
-          }
-        })
+      await apiNotify().then(result => {
+        if (result.code === 0) {
+          this.notice = result.result
+        }
+      })
     },
     async fittingName () {
       await apiFitting()
@@ -217,7 +238,8 @@ export default {
       const action = this.currentRow.repairmethod
       const number = this.fittingNumber
       const id = this.currentRow.id
-      await apiRepairComp({ id, content, action, number })
+      const repairAttr = this.currentRow.repairAttr
+      await apiRepairComp({ id, content, action, number, repairAttr })
         .then(result => {
           if (result.code === 0) {
             this.showMain()
@@ -310,11 +332,11 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-  .title {
-    color: rgba(0,0,0,.85);
-    font-size: 16px;
-    font-weight: bolder;
-    margin-bottom: 16px;
-    line-height: 250%;
-  }
+.title {
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 16px;
+  font-weight: bolder;
+  margin-bottom: 16px;
+  line-height: 250%;
+}
 </style>
