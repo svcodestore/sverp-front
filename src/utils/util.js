@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-09 19:48:29
- * @LastEditTime: 2021-01-06 16:33:24
+ * @LastEditTime: 2021-06-30 16:04:41
  * @LastEditors: yanbuw1911
  * @Description:
- * @FilePath: \client\src\utils\util.js
+ * @FilePath: /sverp-front/src/utils/util.js
  */
 export function timeFix () {
   const time = new Date()
@@ -85,4 +85,30 @@ export function arrElCombineSet (arr) {
   }
 
   return combineSet
+}
+
+export function objArrUniq (arr, pk) {
+  const o = {}
+  const newArr = arr.reduce((item, next) => {
+    let _pk = Object.keys(next).join(',,') + '-' + Object.values(next).join(',,')
+    if (typeof pk === 'string') {
+      _pk = pk + '-' + next[pk]
+    } else if (Array.isArray(pk)) {
+      _pk =
+        pk.join(',,') +
+        '-' +
+        pk.reduce((prev, curr) => {
+          return prev + next[curr] + ',,'
+        }, '')
+    }
+
+    if (!o[_pk]) {
+      o[_pk] = true
+      item.push(next)
+    }
+
+    return item
+  }, [])
+
+  return newArr
 }
