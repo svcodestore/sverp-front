@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-06-15 09:53:14
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-06-30 16:43:20
+ * @LastEditTime: 2021-06-30 16:54:11
  * @Description: Do not edit
  * @FilePath: /sverp-front/src/views/BS/index.vue
 -->
@@ -82,9 +82,9 @@
     <div v-if="!isShowGrid">
       <p v-for="(item, index) in queryCond" :key="index">
         <a-button type="link" @click="handleDelCond(item)"><a-icon type="close"/></a-button>
-        {{ item.KhPONo ? '客户单号：' + item.KhPONo : '' }}
-        {{ item.sp_No ? '存货编号：' + item.sp_No : '' }}
-        {{ item.khNo ? '客商编号：' + item.khNo : '' }}
+        {{ item.KhPONo ? '客户单号： ' + item.KhPONo : '' }}
+        {{ item.sp_No ? '存货编号： ' + item.sp_No : '' }}
+        {{ item.khNo ? '客商编号： ' + item.khNo : '' }}
         {{ '地点公司：' + (item.company > 1 ? '杰士通' : '斯达文星') }}
       </p>
     </div>
