@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-06-15 09:53:14
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-06-30 16:54:11
+ * @LastEditTime: 2021-07-01 15:15:26
  * @Description: Do not edit
  * @FilePath: /sverp-front/src/views/BS/index.vue
 -->
@@ -96,7 +96,19 @@
         {{ row[column.property] | fmtNum }}
       </template>
       <template #danCiChuHuo="{row,column}">
-        {{ row[column.property] | fmtNum }}
+        <ul class="order-detail">
+          <li v-for="(item, index) in row.detail" :key="index">{{ item[column.property] | fmtNum }}&nbsp;</li>
+        </ul>
+      </template>
+      <template #danCiChuHuoShiJian="{row,column}">
+        <ul class="order-detail">
+          <li v-for="(item, index) in row.detail" :key="index">{{ item[column.property] }}&nbsp;</li>
+        </ul>
+      </template>
+      <template #chuHuoDanHao="{row,column}">
+        <ul class="order-detail">
+          <li v-for="(item, index) in row.detail" :key="index">{{ item[column.property] }} &nbsp;</li>
+        </ul>
       </template>
     </sv-grid>
   </div>
@@ -136,13 +148,14 @@ export default {
         align: 'center',
         loading: false,
         refreshBtn: false,
-        toolDropdown: true,
+        showOverflow: false,
+        highlightHoverRow: false,
+        showHeaderOverflow: false,
+        mouseConfig: {
+          selected: false
+        },
         data: [],
         columns: [
-          {
-            type: 'seq',
-            width: 50
-          },
           {
             field: 'SC_Name',
             title: '类别',
@@ -194,24 +207,30 @@ export default {
             sortable: true
           },
           {
-            field: 'danCiChuHuo',
-            title: '单次出货',
-            slots: {
-              default: 'danCiChuHuo'
-            },
-            sortable: true
-          },
-          {
-            field: 'danCiChuHuoShiJian',
-            title: '出库日期',
-            sortable: true,
-            filters: [],
-            filterMethod: this.columnDateFilter
-          },
-          {
-            field: 'chuHuoDanHao',
-            title: '出库单号',
-            sortable: true
+            title: '出货明细',
+            children: [
+              {
+                field: 'danCiChuHuo',
+                title: '单次出货',
+                slots: {
+                  default: 'danCiChuHuo'
+                }
+              },
+              {
+                field: 'danCiChuHuoShiJian',
+                title: '出库日期',
+                slots: {
+                  default: 'danCiChuHuoShiJian'
+                }
+              },
+              {
+                field: 'chuHuoDanHao',
+                title: '出库单号',
+                slots: {
+                  default: 'chuHuoDanHao'
+                }
+              }
+            ]
           }
         ]
       }
@@ -240,6 +259,43 @@ export default {
     handleDelCond (item) {
       this.queryCond = this.queryCond.filter(e => JSON.stringify(e) !== JSON.stringify(item))
     },
+    fmtData (data) {
+      const fmtData = objArrUniq(
+        data.map(e => {
+          const o = Object.assign({}, e)
+          delete o.danCiChuHuo
+          delete o.danCiChuHuoShiJian
+          delete o.chuHuoDanHao
+          return o
+        })
+      ).map(item => {
+        item.dingDanShiJian && (item.dingDanShiJian = moment(item.dingDanShiJian).format('YYYY-MM-DD'))
+        item.jiHuaJiaoQi && (item.jiHuaJiaoQi = moment(item.jiHuaJiaoQi).format('YYYY-MM-DD'))
+        item.danCiChuHuoShiJian && (item.danCiChuHuoShiJian = moment(item.danCiChuHuoShiJian).format('YYYY-MM-DD'))
+        item.dingDanShuLiang && (item.dingDanShuLiang = Number(item.dingDanShuLiang).toFixed())
+        item.leiJiChuHuo && (item.leiJiChuHuo = Number(item.leiJiChuHuo).toFixed())
+        item.danCiChuHuo && (item.danCiChuHuo = Number(item.danCiChuHuo).toFixed())
+
+        const detail = []
+        data.forEach(el => {
+          if (
+            item.KhPONo === el.KhPONo &&
+            item.smSOBPlusmyField12 === el.smSOBPlusmyField12 &&
+            item.cunHuoBianHao === el.cunHuoBianHao
+          ) {
+            let { danCiChuHuo, danCiChuHuoShiJian } = el
+            const { chuHuoDanHao } = el
+            danCiChuHuoShiJian && (danCiChuHuoShiJian = moment(danCiChuHuoShiJian).format('YYYY-MM-DD'))
+            danCiChuHuo && (danCiChuHuo = Number(danCiChuHuo).toFixed())
+            detail.push({ danCiChuHuo, danCiChuHuoShiJian, chuHuoDanHao })
+          }
+        })
+        item.detail = detail
+        return item
+      })
+      console.log(fmtData)
+      return fmtData
+    },
     async handleSearch () {
       this.searchLoading = true
       this.gridOptions.loading = true
@@ -255,17 +311,7 @@ export default {
           })
           arr = objArrUniq(arr)
           if (arr.length) {
-            this.gridOptions.data = arr.map(item => {
-              item.dingDanShiJian && (item.dingDanShiJian = moment(item.dingDanShiJian).format('YYYY-MM-DD'))
-              item.jiHuaJiaoQi && (item.jiHuaJiaoQi = moment(item.jiHuaJiaoQi).format('YYYY-MM-DD'))
-              item.danCiChuHuoShiJian &&
-                (item.danCiChuHuoShiJian = moment(item.danCiChuHuoShiJian).format('YYYY-MM-DD'))
-              item.dingDanShuLiang && (item.dingDanShuLiang = Number(item.dingDanShuLiang).toFixed())
-              item.leiJiChuHuo && (item.leiJiChuHuo = Number(item.leiJiChuHuo).toFixed())
-              item.danCiChuHuo && (item.danCiChuHuo = Number(item.danCiChuHuo).toFixed())
-
-              return item
-            })
+            this.gridOptions.data = this.fmtData(arr)
             this.isShowGrid = true
             this.setColumnFilter(this.gridOptions.data)
           } else {
@@ -281,17 +327,7 @@ export default {
         await getOrders2(this.params).then(({ result, data }) => {
           if (result) {
             if (data.length) {
-              this.gridOptions.data = data.map(item => {
-                item.dingDanShiJian && (item.dingDanShiJian = moment(item.dingDanShiJian).format('YYYY-MM-DD'))
-                item.jiHuaJiaoQi && (item.jiHuaJiaoQi = moment(item.jiHuaJiaoQi).format('YYYY-MM-DD'))
-                item.danCiChuHuoShiJian &&
-                  (item.danCiChuHuoShiJian = moment(item.danCiChuHuoShiJian).format('YYYY-MM-DD'))
-                item.dingDanShuLiang && (item.dingDanShuLiang = Number(item.dingDanShuLiang).toFixed())
-                item.leiJiChuHuo && (item.leiJiChuHuo = Number(item.leiJiChuHuo).toFixed())
-                item.danCiChuHuo && (item.danCiChuHuo = Number(item.danCiChuHuo).toFixed())
-
-                return item
-              })
+              this.gridOptions.data = this.fmtData(data)
               this.isShowGrid = true
               this.setColumnFilter(this.gridOptions.data)
             } else {
@@ -336,5 +372,14 @@ export default {
 <style lang="less" scoped>
 /deep/ .param-item {
   width: 150px !important;
+}
+
+.order-detail {
+  margin: 0;
+  padding: 0;
+
+  li:nth-of-type(n + 2) {
+    border-top: 1px solid #e8eaec;
+  }
 }
 </style>

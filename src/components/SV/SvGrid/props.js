@@ -1,10 +1,10 @@
 /*
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:27:12
- * @LastEditTime: 2021-06-10 09:54:17
+ * @LastEditTime: 2021-07-01 13:47:29
  * @LastEditors: yanbuw1911
  * @Description: 参考 vxe-grid
- * @FilePath: \sverp-front\src\components\SV\SvGrid\props.js
+ * @FilePath: /sverp-front/src/components/SV/SvGrid/props.js
  */
 const gridProps = {
   id: { type: String, default: () => 'svGrid' },
@@ -93,7 +93,8 @@ const gridProps = {
   toolbarConfig: Object,
   pagerConfig: Object,
   proxyConfig: Object,
-  zoomConfig: Object
+  zoomConfig: Object,
+  spanMethod: Function
 }
 
 const svGridProps = {
