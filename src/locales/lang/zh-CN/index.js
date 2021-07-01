@@ -74,7 +74,9 @@ const menuNodes = {
   DCS_LIST3: '设备操作规范',
   DCS_LIST4: '品管作业指导书',
   HRD_ZTIME: '考勤机',
-  HRD_ZKTIME_USERS: '考勤人员'
+  HRD_ZKTIME_USERS: '考勤人员',
+  WECHAT: '微信推送',
+  WECHAT_BINDING: '微信推送绑定'
 }
 
 const svGrid = {

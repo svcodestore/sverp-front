@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-04-13 09:50:11
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-05-18 14:44:23
+ * @LastEditTime: 2021-07-01 15:34:04
  * @FilePath: \sverp-front\src\views\TPM\QADD\index.vue
 -->
 <template>
@@ -193,12 +193,12 @@ export default {
         cate: null
       },
       param: {
-          arr: [],
-          cause: null,
-          row: null,
-          cate: null,
-          reporterConId: null,
-          reporterName: null
+        arr: [],
+        cause: null,
+        row: null,
+        cate: null,
+        reporterConId: null,
+        reporterName: null
       },
       selectRow: null,
       notifyPeople: [],
