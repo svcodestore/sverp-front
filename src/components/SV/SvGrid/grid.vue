@@ -1,10 +1,10 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-06-25 16:25:13
- * @LastEditors: yanbuw1911
+ * @LastEditTime: 2021-07-02 15:33:58
+ * @LastEditors: Mok.CH
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
- * @FilePath: /sverp-front/src/components/SV/SvGrid/grid.vue
+ * @FilePath: \sverp-front\src\components\SV\SvGrid\grid.vue
 -->
 <template>
   <vxe-grid ref="xGrid" v-bind="attrs" v-on="events">
@@ -373,38 +373,18 @@ export default {
       return this.$refs.xGrid.openExport(options)
     },
     exportAsXlsx () {
-      const wopts = {
-        bookType: 'xlsx',
-        bookSST: false,
-        type: 'binary'
-      }
-      const workBook = {
-        SheetNames: ['Sheet1'],
-        Sheets: {},
-        Props: {}
-      }
-
-      const header = {}
-      this.$refs.xGrid.getColumns().map(e => {
-        const o = Object.assign({}, e)
-        const name = o.property
-        const value = o.title
-        header[name] = value
-      })
-
-      const data = this.$refs.xGrid.getTableData().visibleData.map(e => {
-        const o = Object.assign({}, e)
-        for (const item of Object.entries(o)) {
-          if (!(item[0] in header)) {
-            delete o[item[0]]
-          }
-        }
-        return o
-      })
-      data.unshift(header)
-
-      workBook.Sheets['Sheet1'] = XLSX.utils.json_to_sheet(data, { skipHeader: true })
-      XLSX.writeFile(workBook, `${moment().format('YYYY-MM-DD HH:mm:SSS')}.xlsx`, wopts)
+      this.$refs.xGrid
+        .exportData({
+          filename: `${moment().format('YYYY-MM-DD HH:mm:SSS')}`,
+          type: 'html',
+          mode: 'all',
+          download: false
+        })
+        .then(res => {
+          const d = new DOMParser().parseFromString(res.content, 'text/html')
+          const workBook = XLSX.utils.table_to_book(d.querySelector('table'), { raw: true, cellStyles: true })
+          XLSX.writeFile(workBook, `${moment().format('YYYY-MM-DD HH:mm:SSS')}.xlsx`, { cellStyles: true })
+        })
     },
     exportAsPdf () {
       /* eslint new-cap: ["error", { "newIsCap": false }] */
