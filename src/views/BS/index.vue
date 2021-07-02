@@ -2,7 +2,7 @@
  * @Author: yanbuw1911
  * @Date: 2021-06-15 09:53:14
  * @LastEditors: yanbuw1911
- * @LastEditTime: 2021-07-01 15:15:26
+ * @LastEditTime: 2021-07-02 08:54:10
  * @Description: Do not edit
  * @FilePath: /sverp-front/src/views/BS/index.vue
 -->
@@ -277,11 +277,13 @@ export default {
         item.danCiChuHuo && (item.danCiChuHuo = Number(item.danCiChuHuo).toFixed())
 
         const detail = []
-        data.forEach(el => {
+        objArrUniq(data).forEach(el => {
+          el.jiHuaJiaoQi && (el.jiHuaJiaoQi = moment(el.jiHuaJiaoQi).format('YYYY-MM-DD'))
           if (
             item.KhPONo === el.KhPONo &&
             item.smSOBPlusmyField12 === el.smSOBPlusmyField12 &&
-            item.cunHuoBianHao === el.cunHuoBianHao
+            item.cunHuoBianHao === el.cunHuoBianHao &&
+            item.jiHuaJiaoQi === el.jiHuaJiaoQi
           ) {
             let { danCiChuHuo, danCiChuHuoShiJian } = el
             const { chuHuoDanHao } = el
@@ -293,7 +295,7 @@ export default {
         item.detail = detail
         return item
       })
-      console.log(fmtData)
+
       return fmtData
     },
     async handleSearch () {
@@ -302,39 +304,49 @@ export default {
 
       if (this.queryCond.length && this.isAdvancedQuery) {
         const requestList = this.queryCond.map(params => getOrders2(params))
-        await Promise.all(requestList).then(res => {
-          let arr = []
-          res.forEach(item => {
-            if (item.result && item.data.length) {
-              arr.push(...item.data)
+        await Promise.all(requestList)
+          .then(res => {
+            let arr = []
+            res.forEach(item => {
+              if (item.result && item.data.length) {
+                arr.push(...item.data)
+              }
+            })
+            arr = objArrUniq(arr)
+            if (arr.length) {
+              this.gridOptions.data = this.fmtData(arr)
+              this.isShowGrid = true
+              this.setColumnFilter(this.gridOptions.data)
+            } else {
+              this.$message.info('暂无数据')
             }
           })
-          arr = objArrUniq(arr)
-          if (arr.length) {
-            this.gridOptions.data = this.fmtData(arr)
-            this.isShowGrid = true
-            this.setColumnFilter(this.gridOptions.data)
-          } else {
-            this.$message.info('暂无数据')
-          }
-        })
+          .catch(() => {
+            this.searchLoading = false
+            this.gridOptions.loading = false
+          })
       } else {
         // eslint-disable-next-line camelcase
         const { KhPONo, sp_No, khNo } = this.params
         // eslint-disable-next-line camelcase
         if (!KhPONo && !sp_No && !khNo) return
 
-        await getOrders2(this.params).then(({ result, data }) => {
-          if (result) {
-            if (data.length) {
-              this.gridOptions.data = this.fmtData(data)
-              this.isShowGrid = true
-              this.setColumnFilter(this.gridOptions.data)
-            } else {
-              this.$message.info('暂无数据')
+        await getOrders2(this.params)
+          .then(({ result, data }) => {
+            if (result) {
+              if (data.length) {
+                this.gridOptions.data = this.fmtData(data)
+                this.isShowGrid = true
+                this.setColumnFilter(this.gridOptions.data)
+              } else {
+                this.$message.info('暂无数据')
+              }
             }
-          }
-        })
+          })
+          .catch(() => {
+            this.searchLoading = false
+            this.gridOptions.loading = false
+          })
       }
       this.searchLoading = false
       this.gridOptions.loading = false
