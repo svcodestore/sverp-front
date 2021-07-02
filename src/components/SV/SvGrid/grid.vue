@@ -1,7 +1,7 @@
 <!--
  * @Author: yanbuw1911
  * @Date: 2020-12-07 14:19:34
- * @LastEditTime: 2021-07-02 16:03:07
+ * @LastEditTime: 2021-07-02 16:20:21
  * @LastEditors: Mok.CH
  * @Description: 可编辑表格组件，提供格式化数据格式与后台交互。参考 vxe-table。
  * @FilePath: \sverp-front\src\components\SV\SvGrid\grid.vue
@@ -381,15 +381,16 @@ export default {
           download: false
         })
         .then(res => {
-          // const d = new DOMParser().parseFromString(res.content, 'text/html')
+          const d = new DOMParser().parseFromString(res.content, 'text/html')
           // const workBook = XLSX.utils.table_to_book(d.querySelector('table'), { raw: true, cellStyles: true })
           // XLSX.writeFile(workBook, `${moment().format('YYYY-MM-DD HH:mm:SSS')}.xlsx`, { cellStyles: true })
 
-          // 下面方法可以保存所有单元格长宽，但表格辅助线变空白
+          // 添加表格border
+          d.querySelector('table').setAttribute('border', '1')
           this.$refs.xGrid.saveFile({
             filename: `${moment().format('YYYY-MM-DD HH:mm:SSS')}`,
             type: 'xlsx',
-            content: res.content
+            content: d.documentElement.innerHTML
           })
         })
     },
