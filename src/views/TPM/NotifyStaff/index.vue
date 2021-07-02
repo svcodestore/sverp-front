@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-01-18 09:16:25
- * @LastEditors: yu chen
- * @LastEditTime: 2021-01-21 15:38:42
+ * @LastEditors: Mok.CH
+ * @LastEditTime: 2021-07-01 09:43:08
  * @FilePath: \sverp-front\src\views\TPM\NotifyStaff\index.vue
 -->
 <template>
@@ -39,29 +39,27 @@ export default {
             field: 'id',
             title: 'ID',
             width: 80,
-            sortable: true,
-            fixed: 'left'
+            sortable: true
           },
           {
             field: 'notify_name',
             title: '姓名',
-            editRender: { name: 'input' },
-            width: 110,
-            fixed: 'left'
+            editRender: { name: 'input' }
           },
           {
             field: 'notify_phone',
             title: '手机号',
-            editRender: { name: 'input' },
-            width: 110,
-            fixed: 'left'
+            editRender: { name: 'input' }
+          },
+          {
+            field: 'notify_con_id',
+            title: '系统登录账号',
+            editRender: { name: 'input' }
           },
           {
             field: 'notify_create_time',
             title: '时间',
-            editRender: { name: 'input' },
-            width: 110,
-            fixed: 'left'
+            editRender: { name: 'input' }
           },
           {
             field: 'notify_people',
@@ -78,9 +76,7 @@ export default {
                   label: '是'
                 }
               ]
-            },
-            width: 140,
-            fixed: 'left'
+            }
           }
         ]
       },

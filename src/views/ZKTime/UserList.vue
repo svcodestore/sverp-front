@@ -1,8 +1,8 @@
 <!--
  * @Date: 2021-06-01 09:59:26
  * @LastEditors: Mok.CH
- * @LastEditTime: 2021-06-02 09:07:49
- * @FilePath: \sverp-front\src\views\ZKTIme\UserList.vue
+ * @LastEditTime: 2021-07-01 15:36:38
+ * @FilePath: \sverp-front\src\views\ZKTime\UserList.vue
 -->
 <template>
   <div>
@@ -94,7 +94,6 @@ export default {
     changeUserState (row, state) {
       const edmes = state ? '启用' : '禁用'
       if (confirm('确定 ' + edmes + row.userName + ' ？')) {
-        // 未测
         this.loading = true
         const awaitJobs = []
         for (const device of this.choicedDevice) {
@@ -110,7 +109,6 @@ export default {
     },
     deleteUserAllData (row) {
       if (confirm('确定删除 ' + row.userName + ' 信息、指纹、面容识别？')) {
-        // 未测
         this.loading = true
         const awaitJobs = []
         for (const device of this.choicedDevice) {
